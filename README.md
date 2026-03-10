@@ -63,7 +63,7 @@ Deployable to [Vercel](https://vercel.com/) with zero configuration.
 
 ## 🟠 Contributing
 
-BOSCOLAB is actively developed and currently in use at the **Universidade Federal de Roraima (UFRR)**, in the northern Amazon region of Brazil.
+BOSCOLAB is actively developed and currently in use at the **Federal University of Roraima (UFRR)**, in the northern Amazon region of Brazil.
 
 Contributions, ideas, criticism, and suggestions are very welcome — whether you are a student, educator, physicist, or developer. Feel free to open an issue or start a discussion on GitHub. Every bit of feedback helps shape a better tool for education.
 
