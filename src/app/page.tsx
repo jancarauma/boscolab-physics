@@ -11,6 +11,7 @@ import AboutModal from '@/components/modals/AboutModal';
 import PrecisionModal from '@/components/modals/PrecisionModal';
 import CustomDialog from '@/components/ui/CustomDialog';
 import Toast from '@/components/ui/Toast';
+import { Analytics } from "@vercel/analytics/next"
 
 export default function Home() {
   // Theme init (runs before paint)
@@ -29,6 +30,9 @@ export default function Home() {
         <AnimationPanel />
       </div>
       <BottomBar />
+
+      {/* Analytics */}
+      <Analytics />
 
       {/* Modals & overlays */}
       <AddObjectModal />
