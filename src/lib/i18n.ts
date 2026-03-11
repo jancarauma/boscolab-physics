@@ -1,8 +1,14 @@
 // ── Tipos ──────────────────────────────────────────────────────────────────
-export type Locale = 'pt' | 'en' | 'es';
+export type Locale = 'pt' | 'en' | 'es' | 'zh';
 
 export interface Translations {
-  // Menu principal
+  // ── META ──────────────────────────────────────────────────────────────
+  meta: {
+    appTitle: string;
+    appDescription: string;
+  };
+  
+  // ── MENU PRINCIPAL ────────────────────────────────────────────────────
   menu: {
     file: string;
     examples: string;
@@ -10,7 +16,8 @@ export interface Translations {
     options: string;
     help: string;
   };
-  // Menu Arquivo
+  
+  // ── MENU ARQUIVO ──────────────────────────────────────────────────────
   file: {
     new: string;
     open: string;
@@ -19,7 +26,8 @@ export interface Translations {
     exportImage: string;
     precision: string;
   };
-  // Menu Exemplos — categorias
+  
+  // ── MENU EXEMPLOS — CATEGORIAS ────────────────────────────────────────
   exCategories: {
     mechanics: string;
     kinematics: string;
@@ -30,7 +38,8 @@ export interface Translations {
     electromagnetism: string;
     complex: string;
   };
-  // Menu Exemplos — itens
+  
+  // ── MENU EXEMPLOS — ITENS ─────────────────────────────────────────────
   exItems: {
     projetil: string;
     projetil_drag: string;
@@ -53,28 +62,307 @@ export interface Translations {
     lotka: string;
     lorenz: string;
   };
-  // Menu Visualização
+  
+  // ── MENU VISUALIZAÇÃO ─────────────────────────────────────────────────
   view: {
     grid: string;
     axes: string;
     clearTrails: string;
     centerView: string;
   };
-  // Menu Ajuda
+  
+  // ── MENU AJUDA ────────────────────────────────────────────────────────
   help: {
     syntax: string;
     about: string;
   };
-  // Menu Opções
+  
+  // ── MENU OPÇÕES ───────────────────────────────────────────────────────
   options: {
     precision: string;
     language: string;
   };
+  
+  // ── TOOLBAR ───────────────────────────────────────────────────────────
+  toolbar: {
+    play: string;
+    pause: string;
+    restart: string;
+    stepBack: string;
+    stepForward: string;
+    undo: string;
+    redo: string;
+    undoTooltip: string;
+    redoTooltip: string;
+  };
+  
+  // ── PAINÉIS ───────────────────────────────────────────────────────────
+  panels: {
+    showObjects: string;
+    showGraphs: string;
+    objects: string;
+    graphs: string;
+    noObjects: string;
+    noObjectsDesc: string;
+    noProps: string;
+    noPropsDesc: string;
+    applyAndRestart: string;
+    clearAll: string;
+    minimize: string;
+  };
+  
+  // ── OBJETOS (TIPOS) ───────────────────────────────────────────────────
+  objectTypes: {
+    particle: string;
+    pendulum: string;
+    spring: string;
+    vector: string;
+    circle: string;
+    rectangle: string;
+    text: string;
+    field: string;
+  };
+  
+  // ── OBJETOS (PROPRIEDADES COMPARTILHADAS) ─────────────────────────────
+  commonProps: {
+    name: string;
+    color: string;
+    reset: string;
+    remove: string;
+    identity: string;
+    physics: string;
+    geometry: string;
+    visualization: string;
+    content: string;
+    configuration: string;
+  };
+  
+  // ── PARTÍCULA ─────────────────────────────────────────────────────────
+  particle: {
+    positionX: string;
+    positionY: string;
+    velX: string;
+    velY: string;
+    radius: string;
+    showVelocity: string;
+    trail: string;
+    label: string;
+    namePlaceholder: string;
+    position: string;
+    visualOffset: string;
+    velocityVector: string;
+    projections: string;
+    scale: string;
+    vectorColor: string;
+    vectorLength: string;
+    image: string;
+    useImage: string;
+    imageFormat: string;
+    loadImage: string;
+    imageLoaded: string;
+  };
+  
+  // ── PÊNDULO ───────────────────────────────────────────────────────────
+  pendulum: {
+    defaultName: string;
+    angle: string;
+    length: string;
+    pivotX: string;
+    pivotY: string;
+    bobRadius: string;
+    bobColor: string;
+    rodColor: string;
+    rotation: string;
+  };
+  
+  // ── MOLA ──────────────────────────────────────────────────────────────
+  spring: {
+    defaultName: string;
+    orientation: string;
+    vertical: string;
+    horizontal: string;
+    blockPos: string;
+    pivotX: string;
+    pivotY: string;
+    constant: string;
+    variable: string;
+    coils: string;
+  };
+  
+  // ── VETOR ─────────────────────────────────────────────────────────────
+  vector: {
+    defaultName: string;
+    originX: string;
+    originY: string;
+    componentVx: string;
+    componentVy: string;
+    scale: string;
+    components: string;
+    thickness: string;
+  };
+  
+  // ── CÍRCULO ───────────────────────────────────────────────────────────
+  circle: {
+    defaultName: string;
+    centerX: string;
+    centerY: string;
+    radiusUnit: string;
+    radiusPixel: string;
+    borderColor: string;
+    fillColor: string;
+  };
+  
+  // ── RETÂNGULO ─────────────────────────────────────────────────────────
+  rectangle: {
+    defaultName: string;
+    width: string;
+    height: string;
+  };
+  
+  // ── TEXTO/LABEL ───────────────────────────────────────────────────────
+  textLabel: {
+    defaultName: string;
+    posX: string;
+    posY: string;
+    text: string;
+    textPlaceholder: string;
+    size: string;
+    interpolationHint: string;
+  };
+  
+  // ── CAMPO VETORIAL ────────────────────────────────────────────────────
+  field: {
+    defaultName: string;
+    fieldType: string;
+  };
+  
+  // ── MODAIS ────────────────────────────────────────────────────────────
+  modals: {
+    newProject: string;
+    newObject: string;
+    cancel: string;
+    add: string;
+    apply: string;
+    close: string;
+    confirm: string;
+    ok: string;
+  };
+  
+  // ── DIÁLOGOS ──────────────────────────────────────────────────────────
+  dialogs: {
+    confirmation: string;
+    warning: string;
+    info: string;
+    error: string;
+    newProjectMsg: string;
+    unsavedData: string;
+    createNew: string;
+  };
+  
+  // ── MENSAGENS ─────────────────────────────────────────────────────────
+  messages: {
+    modelOk: string;
+    modelError: string;
+    noUndoAction: string;
+    noRedoAction: string;
+    graphNotFound: string;
+    selectYVar: string;
+    runSimulationFirst: string;
+    csvExported: string;
+    fileSaved: string;
+    fileError: string;
+    numericError: string;
+    imageLoaded: string;
+    runSimulationOrChange: string;
+  };
+  
+  // ── HELP MODAL ────────────────────────────────────────────────────────
+  helpContent: {
+    newProjectKey: string;
+    saveKey: string;
+    playKey: string;
+    restartKey: string;
+    stepForwardKey: string;
+    stepBackKey: string;
+    deleteKey: string;
+    constantDesc: string;
+    expressionDesc: string;
+    availableFunctions: string;
+    conditional: string;
+    usageTips: string;
+    dragTip: string;
+    shiftDragTip: string;
+    scrollTip: string;
+    saveTip: string;
+    rk4Tip: string;
+    constants: string;
+    power: string;
+  };
+  
+  // ── ABOUT MODAL ───────────────────────────────────────────────────────
+  about: {
+    graphs: string;
+    equations: string;
+  };
+  
+  // ── GRÁFICOS ──────────────────────────────────────────────────────────
+  graphs: {
+    graph1: string;
+    graph2: string;
+    graph3: string;
+    graph4: string;
+    simulationStopped: string;
+  };
+  
+  // ── SETTINGS/CONFIGURAÇÃO ─────────────────────────────────────────────
+  settings: {
+    method: string;
+    euler: string;
+    rk4: string;
+    timeStep: string;
+    maxTime: string;
+    speed: string;
+    time: string;
+    steps: string;
+  };
+  
+  // ── INTERFACE GERAL ───────────────────────────────────────────────────
+  ui: {
+    animation: string;
+    model: string;
+    windows: string;
+    showModel: string;
+    verify: string;
+    minimize: string;
+    initialConditions: string;
+    dragObject: string;
+    shiftDrag: string;
+    ready: string;
+    clear: string;
+    auto: string;
+    image: string;
+    data: string;
+    x: string;
+    y1: string;
+    y2: string;
+    error: string;
+  };
+  
+  // ── MODO DE RASTRO ────────────────────────────────────────────────────
+  trailMode: {
+    temporary: string;
+    persistent: string;
+    ghosts: string;
+    none: string;
+  };
 }
+
+
 
 // ── Dicionários ────────────────────────────────────────────────────────────
 const translations: Record<Locale, Translations> = {
   pt: {
+    meta: { appTitle: 'Boscolab', appDescription: 'Simulador de equações diferenciais' },
     menu: { file: 'Arquivo', examples: 'Exemplos', view: 'Exibir', options: 'Opções', help: 'Ajuda' },
     file: { new: 'Novo', open: 'Abrir .modx', save: 'Salvar', exportData: 'Exportar Dados', exportImage: 'Exportar Imagem', precision: 'Precisão' },
     exCategories: { mechanics: 'Mecânica', kinematics: 'Cinemática', gravitation: 'Gravitação', waves: 'Ondas', oscillations: 'Oscilações', other: 'Outros', electromagnetism: 'Eletromagnetismo', complex: 'Sistemas Complexos' },
@@ -82,8 +370,31 @@ const translations: Record<Locale, Translations> = {
     view: { grid: '⊞ Grade', axes: '↔ Eixos', clearTrails: '✕ Limpar Rastros', centerView: '⊙ Centralizar Vista' },
     help: { syntax: 'Sintaxe das Equações', about: 'Sobre' },
     options: { precision: 'Precisão', language: 'Idioma' },
+    toolbar: { play: '▶ Iniciar', pause: '⏸  Parar', restart: '↺ Reiniciar', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Desfazer (Ctrl+Z)', redoTooltip: 'Refazer (Ctrl+Y)' },
+    panels: { showObjects: 'Mostrar Objetos', showGraphs: 'Mostrar Gráficos', objects: 'Objetos', graphs: 'Gráficos', noObjects: 'Sem objetos.', noObjectsDesc: 'Adicione abaixo ↓', noProps: 'Clique num objeto', noPropsDesc: 'para ver propriedades', applyAndRestart: '✓ Aplicar e Reiniciar', clearAll: 'Limpar tudo', minimize: 'Minimizar' },
+    objectTypes: { particle: '● Partícula', pendulum: '℘ Pêndulo', spring: '⇝ Mola', vector: '➡ Vetor', circle: '◯ Círculo', rectangle: '▭ Retângulo', text: 'T Texto', field: '⊞ Campo' },
+    commonProps: { name: 'Nome', color: 'Cor', reset: 'Resetar', remove: 'Remover', identity: 'Identidade', physics: 'Física', geometry: 'Geometria', visualization: 'Visualização', content: 'Conteúdo', configuration: 'Configuração' },
+    particle: { positionX: 'Posição X', positionY: 'Posição Y', velX: 'Vel. X', velY: 'Vel. Y', radius: 'Raio (px)', showVelocity: 'Mostrar vel.', trail: 'Rastro', label: 'Rótulo', namePlaceholder: 'ex: bola', position: 'Posição', visualOffset: 'Offset visual', velocityVector: 'Vetor Velocidade', projections: 'Projeções', scale: 'Escala', vectorColor: 'Cor vetor', vectorLength: 'Comprimento', image: 'Imagem', useImage: 'Usar imagem', imageFormat: 'PNG/JPG', loadImage: 'Carregar', imageLoaded: '✓ Imagem carregada — salva no projeto .modx' },
+    pendulum: { defaultName: 'Pêndulo{id}', angle: 'Ângulo θ', length: 'Comprimento L', pivotX: 'Pivot X', pivotY: 'Pivot Y', bobRadius: 'Raio bob', bobColor: 'Cor bob', rodColor: 'Cor haste', rotation: 'Rotação °' },
+    spring: { defaultName: 'Mola{id}', orientation: 'Orientação', vertical: 'Vertical (mola suspensa)', horizontal: 'Horizontal', blockPos: 'Pos. bloco', pivotX: 'Pivot X', pivotY: 'Pivot Y', constant: 'Constante', variable: 'Variável', coils: 'Espiras' },
+    vector: { defaultName: 'Vetor{id}', originX: 'Origem X', originY: 'Origem Y', componentVx: 'Comp. Vx', componentVy: 'Comp. Vy', scale: 'Escala', components: 'Componentes', thickness: 'Espessura' },
+    circle: { defaultName: 'Círculo{id}', centerX: 'Centro X', centerY: 'Centro Y', radiusUnit: 'Raio (unid.)', radiusPixel: 'Raio', borderColor: 'Cor borda', fillColor: 'Cor fill' },
+    rectangle: { defaultName: 'Rect{id}', width: 'Largura', height: 'Altura' },
+    textLabel: { defaultName: 'Texto{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Texto', textPlaceholder: 't = {t:2}s', size: 'Tamanho', interpolationHint: 'Use {varname} ou {varname:2} para interpolar valores' },
+    field: { defaultName: 'Campo{id}', fieldType: 'Campo Vetorial' },
+    modals: { newProject: 'Novo Projeto', newObject: 'Novo Objeto', cancel: 'Cancelar', add: 'Adicionar', apply: 'Aplicar', close: 'Fechar', confirm: 'Confirmar', ok: 'OK' },
+    dialogs: { confirmation: '⚠️', warning: 'Aviso', info: 'ℹ️', error: 'Erro', newProjectMsg: 'Deseja criar um novo projeto?', unsavedData: '⚠️ Dados não salvos serão perdidos.', createNew: 'Criar Novo' },
+    messages: { modelOk: '✓ Modelo OK — {count} variáveis', modelError: 'Modelo com erros.', noUndoAction: 'Nada para desfazer', noRedoAction: 'Nada para refazer', graphNotFound: 'Gráfico não encontrado', selectYVar: 'Selecione uma variável Y no gráfico primeiro', runSimulationFirst: 'Execute a simulação primeiro', csvExported: '✓ CSV Gráfico {idx}: {count} pontos', fileSaved: '✓ Arquivo salvo', fileError: '❌ Erro: {message}', numericError: 'Erro numérico: {message}', imageLoaded: '✓ Imagem carregada — salva no projeto .modx', runSimulationOrChange: 'Execute a simulação primeiro (ou mude a variável Y)' },
+    helpContent: { newProjectKey: 'Novo projeto', saveKey: 'Salvar arquivo .modx', playKey: 'Iniciar / Parar simulação', restartKey: 'Reiniciar simulação a partir do início', stepForwardKey: 'Executar passo para frente', stepBackKey: 'Executar passo para trás', deleteKey: 'Remover objeto selecionado', constantDesc: 'Constante — valor numérico fixo', expressionDesc: 'Expressão — recalculada a cada passo', availableFunctions: 'Funções Disponíveis', conditional: 'Condicional', usageTips: 'Dicas de Uso', dragTip: 'Arraste objetos na área de animação para reposicioná-los visualmente.', shiftDragTip: 'Shift+arraste modifica as condições iniciais em tempo real.', scrollTip: 'Use scroll do mouse para zoom na animação.', saveTip: 'Salve sua simulação: .modx (arquivo do tipo XML).', rk4Tip: 'O método RK4 é mais preciso para sistemas físicos contínuos.', constants: 'Constantes:', power: 'Potência:' },
+    about: { graphs: 'Gráficos', equations: 'Equações' },
+    graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulação parada' },
+    settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', time: 't =', steps: 'n =' },
+    ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro' },
+    trailMode: { temporary: 'Temporário', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sem rastro' },
   },
+
   en: {
+    meta: { appTitle: 'Boscolab', appDescription: 'Differential equations simulator' },
     menu: { file: 'File', examples: 'Examples', view: 'View', options: 'Options', help: 'Help' },
     file: { new: 'New', open: 'Open .modx', save: 'Save', exportData: 'Export Data', exportImage: 'Export Image', precision: 'Precision' },
     exCategories: { mechanics: 'Mechanics', kinematics: 'Kinematics', gravitation: 'Gravitation', waves: 'Waves', oscillations: 'Oscillations', other: 'Other', electromagnetism: 'Electromagnetism', complex: 'Complex Systems' },
@@ -91,8 +402,31 @@ const translations: Record<Locale, Translations> = {
     view: { grid: '⊞ Grid', axes: '↔ Axes', clearTrails: '✕ Clear Trails', centerView: '⊙ Center View' },
     help: { syntax: 'Equation Syntax', about: 'About' },
     options: { precision: 'Precision', language: 'Language' },
+    toolbar: { play: '▶ Play', pause: '⏸  Pause', restart: '↺ Restart', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Undo (Ctrl+Z)', redoTooltip: 'Redo (Ctrl+Y)' },
+    panels: { showObjects: 'Show Objects', showGraphs: 'Show Graphs', objects: 'Objects', graphs: 'Graphs', noObjects: 'No objects.', noObjectsDesc: 'Add below ↓', noProps: 'Click on an object', noPropsDesc: 'to see properties', applyAndRestart: '✓ Apply and Restart', clearAll: 'Clear all', minimize: 'Minimize' },
+    objectTypes: { particle: '● Particle', pendulum: '℘ Pendulum', spring: '⇝ Spring', vector: '➡ Vector', circle: '◯ Circle', rectangle: '▭ Rectangle', text: 'T Text', field: '⊞ Field' },
+    commonProps: { name: 'Name', color: 'Color', reset: 'Reset', remove: 'Remove', identity: 'Identity', physics: 'Physics', geometry: 'Geometry', visualization: 'Visualization', content: 'Content', configuration: 'Configuration' },
+    particle: { positionX: 'Position X', positionY: 'Position Y', velX: 'Vel. X', velY: 'Vel. Y', radius: 'Radius (px)', showVelocity: 'Show velocity', trail: 'Trail', label: 'Label', namePlaceholder: 'e.g. ball', position: 'Position', visualOffset: 'Visual offset', velocityVector: 'Velocity Vector', projections: 'Projections', scale: 'Scale', vectorColor: 'Vector color', vectorLength: 'Length', image: 'Image', useImage: 'Use image', imageFormat: 'PNG/JPG', loadImage: 'Load', imageLoaded: '✓ Image loaded — saved in .modx project' },
+    pendulum: { defaultName: 'Pendulum{id}', angle: 'Angle θ', length: 'Length L', pivotX: 'Pivot X', pivotY: 'Pivot Y', bobRadius: 'Bob radius', bobColor: 'Bob color', rodColor: 'Rod color', rotation: 'Rotation °' },
+    spring: { defaultName: 'Spring{id}', orientation: 'Orientation', vertical: 'Vertical (hanging spring)', horizontal: 'Horizontal', blockPos: 'Block pos', pivotX: 'Pivot X', pivotY: 'Pivot Y', constant: 'Constant', variable: 'Variable', coils: 'Coils' },
+    vector: { defaultName: 'Vector{id}', originX: 'Origin X', originY: 'Origin Y', componentVx: 'Component Vx', componentVy: 'Component Vy', scale: 'Scale', components: 'Components', thickness: 'Thickness' },
+    circle: { defaultName: 'Circle{id}', centerX: 'Center X', centerY: 'Center Y', radiusUnit: 'Radius (unit)', radiusPixel: 'Radius', borderColor: 'Border color', fillColor: 'Fill color' },
+    rectangle: { defaultName: 'Rect{id}', width: 'Width', height: 'Height' },
+    textLabel: { defaultName: 'Text{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Text', textPlaceholder: 't = {t:2}s', size: 'Size', interpolationHint: 'Use {varname} or {varname:2} to interpolate values' },
+    field: { defaultName: 'Field{id}', fieldType: 'Vector Field' },
+    modals: { newProject: 'New Project', newObject: 'New Object', cancel: 'Cancel', add: 'Add', apply: 'Apply', close: 'Close', confirm: 'Confirm', ok: 'OK' },
+    dialogs: { confirmation: '⚠️', warning: 'Warning', info: 'ℹ️', error: 'Error', newProjectMsg: 'Do you want to create a new project?', unsavedData: '⚠️ Unsaved data will be lost.', createNew: 'Create New' },
+    messages: { modelOk: '✓ Model OK — {count} variables', modelError: 'Model with errors.', noUndoAction: 'Nothing to undo', noRedoAction: 'Nothing to redo', graphNotFound: 'Graph not found', selectYVar: 'Select a Y variable in the graph first', runSimulationFirst: 'Run the simulation first', csvExported: '✓ CSV Graph {idx}: {count} points', fileSaved: '✓ File saved', fileError: '❌ Error: {message}', numericError: 'Numeric error: {message}', imageLoaded: '✓ Image loaded — saved in .modx project', runSimulationOrChange: 'Run the simulation first (or change the Y variable)' },
+    helpContent: { newProjectKey: 'New project', saveKey: 'Save .modx file', playKey: 'Play / Pause simulation', restartKey: 'Restart simulation from the beginning', stepForwardKey: 'Step forward', stepBackKey: 'Step backward', deleteKey: 'Remove selected object', constantDesc: 'Constant — fixed numeric value', expressionDesc: 'Expression — recalculated each step', availableFunctions: 'Available Functions', conditional: 'Conditional', usageTips: 'Usage Tips', dragTip: 'Drag objects in the animation area to reposition them visually.', shiftDragTip: 'Shift+drag modifies initial conditions in real time.', scrollTip: 'Use mouse scroll to zoom in the animation.', saveTip: 'Save your simulation: .modx (XML file format).', rk4Tip: 'The RK4 method is more accurate for continuous physical systems.', constants: 'Constants:', power: 'Power:' },
+    about: { graphs: 'Graphs', equations: 'Equations' },
+    graphs: { graph1: 'Graph 1', graph2: 'Graph 2', graph3: 'Graph 3', graph4: 'Graph 4', simulationStopped: 'simulation stopped' },
+    settings: { method: 'Method', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't max', speed: 'speed', time: 't =', steps: 'n =' },
+    ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '─', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error' },
+    trailMode: { temporary: 'Temporary', persistent: 'Persistent', ghosts: 'Ghosts', none: 'No Trail' },
   },
+
   es: {
+    meta: { appTitle: 'Boscolab', appDescription: 'Simulador de ecuaciones diferenciales' },
     menu: { file: 'Archivo', examples: 'Ejemplos', view: 'Vista', options: 'Opciones', help: 'Ayuda' },
     file: { new: 'Nuevo', open: 'Abrir .modx', save: 'Guardar', exportData: 'Exportar Datos', exportImage: 'Exportar Imagen', precision: 'Precisión' },
     exCategories: { mechanics: 'Mecánica', kinematics: 'Cinemática', gravitation: 'Gravitación', waves: 'Ondas', oscillations: 'Oscilaciones', other: 'Otros', electromagnetism: 'Electromagnetismo', complex: 'Sistemas Complejos' },
@@ -100,8 +434,62 @@ const translations: Record<Locale, Translations> = {
     view: { grid: '⊞ Cuadrícula', axes: '↔ Ejes', clearTrails: '✕ Limpiar Rastros', centerView: '⊙ Centrar Vista' },
     help: { syntax: 'Sintaxis de Ecuaciones', about: 'Acerca de' },
     options: { precision: 'Precisión', language: 'Idioma' },
+    toolbar: { play: '▶ Iniciar', pause: '⏸  Pausar', restart: '↺ Reiniciar', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Deshacer (Ctrl+Z)', redoTooltip: 'Rehacer (Ctrl+Y)' },
+    panels: { showObjects: 'Mostrar Objetos', showGraphs: 'Mostrar Gráficos', objects: 'Objetos', graphs: 'Gráficos', noObjects: 'Sin objetos.', noObjectsDesc: 'Agregue abajo ↓', noProps: 'Haga clic en un objeto', noPropsDesc: 'para ver propiedades', applyAndRestart: '✓ Aplicar e Reiniciar', clearAll: 'Limpiar todo', minimize: 'Minimizar' },
+    objectTypes: { particle: '● Partícula', pendulum: '℘ Péndulo', spring: '⇝ Resorte', vector: '➡ Vector', circle: '◯ Círculo', rectangle: '▭ Rectángulo', text: 'T Texto', field: '⊞ Campo' },
+    commonProps: { name: 'Nombre', color: 'Color', reset: 'Restablecer', remove: 'Eliminar', identity: 'Identidad', physics: 'Física', geometry: 'Geometría', visualization: 'Visualización', content: 'Contenido', configuration: 'Configuración' },
+    particle: { positionX: 'Posición X', positionY: 'Posición Y', velX: 'Vel. X', velY: 'Vel. Y', radius: 'Radio (px)', showVelocity: 'Mostrar velocidad', trail: 'Rastro', label: 'Etiqueta', namePlaceholder: 'p.ej: bola', position: 'Posición', visualOffset: 'Desplazamiento visual', velocityVector: 'Vector de Velocidad', projections: 'Proyecciones', scale: 'Escala', vectorColor: 'Color del vector', vectorLength: 'Longitud', image: 'Imagen', useImage: 'Usar imagen', imageFormat: 'PNG/JPG', loadImage: 'Cargar', imageLoaded: '✓ Imagen cargada — guardada en proyecto .modx' },
+    pendulum: { defaultName: 'Péndulo{id}', angle: 'Ángulo θ', length: 'Longitud L', pivotX: 'Pivot X', pivotY: 'Pivot Y', bobRadius: 'Radio bob', bobColor: 'Color bob', rodColor: 'Color varilla', rotation: 'Rotación °' },
+    spring: { defaultName: 'Resorte{id}', orientation: 'Orientación', vertical: 'Vertical (resorte colgante)', horizontal: 'Horizontal', blockPos: 'Pos. bloque', pivotX: 'Pivot X', pivotY: 'Pivot Y', constant: 'Constante', variable: 'Variable', coils: 'Espiras' },
+    vector: { defaultName: 'Vector{id}', originX: 'Origen X', originY: 'Origen Y', componentVx: 'Componente Vx', componentVy: 'Componente Vy', scale: 'Escala', components: 'Componentes', thickness: 'Grosor' },
+    circle: { defaultName: 'Círculo{id}', centerX: 'Centro X', centerY: 'Centro Y', radiusUnit: 'Radio (unid.)', radiusPixel: 'Radio', borderColor: 'Color borde', fillColor: 'Color relleno' },
+    rectangle: { defaultName: 'Rect{id}', width: 'Ancho', height: 'Altura' },
+    textLabel: { defaultName: 'Texto{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Texto', textPlaceholder: 't = {t:2}s', size: 'Tamaño', interpolationHint: 'Use {varname} o {varname:2} para interpolar valores' },
+    field: { defaultName: 'Campo{id}', fieldType: 'Campo Vectorial' },
+    modals: { newProject: 'Nuevo Proyecto', newObject: 'Nuevo Objeto', cancel: 'Cancelar', add: 'Agregar', apply: 'Aplicar', close: 'Cerrar', confirm: 'Confirmar', ok: 'OK' },
+    dialogs: { confirmation: '⚠️', warning: 'Advertencia', info: 'ℹ️', error: 'Error', newProjectMsg: '¿Desea crear un nuevo proyecto?', unsavedData: '⚠️ Los datos no guardados se perderán.', createNew: 'Crear Nuevo' },
+    messages: { modelOk: '✓ Modelo OK — {count} variables', modelError: 'Modelo con errores.', noUndoAction: 'Nada para deshacer', noRedoAction: 'Nada para rehacer', graphNotFound: 'Gráfico no encontrado', selectYVar: 'Seleccione primero una variable Y en el gráfico', runSimulationFirst: 'Ejecute la simulación primero', csvExported: '✓ CSV Gráfico {idx}: {count} puntos', fileSaved: '✓ Archivo guardado', fileError: '❌ Error: {message}', numericError: 'Error numérico: {message}', imageLoaded: '✓ Imagen cargada — guardada en proyecto .modx', runSimulationOrChange: 'Ejecute la simulación primero (o cambie la variable Y)' },
+    helpContent: { newProjectKey: 'Nuevo proyecto', saveKey: 'Guardar archivo .modx', playKey: 'Reproducir / Pausar simulación', restartKey: 'Reiniciar simulación desde el principio', stepForwardKey: 'Paso adelante', stepBackKey: 'Paso atrás', deleteKey: 'Eliminar objeto seleccionado', constantDesc: 'Constante — valor numérico fijo', expressionDesc: 'Expresión — recalculada en cada paso', availableFunctions: 'Funciones Disponibles', conditional: 'Condicional', usageTips: 'Consejos de Uso', dragTip: 'Arrastre objetos en el área de animación para reposicionarlos visualmente.', shiftDragTip: 'Shift+arrastrar modifica las condiciones iniciales en tiempo real.', scrollTip: 'Use la rueda del mouse para hacer zoom en la animación.', saveTip: 'Guarde su simulación: .modx (formato de archivo XML).', rk4Tip: 'El método RK4 es más preciso para sistemas físicos continuos.', constants: 'Constantes:', power: 'Potencia:' },
+    about: { graphs: 'Gráficos', equations: 'Ecuaciones' },
+    graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulación detenida' },
+    settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', time: 't =', steps: 'n =' },
+    ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error' },
+    trailMode: { temporary: 'Temporal', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sin Rastro' },
+  },
+
+  zh: {
+    meta: { appTitle: 'Boscolab', appDescription: '微分方程模拟器' },
+    menu: { file: '文件', examples: '示例', view: '视图', options: '选项', help: '帮助' },
+    file: { new: '新建', open: '打开 .modx', save: '保存', exportData: '导出数据', exportImage: '导出图像', precision: '精度' },
+    exCategories: { mechanics: '力学', kinematics: '运动学', gravitation: '万有引力', waves: '波动', oscillations: '振动', other: '其他', electromagnetism: '电磁学', complex: '复杂系统' },
+    exItems: { projetil: '抛体运动', projetil_drag: '带阻力的抛体', queda: '自由落体', queda_lua: '自由落体：地球 vs 月球', orbita: '开普勒定律', orbita3: '三体问题', solar: '行星系统', batimento: '波的干涉', pendulo: '简单摆', pendulo_duplo: '双摆', mola: '简谐振子', amortecido: '阻尼振子', onda: '强迫振子', mola2d: '二维弹簧', vanderpol: '范德波尔', rc: 'RC 电路', cargas: '电荷', campo_eletrico: '矢量场', lotka: '洛卡-沃尔泰拉', lorenz: '洛伦茨吸引子' },
+    view: { grid: '⊞ 网格', axes: '↔ 坐标轴', clearTrails: '✕ 清除轨迹', centerView: '⊙ 中心视图' },
+    help: { syntax: '方程语法', about: '关于' },
+    options: { precision: '精度', language: '语言' },
+    toolbar: { play: '▶ 播放', pause: '⏸  暂停', restart: '↺ 重新开始', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: '撤销 (Ctrl+Z)', redoTooltip: '重做 (Ctrl+Y)' },
+    panels: { showObjects: '显示对象', showGraphs: '显示图表', objects: '对象', graphs: '图表', noObjects: '没有对象。', noObjectsDesc: '在下方添加 ↓', noProps: '单击一个对象', noPropsDesc: '查看属性', applyAndRestart: '✓ 应用并重新开始', clearAll: '全部清除', minimize: '最小化' },
+    objectTypes: { particle: '● 粒子', pendulum: '℘ 摆', spring: '⇝ 弹簧', vector: '➡ 矢量', circle: '◯ 圆', rectangle: '▭ 矩形', text: 'T 文本', field: '⊞ 场' },
+    commonProps: { name: '名称', color: '颜色', reset: '重置', remove: '删除', identity: '身份', physics: '物理', geometry: '几何', visualization: '可视化', content: '内容', configuration: '配置' },
+    particle: { positionX: '位置 X', positionY: '位置 Y', velX: '速度 X', velY: '速度 Y', radius: '半径 (px)', showVelocity: '显示速度', trail: '轨迹', label: '标签', namePlaceholder: '例如：球', position: '位置', visualOffset: '视觉偏移', velocityVector: '速度矢量', projections: '投影', scale: '缩放', vectorColor: '矢量颜色', vectorLength: '长度', image: '图像', useImage: '使用图像', imageFormat: 'PNG/JPG', loadImage: '加载', imageLoaded: '✓ 图像已加载 — 已保存到 .modx 项目' },
+    pendulum: { defaultName: '摆{id}', angle: '角度 θ', length: '长度 L', pivotX: '轴心 X', pivotY: '轴心 Y', bobRadius: '球半径', bobColor: '球颜色', rodColor: '杆颜色', rotation: '旋转 °' },
+    spring: { defaultName: '弹簧{id}', orientation: '方向', vertical: '竖直（悬挂弹簧）', horizontal: '水平', blockPos: '块位置', pivotX: '轴心 X', pivotY: '轴心 Y', constant: '常数', variable: '变量', coils: '线圈' },
+    vector: { defaultName: '矢量{id}', originX: '原点 X', originY: '原点 Y', componentVx: '分量 Vx', componentVy: '分量 Vy', scale: '缩放', components: '分量', thickness: '粗细' },
+    circle: { defaultName: '圆{id}', centerX: '中心 X', centerY: '中心 Y', radiusUnit: '半径（单位）', radiusPixel: '半径', borderColor: '边框颜色', fillColor: '填充颜色' },
+    rectangle: { defaultName: '矩形{id}', width: '宽度', height: '高度' },
+    textLabel: { defaultName: '文本{id}', posX: '位置 X', posY: '位置 Y', text: '文本', textPlaceholder: 't = {t:2}s', size: '大小', interpolationHint: '使用 {varname} 或 {varname:2} 来插值' },
+    field: { defaultName: '场{id}', fieldType: '矢量场' },
+    modals: { newProject: '新项目', newObject: '新对象', cancel: '取消', add: '添加', apply: '应用', close: '关闭', confirm: '确认', ok: '确定' },
+    dialogs: { confirmation: '⚠️', warning: '警告', info: 'ℹ️', error: '错误', newProjectMsg: '是否要创建新项目？', unsavedData: '⚠️ 未保存的数据将丢失。', createNew: '创建新项目' },
+    messages: { modelOk: '✓ 模型正常 — {count} 个变量', modelError: '模型有错误。', noUndoAction: '没有可撤销的操作', noRedoAction: '没有可重做的操作', graphNotFound: '未找到图表', selectYVar: '请先在图表中选择 Y 变量', runSimulationFirst: '请先运行模拟', csvExported: '✓ CSV 图表 {idx}：{count} 个点', fileSaved: '✓ 文件已保存', fileError: '❌ 错误：{message}', numericError: '数值错误：{message}', imageLoaded: '✓ 图像已加载 — 已保存到 .modx 项目', runSimulationOrChange: '请先运行模拟（或更改 Y 变量）' },
+    helpContent: { newProjectKey: '新项目', saveKey: '保存 .modx 文件', playKey: '播放 / 暂停模拟', restartKey: '从头开始重新启动模拟', stepForwardKey: '向前步进', stepBackKey: '向后步进', deleteKey: '删除选定的对象', constantDesc: '常数 — 固定数值', expressionDesc: '表达式 — 每步重新计算', availableFunctions: '可用函数', conditional: '条件语句', usageTips: '使用技巧', dragTip: '在动画区域中拖动对象以直观地重新定位它们。', shiftDragTip: 'Shift + 拖动可实时修改初始条件。', scrollTip: '使用鼠标滚轮在动画中进行缩放。', saveTip: '保存您的模拟：.modx（XML 文件格式）。', rk4Tip: 'RK4 方法对连续物理系统更加精确。', constants: '常数：', power: '幂：' },
+    about: { graphs: '图表', equations: '方程' },
+    graphs: { graph1: '图表 1', graph2: '图表 2', graph3: '图表 3', graph4: '图表 4', simulationStopped: '模拟已停止' },
+    settings: { method: '方法', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't 最大值', speed: '速度', time: 't =', steps: 'n =' },
+    ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '─', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误' },
+    trailMode: { temporary: '临时', persistent: '持久', ghosts: '幻影', none: '无轨迹' },
   },
 };
+
 
 // ── Estado global do idioma ────────────────────────────────────────────────
 const STORAGE_KEY = 'boscolab-locale';
@@ -127,6 +515,16 @@ export function t(): Translations { return translations[_currentLocale]; }
 export function onLocaleChange(fn: (locale: Locale) => void): () => void {
   _listeners.push(fn);
   return () => { const i = _listeners.indexOf(fn); if (i >= 0) _listeners.splice(i, 1); };
+}
+
+// ── Função para interpolar valores em strings ──────────────────────────────
+export function interpolate(text: string, values: Record<string, string | number>): string {
+  return text.replace(/\{(\w+)(?::(\d+))?\}/g, (match, key, precision) => {
+    const value = values[key];
+    if (value === undefined) return match;
+    if (precision) return Number(value).toFixed(parseInt(precision));
+    return String(value);
+  });
 }
 
 export { translations };

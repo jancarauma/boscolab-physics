@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { t, getLocale, setLocale, loadLocale, onLocaleChange, type Locale, translations } from '@/lib/i18n';
 
-const LOCALE_FLAGS: Record<Locale, string> = { pt: '🇧🇷', en: '🇺🇸', es: '🇪🇸' };
-const LOCALE_LABELS: Record<Locale, string> = { pt: 'Português', en: 'English', es: 'Español' };
+const LOCALE_FLAGS: Record<Locale, string> = { pt: '🇧🇷', en: '🇺🇸', es: '🇪🇸', zh: '🇨🇳' };
+const LOCALE_LABELS: Record<Locale, string> = { pt: 'Português', en: 'English', es: 'Español', zh: '中文' };
 
 export default function Menubar() {
   const [locale, setLocaleState] = useState<Locale>('pt');
