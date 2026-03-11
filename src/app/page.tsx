@@ -30,6 +30,7 @@ import { selTab, rebuildGraphSelects, updateGraphCfg, clearGraph, exportGraphCSV
 import { saveFile, openFile, onFileLoad, exportCSV, exportPNG } from '@/lib/fileIO';
 import { mdiInit, mdiFocus, mdiMinimize, mdiRestore, mdiUpdateTaskbar, mdiGetLayout, mdiApplyLayout } from '@/lib/mdiSystem';
 import { showPrecisionModal, updatePrecPreview, applyPrecision } from '@/lib/precisionModal';
+import { undoInit, undoPush, undoSchedule, undoUndo, undoRedo } from '@/lib/undoRedo';
 
 export default function Home() {
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function Home() {
     Object.defineProperty(w, '_objId', { get: () => getObjId(), configurable: true });
 
     // Inline HTML callbacks
-    w.__updateObjProp    = (id: number, prop: string, value: any) => updateObjProp(id, prop, value, anim);
+    w.__updateObjProp    = (id: number, prop: string, value: any) => { undoPush(anim); updateObjProp(id, prop, value, anim); undoSchedule(anim); };
     w.__selectObj        = (id: number) => doSelectObj(id);
     w.__toggleObjVis     = (id: number) => { toggleObjVis(id, anim); renderObjList(anim); };
     w.__deleteObj        = (id: number) => deleteObj(id, anim, sim);
@@ -86,8 +87,8 @@ export default function Home() {
     w.simBack  = () => simBack({ sim, anim, graphs });
 
     w.addObject        = (type: string) => addObject(type, sim, getObjId);
-    w.confirmAddObject = () => confirmAddObject(anim, sim);
-    w.deleteSelectedObj = () => deleteSelectedObj(anim, sim);
+    w.confirmAddObject = () => { confirmAddObject(anim, sim); undoPush(anim); };
+    w.deleteSelectedObj = () => { undoPush(anim); deleteSelectedObj(anim, sim); undoPush(anim); };
     w.clearAllObjects  = () => clearAllObjects(anim, sim);
     w.renderObjList    = () => renderObjList(anim);
     w.renderObjProps   = (obj: any) => renderObjProps(obj, sim, anim);
@@ -127,6 +128,8 @@ export default function Home() {
     w.updatePrecPreview  = updatePrecPreview;
     w.applyPrecision     = applyPrecision;
 
+    w.undoUndo = () => undoUndo(anim, doRenderAfterUndo);
+    w.undoRedo = () => undoRedo(anim, doRenderAfterUndo);
     w.loadEx   = (name: string) => doLoadEx(name);
     w.newProject = () => doNewProject();
     w.setGlobalTrailMode = (mode: string) => {
@@ -144,6 +147,12 @@ export default function Home() {
 
     // ── Internal helpers ────────────────────────────────────────────────────
     function doSimReset() { simReset({ sim, anim, graphs }); }
+
+    function doRenderAfterUndo() {
+      renderObjList(anim);
+      renderObjProps(selectedObj && anim.objects.find((o: any) => o.id === selectedObj?.id) ? selectedObj : null, sim, anim);
+      selectedObj = anim.objects.find((o: any) => o._selected) || null;
+    }
 
     function doSelectObj(id: number) {
       if (selectedObj) selectedObj._selected = false;
@@ -244,34 +253,45 @@ export default function Home() {
       renderObjList(anim); renderObjProps(obj, sim, anim);
     };
     anim.onDragObj = (obj: any, wx: number, wy: number, shiftKey: boolean) => {
-      if (shiftKey && sim.parsed) {
+      if (obj.type === 'vectorfield' || (shiftKey && sim.parsed)) {
+        // Para vectorfield ou quando shift está pressionado
         const xvar = typeof obj.x === 'string' ? obj.x.toLowerCase() : null;
         const yvar = typeof obj.y === 'string' ? obj.y.toLowerCase() : null;
         const tvar = typeof obj.theta === 'string' ? obj.theta.toLowerCase() : null;
         let changed = false;
-        if (xvar && sim.initState[xvar] !== undefined) { sim.initState[xvar] = wx - (obj._vox || 0); changed = true; }
-        if (yvar && sim.initState[yvar] !== undefined) { sim.initState[yvar] = wy - (obj._voy || 0); changed = true; }
-        if (tvar && sim.initState[tvar] !== undefined) {
-          sim.initState[tvar] = Math.atan2(wx - (obj.pivotX || 0), -(wy - (obj.pivotY || 0)));
-          changed = true;
+        
+        if (obj.type === 'vectorfield') {
+          // Vectorfield com shift: atualiza variáveis se forem strings
+          if (xvar && sim.initState[xvar] !== undefined) { sim.initState[xvar] = wx; changed = true; }
+          if (yvar && sim.initState[yvar] !== undefined) { sim.initState[yvar] = wy; changed = true; }
+        } else {
+          // Outros objetos
+          if (xvar && sim.initState[xvar] !== undefined) { sim.initState[xvar] = wx - (obj._vox || 0); changed = true; }
+          if (yvar && sim.initState[yvar] !== undefined) { sim.initState[yvar] = wy - (obj._voy || 0); changed = true; }
+          if (tvar && sim.initState[tvar] !== undefined) {
+            sim.initState[tvar] = Math.atan2(wx - (obj.pivotX || 0), -(wy - (obj.pivotY || 0)));
+            changed = true;
+          }
         }
+        
         if (changed) {
           sim.state = { ...sim.initState };
           if (sim.parsed) Object.entries(sim.parsed.constVars).forEach(([k, v]) => { sim.state[k] = v as number; });
           sim._applyDerived(sim.state); sim.t = 0; sim.n = 0;
           sim.history = [{ ...sim.state, t: 0, n: 0 }];
           anim.clearTrails(); graphs.forEach((g: any) => g.clear());
-          if (xvar) { const el = document.getElementById('ic-' + xvar) as HTMLInputElement | null; if (el) el.value = (wx - (obj._vox || 0)).toFixed(3); }
-          if (yvar) { const el = document.getElementById('ic-' + yvar) as HTMLInputElement | null; if (el) el.value = (wy - (obj._voy || 0)).toFixed(3); }
+          if (xvar) { const el = document.getElementById('ic-' + xvar) as HTMLInputElement | null; if (el) el.value = (obj.type === 'vectorfield' ? wx : wx - (obj._vox || 0)).toFixed(3); }
+          if (yvar) { const el = document.getElementById('ic-' + yvar) as HTMLInputElement | null; if (el) el.value = (obj.type === 'vectorfield' ? wy : wy - (obj._voy || 0)).toFixed(3); }
         }
       } else {
+        // Sem shift: arrasta com offset
         obj._vox = (obj._vox || 0) + (wx - (obj._dragLastX || wx));
         obj._voy = (obj._voy || 0) + (wy - (obj._dragLastY || wy));
       }
       obj._dragLastX = wx; obj._dragLastY = wy;
     };
     anim.onDragStart = (obj: any, wx: number, wy: number) => { obj._dragLastX = wx; obj._dragLastY = wy; };
-    anim.onDragEnd = () => {};
+    anim.onDragEnd = () => { undoPush(anim); };
 
     // ── Varlist resize ───────────────────────────────────────────────────────
     const vlHandle = document.getElementById('varlist-resize');
@@ -292,6 +312,8 @@ export default function Home() {
         return;
       }
       if (e.ctrlKey && e.key === 's') { e.preventDefault(); saveFile(sim, anim, graphs); }
+      else if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undoUndo(anim, doRenderAfterUndo); }
+      else if (e.ctrlKey && (e.key === 'y' || (e.shiftKey && e.key === 'Z'))) { e.preventDefault(); undoRedo(anim, doRenderAfterUndo); }
       else if (e.ctrlKey && e.key === 'n') { e.preventDefault(); doNewProject(); }
       else if (e.key === ' ') { e.preventDefault(); sim.running ? simPause({ sim, anim, graphs }) : simPlay({ sim, anim, graphs }); }
       else if (e.key === 'r' || e.key === 'R') doSimReset();
@@ -340,6 +362,7 @@ export default function Home() {
     if (ss) ss.value = '1';
     sim.stepsPerFrame = 1; sim._frameAcc = 0;
     mdiInit(graphs);
+    undoInit(anim);
     doLoadEx('solar');
     setTimeout(() => { buildEditorUI(doApplyModel); doApplyModel(true); }, 400);
 

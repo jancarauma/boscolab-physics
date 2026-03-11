@@ -5,10 +5,13 @@ export default function Toolbar() {
     <div id="toolbar">
       <div className="statusdot" id="statusdot" />
       <button className="btn primary" id="btn-play" onClick={() => (window as any).simPlay?.()}>▶ Iniciar</button>
-      <button className="btn" id="btn-pause" onClick={() => (window as any).simPause?.()}>⏸ Pausar</button>
-      <button className="btn" id="btn-reset" onClick={() => (window as any).simReset?.()}>↺ Reset</button>
-      <button className="btn" id="btn-back" onClick={() => (window as any).simBack?.()}>◀| Passo</button>
-      <button className="btn" id="btn-step" onClick={() => (window as any).simStep?.()}>Passo |▶</button>
+      <button className="btn" id="btn-pause" onClick={() => (window as any).simPause?.()}>⏸  Parar</button>
+      <button className="btn" id="btn-reset" onClick={() => (window as any).simReset?.()}>↺ Reiniciar</button>
+      <button className="btn" id="btn-back" onClick={() => (window as any).simBack?.()}>◀|</button>
+      <button className="btn" id="btn-step" onClick={() => (window as any).simStep?.()}>|▶</button>
+      <div className="tbsep" />
+      <button className="btn" id="btn-undo" onClick={() => (window as any).undoUndo?.()} title="Desfazer (Ctrl+Z)" disabled>↩</button>
+      <button className="btn" id="btn-redo" onClick={() => (window as any).undoRedo?.()} title="Refazer (Ctrl+Y)" disabled>↪</button>
       <div className="tbsep" />
       <span className="tblabel">Método</span>
       <select className="tbsel" id="sel-method" >

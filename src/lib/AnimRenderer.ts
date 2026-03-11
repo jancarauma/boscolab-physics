@@ -13,6 +13,7 @@ export class AnimRenderer {
   onDragStart: ((obj: any, wx: number, wy: number) => void) | null;
   onDragEnd: (() => void) | null;
   _dragObj: any;
+  _hoveredObj: any | null;
 
   constructor(canvas: HTMLCanvasElement) {
     this.cv = canvas; this.ctx = canvas.getContext('2d')!;
@@ -23,6 +24,7 @@ export class AnimRenderer {
     this._w = 0; this._h = 0;
     this._initOrigin = false;
     this.onSelect = null; this.onDragObj = null; this.onDragStart = null; this.onDragEnd = null;
+    this._hoveredObj = null;
     this._dragObj = null;
     this._setupEvents();
   }
@@ -61,15 +63,24 @@ export class AnimRenderer {
         this.onDragStart(hit, wx, wy);
       }
     });
+    this.cv.addEventListener('mousemove', e => {
+      const rect = this.cv.getBoundingClientRect();
+      const px = e.clientX - rect.left, py = e.clientY - rect.top;
+      const hovered = this._hitTest(px, py);
+      this._hoveredObj = hovered;
+      this.cv.style.cursor = hovered ? 'grab' : 'default';
+    });
     window.addEventListener('mousemove', e => {
       if (this._drag) {
         if (this._dragObj && this.onDragObj) {
           const rect = this.cv.getBoundingClientRect();
           const px = e.clientX - rect.left, py = e.clientY - rect.top;
           const [wx, wy] = this.toMx(px, py);
+          this.cv.style.cursor = 'grabbing';
           this.onDragObj(this._dragObj, wx, wy, e.shiftKey);
         } else {
           this.ox += e.clientX - this._lm[0]; this.oy += e.clientY - this._lm[1];
+          this.cv.style.cursor = 'move';
         }
         this._lm = [e.clientX, e.clientY];
       }
@@ -79,7 +90,7 @@ export class AnimRenderer {
       const cd = document.getElementById('coord-disp');
       if (cd) cd.textContent = `x: ${wx.toFixed(2)}  y: ${wy.toFixed(2)}  ${this._drag && this._dragObj ? '[arrastar obj]' : this._drag ? '[mover câmera]' : '| drag=mover | ⇧drag=IC'}`;
     });
-    window.addEventListener('mouseup', () => { this._drag = false; this._dragObj = null; });
+    window.addEventListener('mouseup', () => { this._drag = false; this._dragObj = null; this.cv.style.cursor = this._hoveredObj ? 'grab' : 'default'; });
   }
 
   toPx(mx: number, my: number): [number, number] { return [this.ox + mx * this.scale, this.oy - my * this.scale]; }
@@ -102,6 +113,10 @@ export class AnimRenderer {
       } else if (o.type === 'vector' || o.type === 'label') {
         const [opx, opy] = this.toPx(rx, ry);
         if (Math.hypot(px - opx, py - opy) < 14) return o;
+      } else if (o.type === 'vectorfield') {
+        const [opx, opy] = this.toPx(rx, ry);
+        const pw = (o._rw || 10) * this.scale / 2, ph = (o._rh || 10) * this.scale / 2;
+        if (px >= opx - pw && px <= opx + pw && py >= opy - ph && py <= opy + ph) return o;
       }
     }
     return null;
@@ -164,10 +179,70 @@ export class AnimRenderer {
     }
   }
 
+  // ── Draw selection/hover ring + drag handle ────────────────────────────
+  _drawSelectionRing(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, sel: boolean, hov: boolean) {
+    if (!sel && !hov) return;
+    ctx.save();
+    // Outer glow
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + (sel ? 6 : 4), 0, Math.PI * 2);
+    ctx.strokeStyle = sel ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = sel ? 4 : 3;
+    ctx.stroke();
+    // Main ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + (sel ? 3 : 2), 0, Math.PI * 2);
+    ctx.strokeStyle = sel ? '#fff' : 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = sel ? 2 : 1.5;
+    ctx.setLineDash(sel ? [] : [4, 3]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // Drag handle icon (only when selected)
+    if (sel) {
+      const hs = 5;
+      const dist = r + 8;
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      [[-hs,-hs],[-hs,hs],[hs,-hs],[hs,hs]].forEach(([dx,dy]) => {
+        const mag = Math.sqrt(dx*dx + dy*dy);
+        const px = cx + dx / mag * dist;
+        const py = cy + dy / mag * dist;
+        ctx.beginPath(); ctx.arc(px, py, 1.8, 0, Math.PI*2); ctx.fill();
+      });
+    }
+    ctx.restore();
+  }
+
+  _drawSelectionBox(ctx: CanvasRenderingContext2D, cx: number, cy: number, w: number, h: number, sel: boolean, hov: boolean) {
+    if (!sel && !hov) return;
+    ctx.save();
+    const pad = sel ? 5 : 3;
+    // Glow
+    ctx.strokeStyle = sel ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = sel ? 4 : 3;
+    ctx.strokeRect(cx - w/2 - pad - 2, cy - h/2 - pad - 2, w + (pad+2)*2, h + (pad+2)*2);
+    // Main border
+    ctx.strokeStyle = sel ? '#fff' : 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = sel ? 2 : 1.5;
+    ctx.setLineDash(sel ? [] : [4, 3]);
+    ctx.strokeRect(cx - w/2 - pad, cy - h/2 - pad, w + pad*2, h + pad*2);
+    ctx.setLineDash([]);
+    // Corner handles
+    if (sel) {
+      const hs = 4;
+      ctx.fillStyle = '#fff';
+      [[cx-w/2-pad, cy-h/2-pad],[cx+w/2+pad, cy-h/2-pad],
+       [cx-w/2-pad, cy+h/2+pad],[cx+w/2+pad, cy+h/2+pad]].forEach(([hx,hy]) => {
+        ctx.fillRect(hx - hs/2, hy - hs/2, hs, hs);
+      });
+    }
+    ctx.restore();
+  }
+
   _drawObj(ctx: CanvasRenderingContext2D, o: any, state: Record<string, number>) {
     const g = (k: string) => this._evalProp(o[k], state);
     const color = o.color || '#4f9eff';
     const sel = o._selected;
+    const hov = this._hoveredObj === o && !sel;
     const vox = o._vox || 0, voy = o._voy || 0;
     const rotDeg = parseFloat(o.rotation) || 0;
     const rot = rotDeg * Math.PI / 180;
@@ -258,8 +333,8 @@ export class AnimRenderer {
       if (o.useImage && o._imgEl && o._imgEl.complete && o._imgEl.naturalWidth > 0) {
         ctx.drawImage(o._imgEl, -r, -r, r * 2, r * 2);
       } else { ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill(); }
-      if (sel) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke(); }
       ctx.restore();
+      this._drawSelectionRing(ctx, px, py, r, sel, hov);
       if (o.label) { ctx.fillStyle = 'rgba(226,232,240,.85)'; ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(o.label, px + r + 4, py - 4); }
 
     } else if (o.type === 'pendulum') {
@@ -287,8 +362,8 @@ export class AnimRenderer {
       ctx.beginPath(); ctx.arc(ppx, ppy, 4, 0, Math.PI * 2); ctx.fillStyle = '#475569'; ctx.fill();
       ctx.save(); ctx.translate(bpx, bpy); ctx.rotate(rot);
       ctx.beginPath(); ctx.arc(0, 0, o.radius || 10, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
-      if (sel) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, o.radius || 10, 0, Math.PI * 2); ctx.stroke(); }
       ctx.restore();
+      this._drawSelectionRing(ctx, bpx, bpy, o.radius || 10, sel, hov);
 
     } else if (o.type === 'spring') {
       const isVert = o.vertical === true || o.vertical === 'true';
@@ -306,7 +381,7 @@ export class AnimRenderer {
       ctx.fillStyle = 'rgba(79,158,255,.25)'; ctx.strokeStyle = color; ctx.lineWidth = 1.5;
       ctx.fillRect(bpx2 - bsize / 2, bpy2 - bsize / 2, bsize, bsize);
       ctx.strokeRect(bpx2 - bsize / 2, bpy2 - bsize / 2, bsize, bsize);
-      if (sel) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.strokeRect(bpx2 - bsize / 2, bpy2 - bsize / 2, bsize, bsize); }
+      this._drawSelectionBox(ctx, bpx2, bpy2, bsize, bsize, sel, hov);
 
     } else if (o.type === 'vector') {
       const vx2 = g('vx'), vy2 = g('vy'), vs2 = o.scale || 0.3;
@@ -318,7 +393,7 @@ export class AnimRenderer {
       this._arrow(ctx, spx, spy, epx, epy, color, o.lineWidth || 2);
       ctx.restore();
       if (o.label) { ctx.fillStyle = color; ctx.font = '10px DM Sans,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(o.label, (spx + epx) / 2 + 4, (spy + epy) / 2 - 4); }
-      if (sel) { ctx.beginPath(); ctx.arc(spx, spy, 6, 0, Math.PI * 2); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); }
+      this._drawSelectionRing(ctx, spx, spy, 6, sel, hov);
 
     } else if (o.type === 'circle') {
       const cx = (g('x') || 0) + vox, cy = (g('y') || 0) + voy;
@@ -334,8 +409,8 @@ export class AnimRenderer {
         ctx.fillStyle = o.fillColor || 'rgba(79,158,255,.15)'; ctx.fill();
         ctx.strokeStyle = color; ctx.lineWidth = o.lineWidth || 1.5; ctx.stroke();
       }
-      if (sel) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, rpx, 0, Math.PI * 2); ctx.stroke(); }
       ctx.restore();
+      this._drawSelectionRing(ctx, cpx, cpy, rpx, sel, hov);
 
     } else if (o.type === 'rect') {
       const rx = (g('x') || 0) + vox, ry = (g('y') || 0) + voy;
@@ -349,8 +424,8 @@ export class AnimRenderer {
         ctx.fillStyle = o.fillColor || 'rgba(79,158,255,.12)'; ctx.fillRect(-pw2 / 2, -ph2 / 2, pw2, ph2);
         ctx.strokeStyle = color; ctx.lineWidth = o.lineWidth || 1.5; ctx.strokeRect(-pw2 / 2, -ph2 / 2, pw2, ph2);
       }
-      if (sel) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.strokeRect(-pw2 / 2, -ph2 / 2, pw2, ph2); }
       ctx.restore();
+      this._drawSelectionBox(ctx, px2, py2, pw2, ph2, sel, hov);
       o._rx = rx; o._ry = ry;
 
     } else if (o.type === 'label') {
@@ -368,7 +443,9 @@ export class AnimRenderer {
       o._rx = lx; o._ry = ly;
 
     } else if (o.type === 'vectorfield') {
-      const R = o.gridRange || 5;
+      const vfx = (g('x') || 0) + vox, vfy = (g('y') || 0) + voy;
+      const vfw = g('w') || g('width') || 10, vfh = g('h') || g('height') || 10;
+      const R = Math.max(vfw, vfh) / 2;
       const fxStr = o.fxExpr || '-y', fyStr = o.fyExpr || 'x';
       const fzStr: string | undefined = o.fzExpr && o.fzExpr.trim() !== '' ? o.fzExpr : undefined;
       const baseColor2 = o.color || '#4f9eff';
@@ -530,7 +607,13 @@ export class AnimRenderer {
           }
         }
       }
-      o._rx = 0; o._ry = 0;
+      o._rx = vfx;
+      o._ry = vfy;
+      o._rw = vfw;
+      o._rh = vfh;
+      const [vfpx, vfpy] = this.toPx(vfx, vfy);
+      const vfpw = vfw * this.scale, vfph = vfh * this.scale;
+      this._drawSelectionBox(ctx, vfpx, vfpy, vfpw, vfph, sel, hov);
     }
     if (sel && (o.type === 'vector' || o.type === 'label')) {
       const [spx2, spy2] = this.toPx((g('x') || 0) + vox, (g('y') || 0) + voy);
