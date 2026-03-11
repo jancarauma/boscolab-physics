@@ -5,7 +5,6 @@ import { makeObj } from './objects';
 import { toast, closeMenus } from './uiHelpers';
 import { getEditorText, setEditorText, applyModel } from './modelEditor';
 import { getICValues, rebuildICPanel } from './icPanel';
-import { rebuildVarList, rebuildGraphSelects as _rebuildVarListInner } from './modelEditor';
 import { rebuildICPanel as _rebuildIC } from './icPanel';
 import { applyTheme } from './theme';
 import { getPrec, setPrec } from './formatVal';
