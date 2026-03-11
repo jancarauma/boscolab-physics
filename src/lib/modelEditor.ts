@@ -197,8 +197,8 @@ export function editorWrapClick(e: MouseEvent, onReparse?: () => void): void {
 
 export function rebuildVarList(sim: SimEngine): void {
   const BADGE_LABELS: Record<string, string> = {
-    state: 'Estado (variável de estado)', const: 'Constante',
-    derived: 'Derivada (calculada)', param: 'Parâmetro',
+    state: 'Estado', const: 'Constante',
+    derived: 'Derivada', param: 'Parâmetro',
   };
   const vars = sim.getVars();
   const el = document.getElementById('varlist');

@@ -79,17 +79,60 @@ export const EXAMPLES: Record<string, any> = {
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'x', yvar2: 'y' }, scale: 100, ox: .5, oy: .5
   },
   rc: {
-    model: `// Circuito RC\nR = 1000\nC = 0.001\nVs = 5.0\ntau = R*C\n\nvc(t+dt) = vc(t) + ((Vs - vc)/(R*C))*dt\n\ni = (Vs - vc)/R\nvr = Vs - vc\ne_cap = 0.5*C*vc^2`,
-    ic: { vc: 0 }, dt: 0.00005, tmax: 0.008,
+    model: `// Circuito RC — Carregamento Didático
+// Parâmetros do circuito
+R = 1000           // Resistência (Ω)
+C = 0.001          // Capacitância (F)
+Vs = 5.0           // Tensão da fonte (V)
+tau = R*C          // Constante de tempo (s)
+
+// Dinâmica: dvc/dt = (Vs - vc)/(R*C)
+vc(t+dt) = vc(t) + ((Vs - vc)/(R*C))*dt
+
+// Corrente no circuito (decai exponencialmente)
+i = (Vs - vc)/R
+
+// Tensão no resistor (complementar à do capacitor)
+vr = Vs - vc
+
+// Energia armazenada no capacitor
+e_cap = 0.5*C*vc^2
+
+// % de carregamento do capacitor
+percent_charge = 100*(vc/Vs)`,
+    ic: { vc: 0 }, dt: 0.001, tmax: 5.0,
     objects: [
-      { type: 'label', x: -5, y: 5.5, text: 'Circuito RC', fontSize: 16, color: '#94a3b8' },
-      { type: 'label', x: -5, y: 4.2, text: 'Vc = {vc:3} V', fontSize: 14, color: '#4f9eff' },
-      { type: 'label', x: -5, y: 3.0, text: 'Vr = {vr:3} V', fontSize: 14, color: '#a78bfa' },
-      { type: 'label', x: -5, y: 1.8, text: 'i  = {i:6} A', fontSize: 14, color: '#34d399' },
-      { type: 'label', x: -5, y: 0.6, text: 'E  = {e_cap:6} J', fontSize: 14, color: '#fbbf24' },
-      { type: 'label', x: -5, y: -1.0, text: 'τ = R·C = {tau:4} s', fontSize: 13, color: '#fb7185' },
+      // PARTÍCULA DIDÁTICA: Sobe conforme o capacitor carrega
+      { type: 'particle', x: '0', y: 'vc', color: '#4f9eff', showTrail: true, trailLen: 2500, radius: 9, showVec: true, vy: 'i', vx: '0', vecScale: 0.3, vecColor: '#34d399', label: 'Carregamento' },
+      
+      // Separador
+      { type: 'label', x: -5.8, y: 5.8, text: '═══════════════════════════════════', fontSize: 12, color: '#475569' },
+      
+      // Título
+      { type: 'label', x: 1.1, y: 3.1, text: 'CARREGAMENTO DE CAPACITOR RC', fontSize: 14, color: '#f0f9ff' },
+      
+      // Seção 1: Tensão do capacitor
+      { type: 'label', x: 1.1, y: 2.8, text: 'TENSÃO DO CAPACITOR', fontSize: 11, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 2.5, text: 'Vc = {vc:5} V  |  {percent_charge:0}% carregado', fontSize: 12, color: '#4f9eff' },
+      
+      // Seção 2: Corrente
+      { type: 'label', x: 1.1, y: 2.2, text: 'CORRENTE (decaimento exponencial)', fontSize: 11, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 1.9, text: 'i = {i:8} A', fontSize: 12, color: '#34d399' },
+      
+      // Seção 3: Voltagens
+      { type: 'label', x: 1.1, y: 1.6, text: 'DIFERENÇAS DE POTENCIAL (DDP)', fontSize: 11, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 1.3, text: 'Vs = {Vs:3} V  |  Vr = {vr:5} V  (Vc + Vr = Vs)', fontSize: 11, color: '#fbbf24' },
+      
+      // Seção 4: Parâmetros
+      { type: 'label', x: 1.1, y: 1.0, text: 'PARÂMETROS & ENERGIA', fontSize: 11, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 0.7, text: 'τ = {tau:4} s  |  E = {e_cap:8} J', fontSize: 11, color: '#a78bfa' },
+      
+      // Nota didática
+      { type: 'label', x: 1.1, y: 0.4, text: '📌 Em ~5τ: 99% carregado. Após 5 segundos.', fontSize: 10, color: '#22d3ee' },
     ],
-    g0: { xvar: 't', yvar: 'vc' }, g1: { xvar: 't', yvar: 'i' }, scale: 30, ox: .08, oy: .25
+    g0: { xvar: 't', yvar: 'vc', yvar2: 'vr' }, 
+    g1: { xvar: 't', yvar: 'i' }, 
+    scale: 100, ox: .08, oy: .15
   },
   onda: {
     model: `// Oscilador Forçado com Ressonância\nm = 1.0\nb = 0.2\nk = 4.0\nF0 = 2.0\nomega_f = 2.0\n\nomega0 = sqrt(k/m)\n\nx(t+dt) = x(t) + v*dt\nv(t+dt) = v(t) + (-b/m*v - k/m*x + F0/m*cos(omega_f*t))*dt`,
