@@ -1,7 +1,7 @@
 export const EXAMPLES: Record<string, any> = {
   queda: {
     model: `// Queda Livre\ng = 9.8\n\ny(t+dt) = y(t) + vy*dt\nvy(t+dt) = vy(t) - g*dt`,
-    ic: { y: 50, vy: 0 }, dt: 0.01, tmax: 4,
+    ic: { y: 22, vy: 0 }, dt: 0.01, tmax: 2.070,
     objects: [{ type: 'particle', x: '0', y: 'y', color: '#4f9eff', showTrail: true, showVec: true, vx: '0', vy: 'vy', vecScale: 0.2, label: 'queda' }],
     g0: { xvar: 't', yvar: 'y' }, g1: { xvar: 't', yvar: 'vy' }, scale: 8, ox: .5, oy: .1
   },
@@ -33,11 +33,11 @@ export const EXAMPLES: Record<string, any> = {
     g0: { xvar: 't', yvar: 'x', yvar2: 'v' }, g1: { xvar: 'x', yvar: 'v' }, scale: 50, ox: .5, oy: .15
   },
   orbita: {
-    model: `// Órbita Kepleriana (elíptica)\nG = 1.0\nM = 1.0\n\nr = sqrt(x^2 + y^2)\nax = -G*M*x/r^3\nay = -G*M*y/r^3\n\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvx(t+dt) = vx(t) + ax*dt\nvy(t+dt) = vy(t) + ay*dt`,
+    model: `// Lei de Kepler \nG = 1.0\nM = 1.0\n\nr = sqrt(x^2 + y^2)\nax = -G*M*x/r^3\nay = -G*M*y/r^3\n\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvx(t+dt) = vx(t) + ax*dt\nvy(t+dt) = vy(t) + ay*dt`,
     ic: { x: 1, y: 0, vx: 0, vy: 0.7 }, dt: 0.005, tmax: 30,
-    objects: [
-      { type: 'circle', x: '0', y: '0', r: '0.08', color: '#fbbf24', fillColor: 'rgba(251,191,36,.25)' },
-      { type: 'particle', x: 'x', y: 'y', color: '#4f9eff', showTrail: true, trailLen: 600, showVec: false, radius: 6 },
+    objects: [      
+      { type: 'particle', x: '0', y: '0', color: '#fbbf24', showVec: false, radius: 12, label: "Sol" },
+      { type: 'particle', x: 'x', y: 'y', color: '#4f9eff', showTrail: true, trailLen: 600, showVec: false, radius: 6, label: "Terra" },
     ],
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'x', yvar2: 'y' }, scale: 140, ox: .5, oy: .5
   },
@@ -104,17 +104,23 @@ export const EXAMPLES: Record<string, any> = {
     g0: { xvar: 't', yvar: 'x' }, g1: { xvar: 'x', yvar: 'v' }, scale: 50, ox: .5, oy: .5
   },
   solar: {
-    model: `// Sistema Solar (simplificado)\nGM = 39.478\n\nrm = sqrt(xm^2 + ym^2)\naxm = -GM*xm/rm^3\naym = -GM*ym/rm^3\nxm(t+dt) = xm(t) + vxm*dt\nym(t+dt) = ym(t) + vym*dt\nvxm(t+dt) = vxm(t) + axm*dt\nvym(t+dt) = vym(t) + aym*dt\n\nrv = sqrt(xv^2 + yv^2)\naxv = -GM*xv/rv^3\nayv = -GM*yv/rv^3\nxv(t+dt) = xv(t) + vxv*dt\nyv(t+dt) = yv(t) + vyv*dt\nvxv(t+dt) = vxv(t) + axv*dt\nvyv(t+dt) = vyv(t) + ayv*dt\n\nrt = sqrt(xt^2 + yt^2)\naxt = -GM*xt/rt^3\nayt = -GM*yt/rt^3\nxt(t+dt) = xt(t) + vxt*dt\nyt(t+dt) = yt(t) + vyt*dt\nvxt(t+dt) = vxt(t) + axt*dt\nvyt(t+dt) = vyt(t) + ayt*dt\n\nrma = sqrt(xma^2 + yma^2)\naxma = -GM*xma/rma^3\nayma = -GM*yma/rma^3\nxma(t+dt) = xma(t) + vxma*dt\nyma(t+dt) = yma(t) + vyma*dt\nvxma(t+dt) = vxma(t) + axma*dt\nvyma(t+dt) = vyma(t) + ayma*dt`,
-    ic: { xm: 0.387, ym: 0, vxm: 0, vym: 10.06, xv: 0.723, yv: 0, vxv: 0, vyv: 7.38, xt: 1, yt: 0, vxt: 0, vyt: 6.283, xma: 1.524, yma: 0, vxma: 0, vyma: 5.09 },
-    dt: 0.0005, tmax: 3,
+    model: `// Sistema Solar Completo\nGM = 39.478\n\nrm = sqrt(xm^2 + ym^2)\naxm = -GM*xm/rm^3\naym = -GM*ym/rm^3\nxm(t+dt) = xm(t) + vxm*dt\nym(t+dt) = ym(t) + vym*dt\nvxm(t+dt) = vxm(t) + axm*dt\nvym(t+dt) = vym(t) + aym*dt\n\nrv = sqrt(xv^2 + yv^2)\naxv = -GM*xv/rv^3\nayv = -GM*yv/rv^3\nxv(t+dt) = xv(t) + vxv*dt\nyv(t+dt) = yv(t) + vyv*dt\nvxv(t+dt) = vxv(t) + axv*dt\nvyv(t+dt) = vyv(t) + ayv*dt\n\nrt = sqrt(xt^2 + yt^2)\naxt = -GM*xt/rt^3\nayt = -GM*yt/rt^3\nxt(t+dt) = xt(t) + vxt*dt\nyt(t+dt) = yt(t) + vyt*dt\nvxt(t+dt) = vxt(t) + axt*dt\nvyt(t+dt) = vyt(t) + ayt*dt\n\nrma = sqrt(xma^2 + yma^2)\naxma = -GM*xma/rma^3\nayma = -GM*yma/rma^3\nxma(t+dt) = xma(t) + vxma*dt\nyma(t+dt) = yma(t) + vyma*dt\nvxma(t+dt) = vxma(t) + axma*dt\nvyma(t+dt) = vyma(t) + ayma*dt\n\nrj = sqrt(xj^2 + yj^2)\naxj = -GM*xj/rj^3\nayj = -GM*yj/rj^3\nxj(t+dt) = xj(t) + vxj*dt\nyj(t+dt) = yj(t) + vyj*dt\nvxj(t+dt) = vxj(t) + axj*dt\nvyj(t+dt) = vyj(t) + ayj*dt\n\nrs = sqrt(xs^2 + ys^2)\naxs = -GM*xs/rs^3\nays = -GM*ys/rs^3\nxs(t+dt) = xs(t) + vxs*dt\nys(t+dt) = ys(t) + vys*dt\nvxs(t+dt) = vxs(t) + axs*dt\nvys(t+dt) = vys(t) + ays*dt\n\nru = sqrt(xu^2 + yu^2)\naxu = -GM*xu/ru^3\nayu = -GM*yu/ru^3\nxu(t+dt) = xu(t) + vxu*dt\nyu(t+dt) = yu(t) + vyu*dt\nvxu(t+dt) = vxu(t) + axu*dt\nvyu(t+dt) = vyu(t) + ayu*dt\n\nrn = sqrt(xn^2 + yn^2)\naxn = -GM*xn/rn^3\nayn = -GM*yn/rn^3\nxn(t+dt) = xn(t) + vxn*dt\nyn(t+dt) = yn(t) + vyn*dt\nvxn(t+dt) = vxn(t) + axn*dt\nvyn(t+dt) = vyn(t) + ayn*dt\n\nrp = sqrt(xp^2 + yp^2)\naxp = -GM*xp/rp^3\nayp = -GM*yp/rp^3\nxp(t+dt) = xp(t) + vxp*dt\nyp(t+dt) = yp(t) + vyp*dt\nvxp(t+dt) = vxp(t) + axp*dt\nvyp(t+dt) = vyp(t) + ayp*dt\n\nrl = sqrt(xl^2 + yl^2)\naxl = -GM*xl/rl^3\nayl = -GM*yl/rl^3\nxl(t+dt) = xl(t) + vxl*dt\nyl(t+dt) = yl(t) + vyl*dt\nvxl(t+dt) = vxl(t) + axl*dt\nvyl(t+dt) = vyl(t) + ayl*dt`,
+    ic: { xm: 0.39, ym: 0.03, vxm: -2.0, vym: 9.8, xv: 0.72, yv: 0.05, vxv: -1.5, vyv: 7.2, xt: 1.0, yt: 0.08, vxt: -0.5, vyt: 6.3, xma: 1.52, yma: 0.12, vxma: -1.2, vyma: 5.0, xj: 5.2, yj: 0.2, vxj: -0.8, vyj: 2.8, xs: 9.54, ys: 0.3, vxs: -0.5, vys: 2.0, xu: 19.2, yu: 0.5, vxu: -0.3, vyu: 1.4, xn: 30.1, yn: 0.8, vxn: -0.2, vyn: 1.1, xp: 39.5, yp: 1.0, vxp: -0.15, vyp: 0.9, xl: 1.005, yl: 0.08, vxl: -0.8, vyl: 6.5 },
+    dt: 0.0005, tmax: 8,
     objects: [
       { type: 'circle', x: '0', y: '0', r: '0.12', color: '#ffd700', fillColor: 'rgba(255,215,0,.35)' },
-      { type: 'particle', x: 'xm', y: 'ym', color: '#b0c0d0', showTrail: true, trailLen: 800, radius: 4, label: 'Mercúrio' },
-      { type: 'particle', x: 'xv', y: 'yv', color: '#e8cda0', showTrail: true, trailLen: 800, radius: 5, label: 'Vênus' },
-      { type: 'particle', x: 'xt', y: 'yt', color: '#4f9eff', showTrail: true, trailLen: 600, radius: 5, label: 'Terra' },
-      { type: 'particle', x: 'xma', y: 'yma', color: '#f97316', showTrail: true, trailLen: 600, radius: 5, label: 'Marte' },
+      { type: 'particle', x: 'xm', y: 'ym', color: '#b0c0d0', showTrail: true, trailLen: 1200, radius: 3, label: 'Mercúrio' },
+      { type: 'particle', x: 'xv', y: 'yv', color: '#e8cda0', showTrail: true, trailLen: 1200, radius: 4, label: 'Vênus' },
+      { type: 'particle', x: 'xt', y: 'yt', color: '#4f9eff', showTrail: true, trailLen: 1200, radius: 4, label: 'Terra' },
+      { type: 'particle', x: 'xl', y: 'yl', color: '#c0c0c0', showTrail: true, trailLen: 400, radius: 2, label: 'Lua' },
+      { type: 'particle', x: 'xma', y: 'yma', color: '#f97316', showTrail: true, trailLen: 1000, radius: 4, label: 'Marte' },
+      { type: 'particle', x: 'xj', y: 'yj', color: '#daa520', showTrail: true, trailLen: 800, radius: 6, label: 'Júpiter' },
+      { type: 'particle', x: 'xs', y: 'ys', color: '#f4e4c1', showTrail: true, trailLen: 600, radius: 5, label: 'Saturno' },
+      { type: 'particle', x: 'xu', y: 'yu', color: '#4fd0e7', showTrail: true, trailLen: 400, radius: 4, label: 'Urano' },
+      { type: 'particle', x: 'xn', y: 'yn', color: '#4169e1', showTrail: true, trailLen: 300, radius: 4, label: 'Netuno' },
+      { type: 'particle', x: 'xp', y: 'yp', color: '#8b7355', showTrail: true, trailLen: 200, radius: 2, label: 'Plutão' },
     ],
-    g0: { xvar: 'xt', yvar: 'yt' }, g1: { xvar: 't', yvar: 'rt' }, scale: 100, ox: .5, oy: .5
+    g0: { xvar: 'xt', yvar: 'yt' }, g1: { xvar: 't', yvar: 'rt' }, scale: 40, ox: .5, oy: .5
   },
   cargas: {
     model: `// Cargas Elétricas\nk = 1.0\nx1c = -2\ny1c = 0\nx2c = 2\ny2c = 0\n\nr1 = sqrt((x-x1c)^2 + (y-y1c)^2 + 0.02)\nr2 = sqrt((x-x2c)^2 + (y-y2c)^2 + 0.02)\n\nfx = k*(x-x1c)/r1^3 - k*(x-x2c)/r2^3\nfy = k*(y-y1c)/r1^3 - k*(y-y2c)/r2^3\n\nm = 0.5\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvx(t+dt) = vx(t) + (fx/m)*dt\nvy(t+dt) = vy(t) + (fy/m)*dt`,
@@ -138,10 +144,10 @@ export const EXAMPLES: Record<string, any> = {
   },
   queda_lua: {
     model: `// Queda Livre: Terra vs Lua\ng_terra = 9.8\ng_lua = 1.62\n\nyt(t+dt) = yt(t) + vyt*dt\nvyt(t+dt) = vyt(t) - g_terra*dt\n\nyl(t+dt) = yl(t) + vyl*dt\nvyl(t+dt) = vyl(t) - g_lua*dt`,
-    ic: { yt: 20, vyt: 0, yl: 20, vyl: 0 }, dt: 0.01, tmax: 5,
+    ic: { yt: 20, vyt: 0, yl: 20, vyl: 0 }, dt: 0.01, tmax: 4.880,
     objects: [
-      { type: 'particle', x: '-1', y: 'yt', color: '#4f9eff', showTrail: true, trailLen: 300, radius: 9, showVec: false, label: 'Terra' },
-      { type: 'particle', x: '1', y: 'yl', color: '#fbbf24', showTrail: true, trailLen: 300, radius: 9, showVec: false, label: 'Lua' },
+      { type: 'particle', x: '-3', y: 'yt', color: '#4f9eff', showTrail: true, trailLen: 300, radius: 9, showVec: false, label: 'Terra' },
+      { type: 'particle', x: '3', y: 'yl', color: '#fbbf24', showTrail: true, trailLen: 300, radius: 9, showVec: false, label: 'Lua' },
     ],
     g0: { xvar: 't', yvar: 'yt', yvar2: 'yl' }, g1: { xvar: 't', yvar: 'vyt', yvar2: 'vyl' }, scale: 12, ox: .5, oy: .1
   },
