@@ -481,12 +481,39 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
     vectorfield: `
       <div class="prop-section"><div class="prop-title">Campo Vetorial</div>
         ${row('Nome', 'name', obj.name)}
-        ${row('Cor', 'color', obj.color || '#4f9eff', 'color')}
         ${row('Fx(x,y,t)', 'fxExpr', obj.fxExpr || '-y')}
         ${row('Fy(x,y,t)', 'fyExpr', obj.fyExpr || 'x')}
-        ${row('Grade N', 'gridN', obj.gridN || 14, 'number')}
         ${row('Alcance', 'gridRange', obj.gridRange || 5, 'number')}
+      </div>
+      <div class="prop-section"><div class="prop-title">Eixo Z → Cor</div>
+        ${row('Fz(x,y,t)', 'fzExpr', obj.fzExpr || '')}
+        <div class="prop-row" style="font-size:10px;color:var(--txt3);flex-direction:column;align-items:flex-start;gap:3px">
+          <span>Se definido, a cor de cada ponto mapeia Fz:</span>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:2px">
+            <div style="width:60px;height:8px;border-radius:3px;background:linear-gradient(to right,#4488ff,#ffffff,#ff4444)"></div>
+            <span>negativo → zero → positivo</span>
+          </div>
+          <span style="margin-top:2px">Ex: <code>z</code>, <code>x*y</code>, <code>sin(x)</code></span>
+        </div>
+        ${obj.fzExpr ? '' : row('Cor base', 'color', obj.color || '#4f9eff', 'color')}
+      </div>
+      <div class="prop-section"><div class="prop-title">Modo de Visualização</div>
+        <div class="prop-row"><span class="prop-label">Modo</span>
+          <select class="prop-val" data-prop="vfMode"
+            onchange="window.__updateObjProp(${obj.id},this.getAttribute('data-prop'),this.value)">
+            <option value="arrows"${(obj.vfMode||'arrows')==='arrows' ? ' selected' : ''}>⊞ Vetores</option>
+            <option value="fieldlines"${obj.vfMode==='fieldlines' ? ' selected' : ''}>〰 Linhas de Campo</option>
+          </select>
+        </div>
+        ${(obj.vfMode||'arrows')==='arrows' ? `
+        ${row('Grade N', 'gridN', obj.gridN || 14, 'number')}
         ${row('Escala seta', 'arrowScale', obj.arrowScale || 0.4, 'number')}
+        ` : `
+        ${row('Nº sementes', 'fieldSeeds', obj.fieldSeeds || 16, 'number')}
+        ${row('Passos', 'fieldSteps', obj.fieldSteps || 120, 'number')}
+        ${row('Tamanho passo', 'fieldDs', obj.fieldDs || 0.08, 'number')}
+        ${row('Espessura linha', 'lineWidth', obj.lineWidth || 1.2, 'number')}
+        `}
       </div>`,
   };
 
@@ -498,10 +525,10 @@ export function updateObjProp(id: number, prop: string, value: any, anim: AnimRe
   const o = anim.objects.find((o: any) => o.id === id);
   if (!o) return;
 
-  const numProps = new Set(['radius', 'trailLen', 'vecScale', 'scale', 'lineWidth', 'fontSize', 'coils', 'rotation']);
+  const numProps = new Set(['radius', 'trailLen', 'vecScale', 'scale', 'lineWidth', 'fontSize', 'coils', 'rotation', 'fieldSeeds', 'fieldSteps', 'fieldDs']);
   const varOrNumProps = new Set(['pivotX', 'pivotY', 'L', 'x1', 'y1', 'x', 'y', 'vx', 'vy', 'r', 'w', 'h']);
   const boolProps = new Set(['showVec', 'showVecProj', 'showTrail', 'useImage', 'visible']);
-  const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'text', 'label', 'theta']);
+  const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'fzExpr', 'text', 'label', 'theta', 'vfMode']);
 
   if (numProps.has(prop)) {
     o[prop] = parseFloat(value) || 0;
@@ -523,4 +550,10 @@ export function updateObjProp(id: number, prop: string, value: any, anim: AnimRe
   }
 
   if (prop === 'x' || prop === 'y' || prop === 'theta') o._trail = [];
+  // Ao trocar modo do campo vetorial, re-renderiza painel para mostrar props corretas
+  if (prop === 'vfMode' || prop === 'fzExpr') {
+    const sim = (window as any).__sim;
+    const anim2 = (window as any).anim;
+    if (sim && anim2) renderObjProps(o, sim, anim2);
+  }
 }

@@ -368,39 +368,166 @@ export class AnimRenderer {
       o._rx = lx; o._ry = ly;
 
     } else if (o.type === 'vectorfield') {
-      const N = o.gridN || 14, R = o.gridRange || 5, arrowScale = o.arrowScale || 0.4;
+      const R = o.gridRange || 5;
       const fxStr = o.fxExpr || '-y', fyStr = o.fyExpr || 'x';
+      const fzStr: string | undefined = o.fzExpr && o.fzExpr.trim() !== '' ? o.fzExpr : undefined;
       const baseColor2 = o.color || '#4f9eff';
       let cr = 79, cg = 158, cb = 255;
       const hm = baseColor2.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
       if (hm) { cr = parseInt(hm[1], 16); cg = parseInt(hm[2], 16); cb = parseInt(hm[3], 16); }
-      let fxFn: Function, fyFn: Function;
+      let fxFn: Function, fyFn: Function, fzFn: Function | null = null;
       try { fxFn = new Function('x', 'y', 't', 'Math', `return ${fxStr.replace(/\^/g, '**')};`); } catch (e) { fxFn = () => 0; }
       try { fyFn = new Function('x', 'y', 't', 'Math', `return ${fyStr.replace(/\^/g, '**')};`); } catch (e) { fyFn = () => 0; }
-      const step = R * 2 / (N - 1);
-      const maxMag = (() => {
-        let m = 0;
-        for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
-          const xi = -R + i * step, yj = -R + j * step;
-          try { m = Math.max(m, Math.hypot(fxFn(xi, yj, state.t || 0, Math), fyFn(xi, yj, state.t || 0, Math))); } catch (e) { }
+      if (fzStr) { try { fzFn = new Function('x', 'y', 't', 'Math', `return ${fzStr.replace(/\^/g, '**')};`); } catch (e) { fzFn = null; } }
+      const T = state.t || 0;
+      const vfMode = o.vfMode || 'arrows'; // 'arrows' | 'fieldlines'
+
+      // ── Mapa de cor Fz: azul(neg) → branco(zero) → vermelho(pos) ────────
+      // Coleta min/max de Fz numa grade grosseira para normalizar
+      let fzMin = 0, fzMax = 0;
+      if (fzFn) {
+        const SN = 10, SR = R * 2 / (SN - 1);
+        for (let i = 0; i < SN; i++) for (let j = 0; j < SN; j++) {
+          try {
+            const v = fzFn(-R + i * SR, -R + j * SR, T, Math);
+            if (isFinite(v)) { fzMin = Math.min(fzMin, v); fzMax = Math.max(fzMax, v); }
+          } catch (_) {}
         }
-        return m || 1;
-      })();
-      for (let i = 0; i < N; i++) {
-        for (let j = 0; j < N; j++) {
-          const xi = -R + i * step, yj = -R + j * step;
+        // Simetria: usa o maior absoluto para escala centrada no zero
+        const fzAbs = Math.max(Math.abs(fzMin), Math.abs(fzMax)) || 1;
+        fzMin = -fzAbs; fzMax = fzAbs;
+      }
+
+      // Retorna rgba baseado em Fz ou na cor base+magnitude
+      const getColor = (x: number, y: number, norm: number, alpha: number): string => {
+        if (fzFn) {
+          let fz = 0;
+          try { fz = fzFn(x, y, T, Math); } catch (_) {}
+          // t ∈ [-1, 1]
+          const t2 = Math.max(-1, Math.min(1, fz / (fzMax || 1)));
+          let r2: number, g2: number, b2: number;
+          if (t2 >= 0) {
+            // zero→branco→vermelho
+            r2 = 255;
+            g2 = Math.round(255 * (1 - t2));
+            b2 = Math.round(255 * (1 - t2));
+          } else {
+            // zero→branco→azul
+            r2 = Math.round(255 * (1 + t2));
+            g2 = Math.round(255 * (1 + t2));
+            b2 = 255;
+          }
+          return `rgba(${r2},${g2},${b2},${(alpha * 0.9).toFixed(2)})`;
+        }
+        const br = Math.round(cr + (255 - cr) * norm * 0.35);
+        const bg2 = Math.round(cg + (255 - cg) * norm * 0.35);
+        const bb = Math.round(cb + (255 - cb) * norm * 0.35);
+        return `rgba(${br},${bg2},${bb},${alpha.toFixed(2)})`;
+      };
+
+      if (vfMode === 'fieldlines') {
+        // ── Linhas de campo: integração RK4 a partir de sementes ──────────
+        const seeds = o.fieldSeeds || 16;
+        const steps = o.fieldSteps || 120;
+        const ds    = (o.fieldDs || 0.08);
+        const alpha = 0.55;
+        const lw    = o.lineWidth || 1.2;
+
+        // Função de campo normalizado (para integração estável)
+        const field = (x: number, y: number): [number, number] => {
           let fx = 0, fy = 0;
-          try { fx = fxFn(xi, yj, state.t || 0, Math); fy = fyFn(xi, yj, state.t || 0, Math); } catch (e) { }
-          if (!isFinite(fx) || !isFinite(fy)) continue;
-          const mag = Math.hypot(fx, fy), norm = mag / maxMag;
-          const br = Math.round(cr + (255 - cr) * norm * 0.35), bg2 = Math.round(cg + (255 - cg) * norm * 0.35), bb = Math.round(cb + (255 - cb) * norm * 0.35);
-          const alpha = 0.22 + norm * 0.68;
-          const len = norm * step * arrowScale * this.scale;
-          if (len < 1) continue;
-          const [apx, apy] = this.toPx(xi, yj);
-          const angle = Math.atan2(-fy, fx);
-          const aex = apx + len * Math.cos(angle), aey = apy + len * Math.sin(angle);
-          this._arrow(ctx, apx, apy, aex, aey, `rgba(${br},${bg2},${bb},${alpha.toFixed(2)})`, 0.9 + norm * 0.6);
+          try { fx = fxFn(x, y, T, Math); fy = fyFn(x, y, T, Math); } catch (_) {}
+          const mag = Math.hypot(fx, fy) || 1e-10;
+          return [fx / mag, fy / mag];
+        };
+
+        // Passo RK4
+        const rk4 = (x: number, y: number, h: number): [number, number] => {
+          const [k1x, k1y] = field(x, y);
+          const [k2x, k2y] = field(x + h * k1x / 2, y + h * k1y / 2);
+          const [k3x, k3y] = field(x + h * k2x / 2, y + h * k2y / 2);
+          const [k4x, k4y] = field(x + h * k3x, y + h * k3y);
+          return [x + h * (k1x + 2*k2x + 2*k3x + k4x) / 6,
+                  y + h * (k1y + 2*k2y + 2*k3y + k4y) / 6];
+        };
+
+        // Sementes distribuídas em círculo ao redor da origem do campo
+        const ox2 = typeof o.x === 'number' ? o.x : 0;
+        const oy2 = typeof o.y === 'number' ? o.y : 0;
+        for (let s = 0; s < seeds; s++) {
+          const angle0 = (2 * Math.PI * s) / seeds;
+          const seedR  = R * 0.15;
+          let cx2 = ox2 + seedR * Math.cos(angle0);
+          let cy2 = oy2 + seedR * Math.sin(angle0);
+
+          ctx.beginPath();
+          let started = false;
+          for (let step2 = 0; step2 < steps; step2++) {
+            // Cor varia com a distância à origem para dar profundidade
+            const dist = Math.hypot(cx2 - ox2, cy2 - oy2);
+            const norm = Math.min(dist / R, 1);
+            const a2 = alpha * (0.3 + norm * 0.7);
+            ctx.strokeStyle = getColor(cx2, cy2, norm, a2);
+            ctx.lineWidth = lw;
+
+            const [px, py] = this.toPx(cx2, cy2);
+            if (!started) { ctx.moveTo(px, py); started = true; }
+            else ctx.lineTo(px, py);
+
+            // Sair do campo se ultrapassar o alcance
+            if (Math.abs(cx2 - ox2) > R * 1.4 || Math.abs(cy2 - oy2) > R * 1.4) break;
+
+            const [nx2, ny2] = rk4(cx2, cy2, ds);
+            // Parar se travar (ponto fixo)
+            if (Math.hypot(nx2 - cx2, ny2 - cy2) < 1e-8) break;
+            cx2 = nx2; cy2 = ny2;
+          }
+          ctx.stroke();
+
+          // Seta indicadora de sentido no meio da linha
+          const midStep = Math.floor(steps * 0.35);
+          let mx = ox2 + seedR * Math.cos(angle0), my = oy2 + seedR * Math.sin(angle0);
+          for (let k = 0; k < midStep; k++) {
+            const [nx2, ny2] = rk4(mx, my, ds);
+            if (Math.abs(nx2 - ox2) > R * 1.4) break;
+            mx = nx2; my = ny2;
+          }
+          const [mx2, my2] = rk4(mx, my, ds * 3);
+          const [apx, apy] = this.toPx(mx, my);
+          const [aex2, aey2] = this.toPx(mx2, my2);
+          const dist2 = Math.hypot(mx - ox2, my - oy2);
+          const arrowAlpha = (0.4 + Math.min(dist2 / R, 1) * 0.5).toFixed(2);
+          this._arrow(ctx, apx, apy, aex2, aey2, getColor(mx, my, Math.min(dist2/R,1), parseFloat(arrowAlpha)), lw * 1.2);
+        }
+
+      } else {
+        // ── Vetores (modo padrão) ─────────────────────────────────────────
+        const N = o.gridN || 14;
+        const arrowScale = o.arrowScale || 0.4;
+        const step = R * 2 / (N - 1);
+        const maxMag = (() => {
+          let m = 0;
+          for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+            const xi = -R + i * step, yj = -R + j * step;
+            try { m = Math.max(m, Math.hypot(fxFn(xi, yj, T, Math), fyFn(xi, yj, T, Math))); } catch (_) {}
+          }
+          return m || 1;
+        })();
+        for (let i = 0; i < N; i++) {
+          for (let j = 0; j < N; j++) {
+            const xi = -R + i * step, yj = -R + j * step;
+            let fx = 0, fy = 0;
+            try { fx = fxFn(xi, yj, T, Math); fy = fyFn(xi, yj, T, Math); } catch (_) {}
+            if (!isFinite(fx) || !isFinite(fy)) continue;
+            const mag = Math.hypot(fx, fy), norm = mag / maxMag;
+            const alpha2 = 0.22 + norm * 0.68;
+            const len = norm * step * arrowScale * this.scale;
+            if (len < 1) continue;
+            const [apx, apy] = this.toPx(xi, yj);
+            const angle = Math.atan2(-fy, fx);
+            const aex = apx + len * Math.cos(angle), aey = apy + len * Math.sin(angle);
+            this._arrow(ctx, apx, apy, aex, aey, getColor(xi, yj, norm, alpha2), 0.9 + norm * 0.6);
+          }
         }
       }
       o._rx = 0; o._ry = 0;
