@@ -369,9 +369,9 @@ export class AnimRenderer {
       const isVert = o.vertical === true || o.vertical === 'true';
       const pivX = (this._evalProp(o.pivotX !== undefined ? o.pivotX : o.x1, state) || 0) + vox;
       const pivY = (this._evalProp(o.pivotY !== undefined ? o.pivotY : o.y1, state) || 0) + voy;
-      const blockPos = g('x');
+      const blockPos = this._evalProp(isVert ? o.y : o.x, state);
       let bx: number, by: number;
-      if (isVert) { bx = pivX; by = blockPos + voy; } else { bx = blockPos + vox; by = pivY; }
+      if (isVert) { bx = pivX; by = blockPos; } else { bx = blockPos; by = pivY; }
       o._rx = bx; o._ry = by;
       const [ppx2, ppy2] = this.toPx(pivX, pivY);
       const [bpx2, bpy2] = this.toPx(bx, by);
