@@ -5,7 +5,8 @@ import { makeObj } from './objects';
 import { toast, closeMenus } from './uiHelpers';
 import { getEditorText, setEditorText, applyModel } from './modelEditor';
 import { getICValues, rebuildICPanel } from './icPanel';
-import { rebuildICPanel as _rebuildIC } from './icPanel';
+import { rebuildVarList } from './modelEditor';
+
 import { applyTheme } from './theme';
 import { getPrec, setPrec } from './formatVal';
 import { getLocale, setLocale, type Locale } from './i18n';
