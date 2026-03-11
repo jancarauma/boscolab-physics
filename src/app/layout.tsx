@@ -15,7 +15,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
-        <Script src="/boscolab-app.js" strategy="afterInteractive" />
       </body>
     </html>
   );

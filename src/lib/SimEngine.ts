@@ -11,6 +11,7 @@ export class SimEngine {
   history: any[]; maxHist: number;
   running: boolean; status: string;
   stepsPerFrame: number;
+  _frameAcc: number;
   _raf: number | null;
   _evalFn: Function | null; _derivFn: Function | null; _applyFn: Function | null;
   fps: number; _fc: number; _ft: number; _lt: number;
@@ -26,6 +27,7 @@ export class SimEngine {
     this.history = []; this.maxHist = 150000;
     this.running = false; this.status = 'stopped';
     this.stepsPerFrame = 1;
+    this._frameAcc = 0;
     this._raf = null;
     this._evalFn = null; this._derivFn = null; this._applyFn = null;
     this.fps = 0; this._fc = 0; this._ft = 0; this._lt = 0;

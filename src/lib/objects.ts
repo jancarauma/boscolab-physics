@@ -7,6 +7,7 @@ export const OBJECT_COLORS = ['#4f9eff', '#f97316', '#34d399', '#a78bfa', '#fb71
 
 let _objId = 1;
 export const resetObjId = () => { _objId = 1; };
+export const getObjId = () => _objId;
 
 export function makeObj(type: string, props: Record<string, any> = {}) {
   const id = _objId++;

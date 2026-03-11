@@ -405,7 +405,7 @@ button,select,input{font-family:var(--ui)}
 .mdi-taskbtn{background:rgba(17,24,39,.92);border:1px solid var(--border2);border-radius:5px;color:var(--txt2);font-size:11px;padding:4px 10px;cursor:pointer;pointer-events:all;display:flex;align-items:center;gap:5px;font-family:var(--ui);transition:all .12s;}
 .mdi-taskbtn:hover{border-color:var(--acc);color:var(--txt)}
 .mdi-taskdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.mdi-toggle-btn{}
+.mdi-toggle-btn{display:inline-flex}
 .mdi-hidden{display:none!important}
 #mdi-model #editor-wrap{flex:1;overflow-y:auto}
 #mdi-model #varlist{max-height:100px}
