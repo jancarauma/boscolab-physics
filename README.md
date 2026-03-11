@@ -21,6 +21,7 @@ BOSCOLAB is a browser-based physics simulation environment designed for students
 - **20+ built-in examples** across mechanics, oscillations, electromagnetism, and complex systems
 - **File save/load** via `.modx` format (XML)
 - **Dark and light themes**
+- **Multiple languages** (on progress)
 - **Keyboard shortcuts** for simulation control
 
 ---
