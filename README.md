@@ -4,6 +4,9 @@
 
 BOSCOLAB is a browser-based physics simulation environment designed for students, educators, and researchers. It allows users to define dynamic systems through differential and iterative equations, visualize motion in real time, and analyze results through interactive graphs — all without installing any software.
 
+- Live: [boscolab-physics.vercel.app](https://boscolab-physics.vercel.app)
+- Blog Post: [carauma.com/en/simulador-de-fisica-tipo-modellus](https://www.carauma.com/en/simulador-de-fisica-tipo-modellus)
+
 ![BOSCOLAB screenshot](screenshot.png)
 
 ---
