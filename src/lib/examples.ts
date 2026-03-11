@@ -6,8 +6,8 @@ export const EXAMPLES: Record<string, any> = {
     g0: { xvar: 't', yvar: 'y' }, g1: { xvar: 't', yvar: 'vy' }, scale: 8, ox: .5, oy: .1
   },
   projetil: {
-    model: `// Projétil Simples\ng = 9.8\n\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvy(t+dt) = vy(t) - g*dt`,
-    ic: { x: 0, y: 0, vx: 15, vy: 20 }, dt: 0.01, tmax: 5,
+    model: `// Projétil Simples\ng = 9.8\n\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvx(t+dt) = vx(t)\nvy(t+dt) = vy(t) - g*dt`,
+    ic: { x: 0, y: 0, vx: 10, vy: 15 }, dt: 0.01, tmax: 5,
     objects: [{ type: 'particle', x: 'x', y: 'y', color: '#f97316', showTrail: true, showVec: true, vx: 'vx', vy: 'vy', vecScale: 0.28, vecColor: '#34d399', radius: 8, label: '' }],
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'vy', yvar2: 'vx' }, scale: 18, ox: .05, oy: .55
   },
