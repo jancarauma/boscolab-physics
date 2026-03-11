@@ -193,8 +193,9 @@ export default function Home() {
       anim.objects = ex.objects.map((o: any) => makeObj(o.type, o));
       anim.clearTrails();
       anim.scale = ex.scale || 30;
-      anim.ox = (anim._w || 500) * (ex.ox || 0.5);
-      anim.oy = (anim._h || 400) * (ex.oy || 0.5);
+      //anim.ox = (anim._w / 2 || 500) * (ex.ox / 2 || 0.5);
+      //anim.oy = (anim._h / 2 || 400) * (ex.oy / 2 || 0.5);
+      anim.ox = anim._w / 2; anim.oy = anim._h / 2;
       if (ex.g0) { graphs[0].xvar = ex.g0.xvar || 't'; graphs[0].yvar = ex.g0.yvar || ''; graphs[0].yvar2 = ex.g0.yvar2 || ''; }
       if (ex.g1) { graphs[1].xvar = ex.g1.xvar || 't'; graphs[1].yvar = ex.g1.yvar || ''; graphs[1].yvar2 = ex.g1.yvar2 || ''; }
       graphs.forEach(g => g.clear());
@@ -202,7 +203,7 @@ export default function Home() {
       rebuildGraphSelects(0, graphs, sim);
       rebuildVarList(sim);
       renderObjList(anim);
-      clearErr();
+      clearErr();      
       toast('✓ ' + ex.model.split('\n')[0].replace('//', '').trim());
     }
 
