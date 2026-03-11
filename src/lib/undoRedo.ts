@@ -41,6 +41,7 @@ export function undoInit(anim: AnimRenderer): void {
   _undoStack = [];
   _redoStack = [];
   _lastSnap = snapshot(anim);
+  _updateButtons();
 }
 
 // Chame após qualquer operação que mude objetos
@@ -70,9 +71,9 @@ export function undoUndo(anim: AnimRenderer, onRender: () => void): void {
   const prev = _undoStack.pop()!;
   _lastSnap = prev;
   restore(anim, prev);
-  onRender();
   _updateButtons();
   toast('↩ Desfeito');
+  onRender();
 }
 
 export function undoRedo(anim: AnimRenderer, onRender: () => void): void {
@@ -81,9 +82,9 @@ export function undoRedo(anim: AnimRenderer, onRender: () => void): void {
   const next = _redoStack.pop()!;
   _lastSnap = next;
   restore(anim, next);
-  onRender();
   _updateButtons();
   toast('↪ Refeito');
+  onRender();
 }
 
 export function undoCanUndo(): boolean { return _undoStack.length > 0; }
@@ -92,6 +93,12 @@ export function undoCanRedo(): boolean { return _redoStack.length > 0; }
 function _updateButtons(): void {
   const btnUndo = document.getElementById('btn-undo') as HTMLButtonElement | null;
   const btnRedo = document.getElementById('btn-redo') as HTMLButtonElement | null;
-  if (btnUndo) btnUndo.disabled = _undoStack.length === 0;
-  if (btnRedo) btnRedo.disabled = _redoStack.length === 0;
+  
+  if (btnUndo) {
+    btnUndo.disabled = _undoStack.length === 0;
+  }
+  
+  if (btnRedo) {
+    btnRedo.disabled = _redoStack.length === 0;
+  }
 }

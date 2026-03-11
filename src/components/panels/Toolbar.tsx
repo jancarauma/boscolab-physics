@@ -10,8 +10,8 @@ export default function Toolbar() {
       <button className="btn" id="btn-back" onClick={() => (window as any).simBack?.()}>◀|</button>
       <button className="btn" id="btn-step" onClick={() => (window as any).simStep?.()}>|▶</button>
       <div className="tbsep" />
-      <button className="btn" id="btn-undo" onClick={() => (window as any).undoUndo?.()} title="Desfazer (Ctrl+Z)" disabled>↩</button>
-      <button className="btn" id="btn-redo" onClick={() => (window as any).undoRedo?.()} title="Refazer (Ctrl+Y)" disabled>↪</button>
+      <button className="btn" id="btn-undo" onClick={() => (window as any).undoUndo?.()} title="Desfazer (Ctrl+Z)">↩</button>
+      <button className="btn" id="btn-redo" onClick={() => (window as any).undoRedo?.()} title="Refazer (Ctrl+Y)">↪</button>
       <div className="tbsep" />
       <span className="tblabel">Método</span>
       <select className="tbsel" id="sel-method" >

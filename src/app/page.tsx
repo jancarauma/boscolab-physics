@@ -61,13 +61,13 @@ export default function Home() {
     Object.defineProperty(w, '_objId', { get: () => getObjId(), configurable: true });
 
     // Inline HTML callbacks
-    w.__updateObjProp    = (id: number, prop: string, value: any) => { undoPush(anim); updateObjProp(id, prop, value, anim); undoSchedule(anim); };
+    w.__updateObjProp    = (id: number, prop: string, value: any) => { updateObjProp(id, prop, value, anim); undoPush(anim); };
     w.__selectObj        = (id: number) => doSelectObj(id);
-    w.__toggleObjVis     = (id: number) => { toggleObjVis(id, anim); renderObjList(anim); };
-    w.__deleteObj        = (id: number) => deleteObj(id, anim, sim);
-    w.__moveObjLayer     = (id: number, dir: number) => moveObjLayer(id, dir, anim);
+    w.__toggleObjVis     = (id: number) => { undoPush(anim); toggleObjVis(id, anim); renderObjList(anim); };
+    w.__deleteObj        = (id: number) => { undoPush(anim); deleteObj(id, anim, sim); undoPush(anim); };
+    w.__moveObjLayer     = (id: number, dir: number) => { undoPush(anim); moveObjLayer(id, dir, anim); undoPush(anim); };
     w.__loadObjImage     = (id: number) => loadObjImage(id, anim, sim);
-    w.__resetObjOffset   = (id: number) => resetObjOffset(id, anim);
+    w.__resetObjOffset   = (id: number) => { undoPush(anim); resetObjOffset(id, anim); undoPush(anim); };
     w.__togglePivotField = (base: string, mode: string) => togglePivotField(base, mode);
 
     // Public API on window
@@ -88,8 +88,8 @@ export default function Home() {
 
     w.addObject        = (type: string) => addObject(type, sim, getObjId);
     w.confirmAddObject = () => { confirmAddObject(anim, sim); undoPush(anim); };
-    w.deleteSelectedObj = () => { undoPush(anim); deleteSelectedObj(anim, sim); undoPush(anim); };
-    w.clearAllObjects  = () => clearAllObjects(anim, sim);
+    w.deleteSelectedObj = () => { deleteSelectedObj(anim, sim); undoPush(anim); };
+    w.clearAllObjects  = () => { clearAllObjects(anim, sim); undoPush(anim); };
     w.renderObjList    = () => renderObjList(anim);
     w.renderObjProps   = (obj: any) => renderObjProps(obj, sim, anim);
     w.selectObj        = (id: number) => doSelectObj(id);
