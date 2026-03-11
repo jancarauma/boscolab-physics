@@ -6,6 +6,7 @@ export default function AboutModal() {
     <div id="about-modal-overlay">
       <div id="about-modal">
         <div className="about-hero">
+          <div className="about-logo"><img src="/favicon.ico" alt="BOSCO LAB" /></div>
           <div className="about-logo">BOSCO<a style={{ color: 'orange' }}>LAB</a></div>
           <div className="about-sub">Simulador de Fisica Computacional Interativo</div>
         </div>
