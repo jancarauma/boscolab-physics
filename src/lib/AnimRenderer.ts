@@ -444,8 +444,8 @@ export class AnimRenderer {
 
     } else if (o.type === 'vectorfield') {
       const vfx = (g('x') || 0) + vox, vfy = (g('y') || 0) + voy;
-      const vfw = g('w') || g('width') || 10, vfh = g('h') || g('height') || 10;
-      const R = Math.max(vfw, vfh) / 2;
+      const R = o.gridRange || 5;
+      const vfw = R * 2, vfh = R * 2;
       const fxStr = o.fxExpr || '-y', fyStr = o.fyExpr || 'x';
       const fzStr: string | undefined = o.fzExpr && o.fzExpr.trim() !== '' ? o.fzExpr : undefined;
       const baseColor2 = o.color || '#4f9eff';

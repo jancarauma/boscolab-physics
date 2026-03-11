@@ -14,7 +14,10 @@ export const EXAMPLES: Record<string, any> = {
   projetil_drag: {
     model: `// Projétil com Arrasto\ng = 9.8\nk = 0.08\nm = 1.0\n\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvx(t+dt) = vx(t) + ax*dt\nvy(t+dt) = vy(t) + ay*dt\n\nv = sqrt(vx^2 + vy^2)\nax = -k/m * vx * v\nay = -g - k/m * vy * v`,
     ic: { x: 0, y: 0, vx: 20, vy: 25 }, dt: 0.005, tmax: 6,
-    objects: [{ type: 'particle', x: 'x', y: 'y', color: '#fb7185', showTrail: true, showVec: false, radius: 8 }],
+    objects: [
+      { type: 'vectorfield', fxExpr: '-0.8', fyExpr: '-0.3', gridN: 14, gridRange: 30, arrowScale: 0.3, color: '#94a3b8' },
+      { type: 'particle', x: 'x', y: 'y', color: '#fb7185', showTrail: true, showVec: false, radius: 8 }
+    ],
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'vy' }, scale: 16, ox: .03, oy: .55
   },
   pendulo: {
