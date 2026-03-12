@@ -47,13 +47,18 @@ export class GraphRenderer {
     const wrap = cv.parentElement!; const W = wrap.clientWidth, H = wrap.clientHeight;
     cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
     ctx.scale(dpr, dpr);
+    const theme = getComputedStyle(document.documentElement);
+    const shellBg = theme.getPropertyValue('--graph-shell-bg').trim() || '#0b0f17';
+    const plotBg = theme.getPropertyValue('--graph-plot-bg').trim() || '#080c13';
+    const gridColor = theme.getPropertyValue('--graph-grid').trim() || 'rgba(30,45,66,.6)';
+    const mutedSoft = theme.getPropertyValue('--graph-muted-soft').trim() || 'rgba(71,85,105,.5)';
     const pad = { t: 22, r: 16, b: 38, l: 52 };
     const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
-    ctx.fillStyle = '#0b0f17'; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = '#080c13'; ctx.fillRect(pad.l, pad.t, pw, ph);
+    ctx.fillStyle = shellBg; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = plotBg; ctx.fillRect(pad.l, pad.t, pw, ph);
     const nodata = this.data.length < 2;
     if (nodata) {
-      ctx.fillStyle = 'rgba(71,85,105,.5)'; ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'center';
+      ctx.fillStyle = mutedSoft; ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'center';
       ctx.fillText(`${this.yvar || '?'} vs ${this.xvar} — simulação parada`, pad.l + pw / 2, pad.t + ph / 2);
       this._labels(ctx, pad, pw, ph, W, H, 0, 1, 0, 1); return;
     }
@@ -63,7 +68,7 @@ export class GraphRenderer {
     const xp = xr * .02, yp = yr * .08;
     const tX = (x: number) => pad.l + ((x - (xmin - xp)) / ((xr + 2 * xp))) * pw;
     const tY = (y: number) => pad.t + ph - ((y - (ymin - yp)) / ((yr + 2 * yp))) * ph;
-    ctx.strokeStyle = 'rgba(30,45,66,.6)'; ctx.lineWidth = .5;
+    ctx.strokeStyle = gridColor; ctx.lineWidth = .5;
     for (let i = 0; i <= 5; i++) {
       const gx = pad.l + (i / 5) * pw; ctx.beginPath(); ctx.moveTo(gx, pad.t); ctx.lineTo(gx, pad.t + ph); ctx.stroke();
       const gy = pad.t + (i / 5) * ph; ctx.beginPath(); ctx.moveTo(pad.l, gy); ctx.lineTo(pad.l + pw, gy); ctx.stroke();
@@ -107,7 +112,10 @@ export class GraphRenderer {
   }
 
   _labels(ctx: CanvasRenderingContext2D, pad: any, pw: number, ph: number, W: number, H: number, xmin: number, xmax: number, ymin: number, ymax: number) {
-    ctx.fillStyle = 'rgba(71,85,105,.9)'; ctx.font = '10px JetBrains Mono,monospace';
+    const theme = getComputedStyle(document.documentElement);
+    const muted = theme.getPropertyValue('--graph-muted').trim() || 'rgba(71,85,105,.9)';
+    const accent = theme.getPropertyValue('--graph-accent').trim() || 'rgba(79,158,255,.7)';
+    ctx.fillStyle = muted; ctx.font = '10px JetBrains Mono,monospace';
     const xr = xmax - xmin || 1, yr = ymax - ymin || 1;
     const xp = xr * .02, yp = yr * .08;
     const fmt = typeof (window as any).formatVal === 'function' ? (window as any).formatVal : (v: number) => v.toFixed(2);
@@ -121,7 +129,7 @@ export class GraphRenderer {
       const v = (ymin - yp) + ((yr + 2 * yp) * i / 5);
       ctx.fillText(fmt(v), pad.l - 4, pad.t + ph - (i / 5) * ph + 3);
     }
-    ctx.fillStyle = 'rgba(79,158,255,.7)'; ctx.font = '11px DM Sans,sans-serif';
+    ctx.fillStyle = accent; ctx.font = '11px DM Sans,sans-serif';
     ctx.textAlign = 'center'; ctx.fillText(this.xvar, pad.l + pw / 2, H - 4);
     ctx.save(); ctx.translate(12, pad.t + ph / 2); ctx.rotate(-Math.PI / 2);
     ctx.fillText(this.yvar + (this.yvar2 ? ', ' + this.yvar2 : ''), 0, 0); ctx.restore();

@@ -161,10 +161,11 @@ export class AnimRenderer {
   }
 
   _drawAxes(ctx: CanvasRenderingContext2D, w: number, h: number) {
+    const isLight = document.documentElement.classList.contains('light');
     ctx.strokeStyle = 'rgba(79,158,255,.4)'; ctx.lineWidth = 1.5;
     if (this.ox > 0 && this.ox < w) { ctx.beginPath(); ctx.moveTo(this.ox, 0); ctx.lineTo(this.ox, h); ctx.stroke(); }
     if (this.oy > 0 && this.oy < h) { ctx.beginPath(); ctx.moveTo(0, this.oy); ctx.lineTo(w, this.oy); ctx.stroke(); }
-    ctx.fillStyle = 'rgba(71,85,105,.9)'; ctx.font = '9px JetBrains Mono,monospace'; ctx.textAlign = 'center';
+    ctx.fillStyle = isLight ? 'rgba(51,65,85,.88)' : 'rgba(71,85,105,.9)'; ctx.font = '9px JetBrains Mono,monospace'; ctx.textAlign = 'center';
     const s = this.scale; const every = Math.max(1, Math.round(50 / s));
     for (let i = Math.floor((-this.ox) / s); i < (w - this.ox) / s; i++) {
       if (i === 0 || i % every !== 0) continue;
@@ -335,7 +336,11 @@ export class AnimRenderer {
       } else { ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill(); }
       ctx.restore();
       this._drawSelectionRing(ctx, px, py, r, sel, hov);
-      if (o.label) { ctx.fillStyle = 'rgba(226,232,240,.85)'; ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(o.label, px + r + 4, py - 4); }
+      if (o.label) {
+        const isLight = document.documentElement.classList.contains('light');
+        ctx.fillStyle = isLight ? 'rgba(26,34,54,.9)' : 'rgba(226,232,240,.85)';
+        ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(o.label, px + r + 4, py - 4);
+      }
 
     } else if (o.type === 'pendulum') {
       const theta = g('theta');

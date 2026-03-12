@@ -6,6 +6,9 @@
   --border:#1e2d42;--border2:#2a3a56;
   --acc:#4f9eff;--acc2:#34d399;--acc3:#f97316;--acc4:#a78bfa;--acc5:#fb7185;
   --txt:#e2e8f0;--txt2:#94a3b8;--txt3:#475569;
+  --overlay-bg:rgba(17,24,39,.85);--overlay-bg-strong:rgba(17,24,39,.8);
+  --graph-shell-bg:#0b0f17;--graph-plot-bg:#080c13;--graph-grid:rgba(30,45,66,.6);
+  --graph-muted:rgba(71,85,105,.9);--graph-muted-soft:rgba(71,85,105,.5);--graph-accent:rgba(79,158,255,.7);
   --mono:'JetBrains Mono',monospace;--ui:'DM Sans',sans-serif;
   --canvas-bg:#080c13;
 }
@@ -13,7 +16,10 @@
   --bg:#f1f5fb;--panel:#ffffff;--panel2:#e8edf5;--panel3:#d8e1ef;
   --border:#c8d3e6;--border2:#b0bfd8;
   --acc:#2176d9;--acc2:#16a068;--acc3:#d95f00;--acc4:#7c4de8;--acc5:#d93060;
-  --txt:#1a2236;--txt2:#4a5a7a;--txt3:#8a9ab8;
+  --txt:#1a2236;--txt2:#334155;--txt3:#52627d;
+  --overlay-bg:rgba(255,255,255,.92);--overlay-bg-strong:rgba(255,255,255,.9);
+  --graph-shell-bg:#edf3fb;--graph-plot-bg:#ffffff;--graph-grid:rgba(148,163,184,.45);
+  --graph-muted:rgba(51,65,85,.88);--graph-muted-soft:rgba(71,85,105,.62);--graph-accent:rgba(33,118,217,.78);
   --canvas-bg:#f8faff;
 }
 #theme-btn{
@@ -163,9 +169,9 @@ button,select,input{font-family:var(--ui)}
 #anim-canvas.crosshair{cursor:crosshair}
 #anim-overlay{position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:4px;z-index:5;pointer-events:none}
 #anim-overlay>*{pointer-events:all}
-.ov-btn{background:rgba(17,24,39,.85);border:1px solid var(--border2);border-radius:4px;color:var(--txt2);padding:4px 8px;font-size:11px;cursor:pointer;backdrop-filter:blur(4px);white-space:nowrap;font-weight:500}
+.ov-btn{background:var(--overlay-bg);border:1px solid var(--border2);border-radius:4px;color:var(--txt2);padding:4px 8px;font-size:11px;cursor:pointer;backdrop-filter:blur(4px);white-space:nowrap;font-weight:500;box-shadow:0 4px 18px rgba(15,23,42,.08)}
 .ov-btn:hover{border-color:var(--acc);color:var(--txt)}
-#coord-disp{position:absolute;bottom:6px;left:8px;background:rgba(17,24,39,.8);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-family:var(--mono);font-size:10px;color:var(--txt3);pointer-events:none;backdrop-filter:blur(4px)}
+#coord-disp{position:absolute;bottom:6px;left:8px;background:var(--overlay-bg-strong);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-family:var(--mono);font-size:10px;color:var(--txt3);pointer-events:none;backdrop-filter:blur(4px)}
 
 /* ─── OBJECTS SIDEBAR ─── */
 #obj-sidebar{width:220px;border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;min-height:0;overflow:hidden}
