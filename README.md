@@ -6,6 +6,7 @@ BOSCOLAB is a browser-based physics simulation environment designed for students
 
 - Live: [boscolab-physics.vercel.app](https://boscolab-physics.vercel.app)
 - Blog Post: [carauma.com/en/simulador-de-fisica-tipo-modellus](https://www.carauma.com/en/simulador-de-fisica-tipo-modellus)
+- Supported languages: ptBR Português | en English | es Español | 简体中文 (zh)
 
 ![BOSCOLAB screenshot](screenshot.png)
 
