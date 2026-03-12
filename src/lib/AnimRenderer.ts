@@ -551,14 +551,14 @@ export class AnimRenderer {
       };
 
       if (vfMode === 'fieldlines') {
-        // ── Linhas de campo: integração RK4 a partir de sementes ──────────
-        const seeds = o.fieldSeeds || 16;
-        const steps = o.fieldSteps || 120;
-        const ds    = (o.fieldDs || 0.08);
-        const alpha = 0.55;
-        const lw    = o.lineWidth || 1.2;
+        // ── Linhas de campo: grade uniforme + integração RK4 bidirecional ──
+        const numSeeds  = o.fieldSeeds || 16;
+        const steps     = o.fieldSteps || 300;
+        const ds        = o.fieldDs    || 0.04;
+        const lineAlpha = 0.85;
+        const lw        = o.lineWidth  || 1.5;
 
-        // Função de campo normalizado (para integração estável)
+        // Campo normalizado (só direção, integração estável)
         const field = (x: number, y: number): [number, number] => {
           let fx = 0, fy = 0;
           try { fx = fxFn(x, y, T, Math); fy = fyFn(x, y, T, Math); } catch (_) {}
@@ -566,63 +566,78 @@ export class AnimRenderer {
           return [fx / mag, fy / mag];
         };
 
-        // Passo RK4
-        const rk4 = (x: number, y: number, h: number): [number, number] => {
+        const rk4Step = (x: number, y: number, h: number): [number, number] => {
           const [k1x, k1y] = field(x, y);
           const [k2x, k2y] = field(x + h * k1x / 2, y + h * k1y / 2);
           const [k3x, k3y] = field(x + h * k2x / 2, y + h * k2y / 2);
           const [k4x, k4y] = field(x + h * k3x, y + h * k3y);
-          return [x + h * (k1x + 2*k2x + 2*k3x + k4x) / 6,
-                  y + h * (k1y + 2*k2y + 2*k3y + k4y) / 6];
+          return [
+            x + h * (k1x + 2 * k2x + 2 * k3x + k4x) / 6,
+            y + h * (k1y + 2 * k2y + 2 * k3y + k4y) / 6,
+          ];
         };
 
-        // Sementes distribuídas em círculo ao redor da origem do campo
-        const ox2 = typeof o.x === 'number' ? o.x : 0;
-        const oy2 = typeof o.y === 'number' ? o.y : 0;
-        for (let s = 0; s < seeds; s++) {
-          const angle0 = (2 * Math.PI * s) / seeds;
-          const seedR  = R * 0.15;
-          let cx2 = ox2 + seedR * Math.cos(angle0);
-          let cy2 = oy2 + seedR * Math.sin(angle0);
+        // Integração em uma direção; limites iguais ao domínio do modo setas
+        const traceDir = (sx: number, sy: number, dir: number): [number, number][] => {
+          const pts: [number, number][] = [[sx, sy]];
+          let cx2 = sx, cy2 = sy;
+          for (let i = 0; i < steps; i++) {
+            const [nx, ny] = rk4Step(cx2, cy2, ds * dir);
+            if (Math.abs(nx) > R * 1.02 || Math.abs(ny) > R * 1.02) break;
+            if (Math.hypot(nx - cx2, ny - cy2) < 1e-9) break; // ponto fixo
+            pts.push([nx, ny]);
+            cx2 = nx; cy2 = ny;
+          }
+          return pts;
+        };
+
+        // ── Grade uniforme de sementes sobre [-R, R]² ────────────────────
+        // Mesma abordagem do modo setas: cobre todo o domínio linearmente.
+        // numSeeds é interpretado como n×n (ex: 16 → 4×4, 25 → 5×5).
+        const n = Math.max(2, Math.round(Math.sqrt(numSeeds)));
+        const margin = R * 0.06;
+        const seedPoints: [number, number][] = [];
+        for (let i = 0; i < n; i++) {
+          for (let j = 0; j < n; j++) {
+            const sx = -R + margin + (2 * (R - margin) * i) / (n - 1);
+            const sy = -R + margin + (2 * (R - margin) * j) / (n - 1);
+            seedPoints.push([sx, sy]);
+          }
+        }
+
+        for (const [sx, sy] of seedPoints) {
+          const fwdPts = traceDir(sx, sy, +1);
+          const bwdPts = traceDir(sx, sy, -1);
+          // Linha completa: segmento traseiro invertido + segmento frontal
+          const allPts = [...bwdPts.slice().reverse(), ...fwdPts.slice(1)];
+          if (allPts.length < 2) continue;
+
+          // Cor calculada no ponto da semente (estável, não muda por passo)
+          const seedNorm  = Math.min(Math.hypot(sx, sy) / R, 1);
+          const lineColor = getColor(sx, sy, seedNorm, lineAlpha);
 
           ctx.beginPath();
-          let started = false;
-          for (let step2 = 0; step2 < steps; step2++) {
-            // Cor varia com a distância à origem para dar profundidade
-            const dist = Math.hypot(cx2 - ox2, cy2 - oy2);
-            const norm = Math.min(dist / R, 1);
-            const a2 = alpha * (0.3 + norm * 0.7);
-            ctx.strokeStyle = getColor(cx2, cy2, norm, a2);
-            ctx.lineWidth = lw;
-
-            const [px, py] = this.toPx(cx2, cy2);
-            if (!started) { ctx.moveTo(px, py); started = true; }
-            else ctx.lineTo(px, py);
-
-            // Sair do campo se ultrapassar o alcance
-            if (Math.abs(cx2 - ox2) > R * 1.4 || Math.abs(cy2 - oy2) > R * 1.4) break;
-
-            const [nx2, ny2] = rk4(cx2, cy2, ds);
-            // Parar se travar (ponto fixo)
-            if (Math.hypot(nx2 - cx2, ny2 - cy2) < 1e-8) break;
-            cx2 = nx2; cy2 = ny2;
+          for (let i = 0; i < allPts.length; i++) {
+            const [wx, wy] = allPts[i];
+            const [px2, py2] = this.toPx(wx, wy);
+            if (i === 0) ctx.moveTo(px2, py2); else ctx.lineTo(px2, py2);
           }
+          ctx.strokeStyle = lineColor;
+          ctx.lineWidth = lw;
           ctx.stroke();
 
-          // Seta indicadora de sentido no meio da linha
-          const midStep = Math.floor(steps * 0.35);
-          let mx = ox2 + seedR * Math.cos(angle0), my = oy2 + seedR * Math.sin(angle0);
-          for (let k = 0; k < midStep; k++) {
-            const [nx2, ny2] = rk4(mx, my, ds);
-            if (Math.abs(nx2 - ox2) > R * 1.4) break;
-            mx = nx2; my = ny2;
+          // Seta de direção num único ponto a ~40% do segmento frontal
+          if (fwdPts.length > 8) {
+            const ai  = Math.floor(fwdPts.length * 0.4);
+            const ai2 = Math.min(ai + 4, fwdPts.length - 1);
+            const [wx1, wy1] = fwdPts[ai];
+            const [wx2, wy2] = fwdPts[ai2];
+            const [apx2, apy2] = this.toPx(wx1, wy1);
+            const [aex3, aey3] = this.toPx(wx2, wy2);
+            if (Math.hypot(aex3 - apx2, aey3 - apy2) > 4) {
+              this._arrow(ctx, apx2, apy2, aex3, aey3, lineColor, lw * 1.1);
+            }
           }
-          const [mx2, my2] = rk4(mx, my, ds * 3);
-          const [apx, apy] = this.toPx(mx, my);
-          const [aex2, aey2] = this.toPx(mx2, my2);
-          const dist2 = Math.hypot(mx - ox2, my - oy2);
-          const arrowAlpha = (0.4 + Math.min(dist2 / R, 1) * 0.5).toFixed(2);
-          this._arrow(ctx, apx, apy, aex2, aey2, getColor(mx, my, Math.min(dist2/R,1), parseFloat(arrowAlpha)), lw * 1.2);
         }
 
       } else {
