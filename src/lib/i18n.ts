@@ -322,6 +322,7 @@ export interface Translations {
     timeStep: string;
     maxTime: string;
     speed: string;
+    indVar: string;
     time: string;
     steps: string;
   };
@@ -388,7 +389,7 @@ const translations: Record<Locale, Translations> = {
     helpContent: { newProjectKey: 'Novo projeto', saveKey: 'Salvar arquivo .modx', playKey: 'Iniciar / Parar simulação', restartKey: 'Reiniciar simulação a partir do início', stepForwardKey: 'Executar passo para frente', stepBackKey: 'Executar passo para trás', deleteKey: 'Remover objeto selecionado', constantDesc: 'Constante — valor numérico fixo', expressionDesc: 'Expressão — recalculada a cada passo', availableFunctions: 'Funções Disponíveis', conditional: 'Condicional', usageTips: 'Dicas de Uso', dragTip: 'Arraste objetos na área de animação para reposicioná-los visualmente.', shiftDragTip: 'Shift+arraste modifica as condições iniciais em tempo real.', scrollTip: 'Use scroll do mouse para zoom na animação.', saveTip: 'Salve sua simulação: .modx (arquivo do tipo XML).', rk4Tip: 'O método RK4 é mais preciso para sistemas físicos contínuos.', constants: 'Constantes:', power: 'Potência:' },
     about: { graphs: 'Gráficos', equations: 'Equações' },
     graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulação parada' },
-    settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', time: 't =', steps: 'n =' },
+    settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
     ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro' },
     trailMode: { temporary: 'Temporário', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sem rastro' },
   },
@@ -420,7 +421,7 @@ const translations: Record<Locale, Translations> = {
     helpContent: { newProjectKey: 'New project', saveKey: 'Save .modx file', playKey: 'Play / Pause simulation', restartKey: 'Restart simulation from the beginning', stepForwardKey: 'Step forward', stepBackKey: 'Step backward', deleteKey: 'Remove selected object', constantDesc: 'Constant — fixed numeric value', expressionDesc: 'Expression — recalculated each step', availableFunctions: 'Available Functions', conditional: 'Conditional', usageTips: 'Usage Tips', dragTip: 'Drag objects in the animation area to reposition them visually.', shiftDragTip: 'Shift+drag modifies initial conditions in real time.', scrollTip: 'Use mouse scroll to zoom in the animation.', saveTip: 'Save your simulation: .modx (XML file format).', rk4Tip: 'The RK4 method is more accurate for continuous physical systems.', constants: 'Constants:', power: 'Power:' },
     about: { graphs: 'Graphs', equations: 'Equations' },
     graphs: { graph1: 'Graph 1', graph2: 'Graph 2', graph3: 'Graph 3', graph4: 'Graph 4', simulationStopped: 'simulation stopped' },
-    settings: { method: 'Method', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't max', speed: 'speed', time: 't =', steps: 'n =' },
+    settings: { method: 'Method', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't max', speed: 'speed', indVar: 'ind var', time: 't =', steps: 'n =' },
     ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '─', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error' },
     trailMode: { temporary: 'Temporary', persistent: 'Persistent', ghosts: 'Ghosts', none: 'No Trail' },
   },
@@ -452,7 +453,7 @@ const translations: Record<Locale, Translations> = {
     helpContent: { newProjectKey: 'Nuevo proyecto', saveKey: 'Guardar archivo .modx', playKey: 'Reproducir / Pausar simulación', restartKey: 'Reiniciar simulación desde el principio', stepForwardKey: 'Paso adelante', stepBackKey: 'Paso atrás', deleteKey: 'Eliminar objeto seleccionado', constantDesc: 'Constante — valor numérico fijo', expressionDesc: 'Expresión — recalculada en cada paso', availableFunctions: 'Funciones Disponibles', conditional: 'Condicional', usageTips: 'Consejos de Uso', dragTip: 'Arrastre objetos en el área de animación para reposicionarlos visualmente.', shiftDragTip: 'Shift+arrastrar modifica las condiciones iniciales en tiempo real.', scrollTip: 'Use la rueda del mouse para hacer zoom en la animación.', saveTip: 'Guarde su simulación: .modx (formato de archivo XML).', rk4Tip: 'El método RK4 es más preciso para sistemas físicos continuos.', constants: 'Constantes:', power: 'Potencia:' },
     about: { graphs: 'Gráficos', equations: 'Ecuaciones' },
     graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulación detenida' },
-    settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', time: 't =', steps: 'n =' },
+    settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
     ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error' },
     trailMode: { temporary: 'Temporal', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sin Rastro' },
   },
@@ -484,7 +485,7 @@ const translations: Record<Locale, Translations> = {
     helpContent: { newProjectKey: '新项目', saveKey: '保存 .modx 文件', playKey: '播放 / 暂停模拟', restartKey: '从头开始重新启动模拟', stepForwardKey: '向前步进', stepBackKey: '向后步进', deleteKey: '删除选定的对象', constantDesc: '常数 — 固定数值', expressionDesc: '表达式 — 每步重新计算', availableFunctions: '可用函数', conditional: '条件语句', usageTips: '使用技巧', dragTip: '在动画区域中拖动对象以直观地重新定位它们。', shiftDragTip: 'Shift + 拖动可实时修改初始条件。', scrollTip: '使用鼠标滚轮在动画中进行缩放。', saveTip: '保存您的模拟：.modx（XML 文件格式）。', rk4Tip: 'RK4 方法对连续物理系统更加精确。', constants: '常数：', power: '幂：' },
     about: { graphs: '图表', equations: '方程' },
     graphs: { graph1: '图表 1', graph2: '图表 2', graph3: '图表 3', graph4: '图表 4', simulationStopped: '模拟已停止' },
-    settings: { method: '方法', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't 最大值', speed: '速度', time: 't =', steps: 'n =' },
+    settings: { method: '方法', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't 最大值', speed: '速度', indVar: '独立变量', time: 't =', steps: 'n =' },
     ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '─', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误' },
     trailMode: { temporary: '临时', persistent: '持久', ghosts: '幻影', none: '无轨迹' },
   },

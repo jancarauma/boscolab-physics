@@ -7,6 +7,8 @@ export class SimEngine {
   state: Record<string, number>;
   initState: Record<string, number>;
   t: number; dt: number; tMax: number; n: number;
+  indVar: string;
+  speedFactor: number;
   method: string;
   history: any[]; maxHist: number;
   running: boolean; status: string;
@@ -23,6 +25,7 @@ export class SimEngine {
     this.parsed = null;
     this.state = {}; this.initState = {};
     this.t = 0; this.dt = 0.01; this.tMax = 10; this.n = 0;
+    this.indVar = 't'; this.speedFactor = 1;
     this.method = 'rk4';
     this.history = []; this.maxHist = 150000;
     this.running = false; this.status = 'stopped';
@@ -109,6 +112,7 @@ export class SimEngine {
     }
     if (this.method === 'rk4') this._stepRK4(); else this._stepEuler();
     this.t += this.dt; this.n++; this.state.t = this.t;
+    this.state[this.indVar] = this.t;
     if (this.history.length < this.maxHist) this.history.push({ ...this.state, t: this.t, n: this.n });
     if (this.t >= this.tMax) { this._setStatus('done'); this.stop(); }
     if (this.onStep) this.onStep(this.state, this.t, this.n);
@@ -119,6 +123,7 @@ export class SimEngine {
     this.history.pop();
     const s = this.history[this.history.length - 1];
     this.state = { ...s }; this.t = s.t || 0; this.n = s.n || 0;
+    this.state[this.indVar] = this.t;
     if (this.onStep) this.onStep(this.state, this.t, this.n);
   }
 
@@ -127,8 +132,10 @@ export class SimEngine {
     Object.entries(ic).forEach(([k, v]) => { normalized[k.toLowerCase()] = v; });
     this.initState = { ...normalized }; this.state = { ...normalized };
     if (this.parsed) Object.entries(this.parsed.constVars).forEach(([k, v]: [string, any]) => { this.state[k] = v; this.initState[k] = v; });
-    this._applyDerived(this.state);
     this.t = 0; this.n = 0;
+    this.state.t = 0;
+    this.state[this.indVar] = 0;
+    this._applyDerived(this.state);
     this.history = [{ ...this.state, t: 0, n: 0 }];
   }
 
@@ -136,6 +143,8 @@ export class SimEngine {
     this.stop();
     this.state = { ...this.initState };
     if (this.parsed) Object.entries(this.parsed.constVars).forEach(([k, v]: [string, any]) => { this.state[k] = v; });
+    this.state.t = 0;
+    this.state[this.indVar] = 0;
     this._applyDerived(this.state);
     this.t = 0; this.n = 0;
     this.history = [{ ...this.state, t: 0, n: 0 }];
@@ -147,6 +156,7 @@ export class SimEngine {
     if (this.status === 'error') return;
     if (this.status === 'done') this.reset();
     this.running = true; this._setStatus('running');
+    this._frameAcc = 0;
     this._lt = performance.now(); this._loop();
   }
 
@@ -158,8 +168,20 @@ export class SimEngine {
     const now = performance.now(); const el = now - this._lt; this._lt = now;
     this._fc++; this._ft += el;
     if (this._ft > 600) { this.fps = Math.round(this._fc / (this._ft / 1000)); this._fc = 0; this._ft = 0; }
-    const steps = Math.max(1, this.stepsPerFrame);
-    for (let i = 0; i < steps && this.running; i++) this.step();
+    const dtSafe = Math.max(this.dt, 1e-9);
+    const speedSafe = Math.max(this.speedFactor, 1e-6);
+    this._frameAcc += (el / 1000) * speedSafe;
+
+    // Prevent pathological frame stalls from trying too many catch-up steps.
+    const maxStepsPerFrame = 240;
+    let steps = 0;
+    while (this._frameAcc >= dtSafe && this.running && steps < maxStepsPerFrame) {
+      this.step();
+      this._frameAcc -= dtSafe;
+      steps++;
+    }
+
+    if (steps >= maxStepsPerFrame) this._frameAcc = 0;
     this._raf = requestAnimationFrame(() => this._loop());
   }
 

@@ -17,6 +17,7 @@ export default function Toolbar() {
       timeStep: tr.settings.timeStep,
       maxTime: tr.settings.maxTime,
       speed: tr.settings.speed,
+      indVar: tr.settings.indVar,
       time: tr.settings.time,
       steps: tr.settings.steps,
       initialConditions: tr.ui.initialConditions,
@@ -43,6 +44,7 @@ export default function Toolbar() {
         timeStep: tr.settings.timeStep,
         maxTime: tr.settings.maxTime,
         speed: tr.settings.speed,
+        indVar: tr.settings.indVar,
         time: tr.settings.time,
         steps: tr.settings.steps,
         initialConditions: tr.ui.initialConditions,
@@ -131,6 +133,8 @@ export default function Toolbar() {
         <option value="30">30×</option>
         <option value="100">100×</option>
       </select>
+      <span className="tblabel">{text.indVar}</span>
+      <input className="tbinp" id="inp-ind-var" defaultValue="t"  />
       <div className="tbsep" />
       <span className="tblabel">{text.time}</span>
       <div className="tbval" id="disp-t">0.000</div>

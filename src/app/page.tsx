@@ -330,9 +330,10 @@ export default function Home() {
     }, true);
 
     // ── Toolbar wiring ───────────────────────────────────────────────────────
-    (document.getElementById('sel-speed') as HTMLSelectElement | null)?.addEventListener('change', function () { sim.stepsPerFrame = parseFloat(this.value); sim._frameAcc = 0; });
-    (document.getElementById('inp-dt')   as HTMLInputElement | null)?.addEventListener('change', function () { sim.dt   = parseFloat(this.value) || 0.01; });
+    (document.getElementById('sel-speed') as HTMLSelectElement | null)?.addEventListener('change', function () { sim.speedFactor = parseFloat(this.value) || 1; sim._frameAcc = 0; });
+    (document.getElementById('inp-dt')   as HTMLInputElement | null)?.addEventListener('change', function () { sim.dt   = parseFloat(this.value) || 0.01; sim._frameAcc = 0; });
     (document.getElementById('inp-tmax') as HTMLInputElement | null)?.addEventListener('change', function () { sim.tMax = parseFloat(this.value) || 10; });
+    (document.getElementById('inp-ind-var') as HTMLInputElement | null)?.addEventListener('change', function () { sim.indVar = this.value.trim() || 't'; });
     (document.getElementById('sel-method') as HTMLSelectElement | null)?.addEventListener('change', function () { sim.method = this.value; });
 
     // ── Sub-menu positioning ─────────────────────────────────────────────────

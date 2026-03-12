@@ -40,7 +40,7 @@ export function saveFile(
   const precStr = `<precision format="${pf}" decimals="${pd}"/>`;
   const localeStr = getLocale();
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<modellus-web version="2.1">\n  <model>\n    <equations><![CDATA[\n${getEditorText()}\n    ]]></equations>\n    <method>${sim.method}</method>\n    <dt>${sim.dt}</dt>\n    <tmax>${sim.tMax}</tmax>\n  </model>\n  <initial-conditions>\n${icX}\n  </initial-conditions>\n  <objects>\n${objX}\n  </objects>\n  <graphs>\n${gX}\n  </graphs>\n  <ui><layout><![CDATA[${layoutStr}]]></layout><theme>${themeStr}</theme>${precStr}<locale>${localeStr}</locale></ui>\n</modellus-web>`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<modellus-web version="2.1">\n  <model>\n    <equations><![CDATA[\n${getEditorText()}\n    ]]></equations>\n    <method>${sim.method}</method>\n    <dt>${sim.dt}</dt>\n    <tmax>${sim.tMax}</tmax>\n    <indVar>${sim.indVar}</indVar>\n    <speedFactor>${sim.speedFactor}</speedFactor>\n  </model>\n  <initial-conditions>\n${icX}\n  </initial-conditions>\n  <objects>\n${objX}\n  </objects>\n  <graphs>\n${gX}\n  </graphs>\n  <ui><layout><![CDATA[${layoutStr}]]></layout><theme>${themeStr}</theme>${precStr}<locale>${localeStr}</locale></ui>\n</modellus-web>`;
 
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([xml], { type: 'text/xml' }));
@@ -93,7 +93,19 @@ export function onFileLoad(
         if (inp) inp.value = String(sim.tMax);
       }
 
-      applyModel(sim, onRebuild, true);
+      const indVarEl = doc.querySelector('indVar');
+      if (indVarEl) {
+        sim.indVar = indVarEl.textContent?.trim() ?? 't';
+        const inp = document.getElementById('inp-ind-var') as HTMLInputElement | null;
+        if (inp) inp.value = sim.indVar;
+      }
+
+      const speedFactorEl = doc.querySelector('speedFactor');
+      if (speedFactorEl) {
+        sim.speedFactor = parseFloat(speedFactorEl.textContent ?? '1') || 1;
+        const sel = document.getElementById('sel-speed') as HTMLSelectElement | null;
+        if (sel) sel.value = String(sim.speedFactor);
+      }
 
       const ic: Record<string, number> = {};
       doc.querySelectorAll('initial-conditions variable').forEach(el => {
