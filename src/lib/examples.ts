@@ -213,7 +213,7 @@ percent_charge = 100*(vc/Vs)`,
         fxExpr: '1',
         fyExpr: '0.3*(-8 * y / Math.pow(x * x + y * y + 0.5, 1.5) * Math.exp(- (x * x + y * y) / (2 * 2 * 2)))',
         gridRange: 7, color: '#f97316',
-        vfMode: 'fieldlines', fieldSeeds: 44, fieldSteps: 400, fieldDs: 0.04, lineWidth: 1.2,
+        vfMode: 'fieldlines', fieldSeeds: 14, fieldSteps: 400, fieldDs: 0.04, lineWidth: 1.2,
       },
       // Campo dipolar da Terra (azul)
       {
