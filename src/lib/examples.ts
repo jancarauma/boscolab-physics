@@ -203,6 +203,34 @@ percent_charge = 100*(vc/Vs)`,
     ],
     g0: { xvar: 't', yvar: 'x', yvar2: 'v' }, g1: { xvar: 'x', yvar: 'v' }, scale: 50, ox: .5, oy: .15
   },
+  campo_magnetico_terrestre: {
+    model: `// Campo Magnético Terrestre\n// Magnetosfera interagindo com o vento solar`,
+    ic: {}, dt: 0.1, tmax: 100,
+    objects: [
+      // Vento solar + interação com a magnetosfera (âmbar)
+      {
+        type: 'vectorfield',
+        fxExpr: '1',
+        fyExpr: '0.3*(-8 * y / Math.pow(x * x + y * y + 0.5, 1.5) * Math.exp(- (x * x + y * y) / (2 * 2 * 2)))',
+        gridRange: 7, color: '#f97316',
+        vfMode: 'fieldlines', fieldSeeds: 44, fieldSteps: 400, fieldDs: 0.04, lineWidth: 1.2,
+      },
+      // Campo dipolar da Terra (azul)
+      {
+        type: 'vectorfield',
+        fxExpr: '0.1*(3 * (1 + 3 * Math.exp(- ( (x + 1.5) * (x + 1.5) ) / (2 * 2) )) * x * y / Math.pow(x * x + y * y + 0.06, 2.5) * (1 + 1.5 * (1 + Math.tanh(x / 6)) / 3))',
+        fyExpr: '0.1*((2 * y * y - x * x) / Math.pow(x * x + y * y + 0.06, 2.5) * (1 - 0.7 * Math.exp(-((x + 1.2) * (x + 1.2)) / (2 * 1.5 * 1.5))) * (1 + 2 * 0.5 * (1 + Math.tanh((x - 0.6) / 6))))',
+        gridRange: 2.5, color: '#38bdf8',
+        vfMode: 'fieldlines', fieldSeeds: 25, fieldSteps: 300, fieldDs: 0.03, lineWidth: 1.8,
+      },
+      // Terra
+      { type: 'circle', x: '0', y: '0', r: '0.4', color: '#60a5fa', fillColor: 'rgba(56,189,248,.6)' },
+      // Rótulos
+      { type: 'label', x: -6.5, y: 6.6, text: '☀ Vento Solar', fontSize: 12, color: '#fb923c' },
+      { type: 'label', x: -6.5, y: -6.2, text: 'Campo Magnético Terrestre', fontSize: 12, color: '#94a3b8' },
+    ],
+    g0: { xvar: 't', yvar: 't' }, g1: { xvar: 't', yvar: 't' }, scale: 50, ox: .5, oy: .5
+  },
   batimento: {
     model: `// Batimento de Ondas\nomega1 = 6.28\nomega2 = 6.91\nA1 = 1.0\nA2 = 1.0\n\nphi1(t+dt) = phi1(t) + omega1*dt\nphi2(t+dt) = phi2(t) + omega2*dt\n\ny1 = A1*sin(phi1)\ny2 = A2*sin(phi2)\ny = y1 + y2\n\nf_bat = (omega2 - omega1)/(2*3.14159)\nomega_bat = omega2 - omega1`,
     ic: { phi1: 0, phi2: 0 }, dt: 0.005, tmax: 20,

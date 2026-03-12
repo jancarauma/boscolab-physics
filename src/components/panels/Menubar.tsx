@@ -95,6 +95,7 @@ export default function Menubar() {
               <div className="di" onClick={() => (window as any).loadEx?.('rc')}>{tr.exItems.rc}</div>
               <div className="di" onClick={() => (window as any).loadEx?.('cargas')}>{tr.exItems.cargas}</div>
               <div className="di" onClick={() => (window as any).loadEx?.('campo_eletrico')}>{tr.exItems.campo_eletrico}</div>
+              <div className="di" onClick={() => (window as any).loadEx?.('campo_magnetico_terrestre')}>{tr.exItems.campo_magnetico_terrestre}</div>
             </div>
           </div>
           <div className="di has-sub">
