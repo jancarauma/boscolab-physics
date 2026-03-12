@@ -136,6 +136,59 @@ export class AnimRenderer {
 
   clearTrails() { this.objects.forEach(o => { o._trail = []; }); }
 
+  _sampleParticleTrail(o: any, mx: number, my: number, rotDeg: number) {
+    if (!o._trail) o._trail = [];
+    const tmode = o.trailMode || 'persist';
+    if (tmode === 'none') return;
+    if (tmode === 'dots') {
+      const last = o._trail[o._trail.length - 1];
+      const ghostSpacingPx = Math.max((o.radius || 8) * 0.9, 5);
+      if (!last || Math.hypot(mx - last[0], my - last[1]) * this.scale >= ghostSpacingPx) o._trail.push([mx, my, rotDeg]);
+      const maxLen = o.trailLen || 300;
+      if (o._trail.length > maxLen) o._trail.shift();
+      return;
+    }
+    o._trail.push([mx, my]);
+    const maxLen = o.trailLen || 300;
+    if (tmode === 'fade' && o._trail.length > maxLen) o._trail.shift();
+  }
+
+  _samplePendulumTrail(o: any, bobX: number, bobY: number) {
+    if (!o._trail) o._trail = [];
+    const tmode = o.trailMode || 'persist';
+    if (tmode === 'none') return;
+    o._trail.push([bobX, bobY]);
+    const maxLen = o.trailLen || 400;
+    if (tmode === 'fade' && o._trail.length > maxLen) o._trail.shift();
+  }
+
+  sampleTrails(state: Record<string, number>) {
+    this.objects.forEach(o => {
+      if (o.visible === false) return;
+      const g = (k: string) => this._evalProp(o[k], state);
+      const vox = o._vox || 0;
+      const voy = o._voy || 0;
+
+      if (o.type === 'particle') {
+        const mx = g('x') + vox;
+        const my = g('y') + voy;
+        const rotDeg = parseFloat(o.rotation) || 0;
+        this._sampleParticleTrail(o, mx, my, rotDeg);
+        return;
+      }
+
+      if (o.type === 'pendulum') {
+        const theta = g('theta');
+        const Lval = (typeof o.L === 'string' && isNaN(o.L)) ? (this._evalProp(o.L, state) || 1.5) : (o.L || 1.5);
+        const pivX = (this._evalProp(o.pivotX, state) || 0) + vox;
+        const pivY = (this._evalProp(o.pivotY, state) || 0) + voy;
+        const bobX = pivX + Math.sin(theta) * Lval;
+        const bobY = pivY - Math.cos(theta) * Lval;
+        this._samplePendulumTrail(o, bobX, bobY);
+      }
+    });
+  }
+
   render(state: Record<string, number>) {
     const ctx = this.ctx; const w = this._w; const h = this._h;
     if (w <= 0 || h <= 0) return;
@@ -309,21 +362,8 @@ export class AnimRenderer {
       o._rx = mx; o._ry = my;
       const [px, py] = this.toPx(mx, my);
       const r = o.radius || 8;
-      if (!o._trail) o._trail = [];
       const tmode = o.trailMode || 'persist';
-      if (tmode !== 'none') {
-        if (tmode === 'dots') {
-          const last = o._trail[o._trail.length - 1];
-          const ghostSpacingPx = Math.max(r * 0.9, 5);
-          if (!last || Math.hypot(mx - last[0], my - last[1]) * this.scale >= ghostSpacingPx) o._trail.push([mx, my, rotDeg]);
-          const maxLen = o.trailLen || 300;
-          if (o._trail.length > maxLen) o._trail.shift();
-        } else {
-          o._trail.push([mx, my]);
-          const maxLen = o.trailLen || 300;
-          if (tmode === 'fade' && o._trail.length > maxLen) o._trail.shift();
-        }
-        if (o.showTrail !== false && o._trail.length > 0) {
+      if (o.showTrail !== false && tmode !== 'none' && o._trail && o._trail.length > 0) {
           if (tmode === 'dots') {
             const ghostCount = o._trail.length;
             for (let i = 0; i < ghostCount - 1; i++) {
@@ -350,7 +390,6 @@ export class AnimRenderer {
               ctx.strokeStyle = o.trailColor || color; ctx.globalAlpha = .7; ctx.lineWidth = 1.5; ctx.stroke(); ctx.globalAlpha = 1;
             }
           }
-        }
       }
       if (o.showVec && (o.vx || o.vy)) {
         const vx = g('vx'), vy = g('vy'), vs = o.vecScale || 0.3;
@@ -388,18 +427,12 @@ export class AnimRenderer {
       const bobX = pivX + Math.sin(theta) * Lval, bobY = pivY - Math.cos(theta) * Lval;
       const [bpx, bpy] = this.toPx(bobX, bobY);
       o._rx = bobX; o._ry = bobY;
-      if (!o._trail) o._trail = [];
       const ptmode = o.trailMode || 'persist';
-      if (ptmode !== 'none') {
-        o._trail.push([bobX, bobY]);
-        const maxLen = o.trailLen || 400;
-        if (ptmode === 'fade' && o._trail.length > maxLen) o._trail.shift();
-        if (o.showTrail !== false && o._trail.length > 1) {
+      if (o.showTrail !== false && ptmode !== 'none' && o._trail && o._trail.length > 1) {
           ctx.beginPath();
           const [tx0, ty0] = this.toPx(o._trail[0][0], o._trail[0][1]); ctx.moveTo(tx0, ty0);
           for (let i = 1; i < o._trail.length; i++) { const [txi, tyi] = this.toPx(o._trail[i][0], o._trail[i][1]); ctx.lineTo(txi, tyi); }
           ctx.strokeStyle = color; ctx.globalAlpha = ptmode === 'fade' ? .3 : .4; ctx.lineWidth = 1.5; ctx.stroke(); ctx.globalAlpha = 1;
-        }
       }
       ctx.strokeStyle = o.rodColor || '#94a3b8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ppx, ppy); ctx.lineTo(bpx, bpy); ctx.stroke();
       ctx.beginPath(); ctx.arc(ppx, ppy, 4, 0, Math.PI * 2); ctx.fillStyle = '#475569'; ctx.fill();

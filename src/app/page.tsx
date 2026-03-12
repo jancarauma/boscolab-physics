@@ -254,7 +254,10 @@ export default function Home() {
     }
     _renderRAF = requestAnimationFrame(renderLoop);
 
-    sim.onStep = (_state: any) => { graphs.forEach((g: any) => g.append(_state)); };
+    sim.onStep = (_state: any) => {
+      anim.sampleTrails(_state);
+      graphs.forEach((g: any) => g.append(_state));
+    };
     sim.onStatus = (s: string) => updateStatusUI(s, sim);
 
     // ── Anim callbacks ───────────────────────────────────────────────────────
