@@ -56,7 +56,7 @@ export default function Home() {
 
     // Core refs on window
     w.sim = sim; w.anim = anim; w.graphs = graphs;
-    w.__sim = sim; w.__graphs = graphs; w.__activeTab = 0;
+    w.__sim = sim; w.__graphs = graphs; w.__activeTab = 0; w.activeTab = 0;
     w.makeObj = makeObj; w.OBJECT_ICONS = OBJECT_ICONS; w.OBJECT_COLORS = OBJECT_COLORS;
     w.resetObjId = resetObjId;
     Object.defineProperty(w, '_objId', { get: () => getObjId(), configurable: true });
@@ -172,7 +172,7 @@ export default function Home() {
     }
 
     function doSelTab(i: number) {
-      activeTab = i; w.__activeTab = i;
+      activeTab = i; w.__activeTab = i; w.activeTab = i;
       selTab(i, graphs);
     }
 

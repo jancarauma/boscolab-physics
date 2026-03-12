@@ -210,10 +210,10 @@ export default function AnimationPanel() {
                   <select className="gcfg-sel" id="cfg-yvar2" onChange={() => (window as any).updateGraphCfg?.()}><option value="">—</option></select>
                 </div>
                 <div className="gcfg-row">
-                  <button className="pico" onClick={() => (window as any).clearGraph?.((window as any).activeTab)} style={{ fontSize: 10 }}>{text.clear}</button>
-                  <button className="pico" onClick={() => { if ((window as any).graphs) (window as any).graphs[(window as any).activeTab].autoScale = true; }} style={{ fontSize: 10 }}>{text.auto}</button>
-                  <button className="pico" onClick={() => (window as any).exportGraphPNG?.((window as any).activeTab)} style={{ fontSize: 10, marginLeft: 'auto' }}>{text.image}</button>
-                  <button className="pico" onClick={() => (window as any).exportGraphCSV?.((window as any).activeTab)} style={{ fontSize: 10 }}>{text.data}</button>
+                  <button className="pico" onClick={() => (window as any).clearGraph?.((window as any).__activeTab ?? 0)} style={{ fontSize: 10 }}>{text.clear}</button>
+                  <button className="pico" onClick={() => { if ((window as any).graphs) (window as any).graphs[(window as any).__activeTab ?? 0].autoScale = true; }} style={{ fontSize: 10 }}>{text.auto}</button>
+                  <button className="pico" onClick={() => (window as any).exportGraphPNG?.((window as any).__activeTab ?? 0)} style={{ fontSize: 10, marginLeft: 'auto' }}>{text.image}</button>
+                  <button className="pico" onClick={() => (window as any).exportGraphCSV?.((window as any).__activeTab ?? 0)} style={{ fontSize: 10 }}>{text.data}</button>
                 </div>
               </div>
             </div>
