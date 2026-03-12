@@ -11,8 +11,8 @@ export let selectedObj: any = null;
 export function renderObjList(anim: AnimRenderer): void {
   const el = document.getElementById('obj-list');
   if (!el) return;
+  const tr = getTranslations();
   if (!anim.objects.length) {
-    const tr = getTranslations();
     el.innerHTML = `<div class="no-obj">${tr.panels.noObjects}<br>${tr.panels.noObjectsDesc}</div>`;
     return;
   }
@@ -21,11 +21,11 @@ export function renderObjList(anim: AnimRenderer): void {
       <span class="obj-icon">${OBJECT_ICONS[o.type] || '●'}</span>
       <span class="obj-name">${o.name}</span>
       <span class="obj-layer-btns" onclick="event.stopPropagation()" style="display:flex;gap:1px;margin-left:auto;flex-shrink:0">
-        <span class="obj-vis" onclick="window.__moveObjLayer(${o.id},-1)" title="Mover para cima (frente)" style="font-size:10px;padding:2px 3px">▲</span>
-        <span class="obj-vis" onclick="window.__moveObjLayer(${o.id},1)" title="Mover para baixo (atrás)" style="font-size:10px;padding:2px 3px">▼</span>
+        <span class="obj-vis" onclick="window.__moveObjLayer(${o.id},-1)" title="${tr.commonProps.moveUp}" style="font-size:10px;padding:2px 3px">▲</span>
+        <span class="obj-vis" onclick="window.__moveObjLayer(${o.id},1)" title="${tr.commonProps.moveDown}" style="font-size:10px;padding:2px 3px">▼</span>
       </span>
-      <span class="obj-vis" onclick="event.stopPropagation();window.__toggleObjVis(${o.id})" title="${o.visible ? 'Ocultar' : 'Mostrar'}">${o.visible ? '👁' : '🚫'}</span>
-      <span class="obj-del" onclick="event.stopPropagation();window.__deleteObj(${o.id})" title="Remover">✕</span>
+      <span class="obj-vis" onclick="event.stopPropagation();window.__toggleObjVis(${o.id})" title="${o.visible ? tr.commonProps.hide : tr.commonProps.show}">${o.visible ? '👁' : '🚫'}</span>
+      <span class="obj-del" onclick="event.stopPropagation();window.__deleteObj(${o.id})" title="${tr.commonProps.remove}">✕</span>
     </div>`).join('');
 }
 
@@ -119,7 +119,7 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
   function mrowCV(label: string, baseId: string, defaultVal: number, vopts: string): string {
     return `<div class="modal-row"><span class="modal-label">${label}</span>
       <select class="modal-sel" id="${baseId}-mode" style="width:80px" onchange="window.__togglePivotField('${baseId}',this.value)">
-        <option value="const">Constante</option><option value="var">Variável</option>
+        <option value="const">${tr.spring.constant}</option><option value="var">${tr.spring.variable}</option>
       </select>
       <input class="modal-inp" id="${baseId}" type="number" step="any" value="${defaultVal}" style="flex:1">
       <select class="modal-sel" id="${baseId}-var" style="display:none;flex:1">${vopts}</select>
@@ -128,95 +128,95 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
 
   const FORMS: Record<string, string> = {
     particle: `
-      <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Partícula${_id}"></div>
-      ${mrowCV('Posição X', 'mo-x', 0, varOptsBlank)}
-      ${mrowCV('Posição Y', 'mo-y', 0, varOptsBlank)}
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.particle.defaultName || 'Particle{id}', { id: _id })}"></div>
+      ${mrowCV(tr.particle.positionX, 'mo-x', 0, varOptsBlank)}
+      ${mrowCV(tr.particle.positionY, 'mo-y', 0, varOptsBlank)}
       ${mrowCV(tr.vector.componentVx, 'mo-vx', 0, varOptsBlank)}
       ${mrowCV(tr.vector.componentVy, 'mo-vy', 0, varOptsBlank)}
-      <div class="modal-row"><span class="modal-label">Raio (px)</span><input class="modal-inp" id="mo-radius" type="number" value="8"></div>
-      <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" style="width:60px;padding:2px" value="#4f9eff"></div>
+      <div class="modal-row"><span class="modal-label">${tr.particle.radius}</span><input class="modal-inp" id="mo-radius" type="number" value="8"></div>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" style="width:60px;padding:2px" value="#4f9eff"></div>
       <div class="modal-row"><span class="modal-label">${tr.particle.showVelocity}</span><input type="checkbox" class="prop-check" id="mo-showvec"></div>
       <div class="modal-row"><span class="modal-label">${tr.particle.projections}</span><input type="checkbox" class="prop-check" id="mo-showvecproj" checked></div>
       <div class="modal-row"><span class="modal-label">${tr.particle.vectorColor}</span><input class="modal-inp" type="color" id="mo-veccolor" value="#34d399"></div>
       <div class="modal-row"><span class="modal-label">${tr.particle.projectionColor}</span><input class="modal-inp" type="color" id="mo-projcolor" value="#93c5fd"></div>
-      <div class="modal-row"><span class="modal-label">Rastro</span><input type="checkbox" class="prop-check" id="mo-trail" checked></div>
-      <div class="modal-row"><span class="modal-label">Rótulo</span><input class="modal-inp" id="mo-label" value="" placeholder="ex: bola"></div>`,
+      <div class="modal-row"><span class="modal-label">${tr.particle.trail}</span><input type="checkbox" class="prop-check" id="mo-trail" checked></div>
+      <div class="modal-row"><span class="modal-label">${tr.particle.label}</span><input class="modal-inp" id="mo-label" value="" placeholder="${tr.particle.namePlaceholder}"></div>`,
     pendulum: `
-      <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Pêndulo${_id}"></div>
-      <div class="modal-row"><span class="modal-label">Ângulo θ</span><select class="modal-sel" id="mo-theta">${varOptsBlank}</select></div>
-      <div class="modal-row"><span class="modal-label">Comprimento L</span>
-        <select class="modal-sel" id="mo-L-mode" style="width:80px" onchange="window.__togglePivotField('mo-L',this.value)"><option value="const">Constante</option><option value="var">Variável</option></select>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.pendulum.defaultName, { id: _id })}"></div>
+      <div class="modal-row"><span class="modal-label">${tr.pendulum.angle}</span><select class="modal-sel" id="mo-theta">${varOptsBlank}</select></div>
+      <div class="modal-row"><span class="modal-label">${tr.pendulum.length}</span>
+        <select class="modal-sel" id="mo-L-mode" style="width:80px" onchange="window.__togglePivotField('mo-L',this.value)"><option value="const">${tr.spring.constant}</option><option value="var">${tr.spring.variable}</option></select>
         <input class="modal-inp" id="mo-L" type="number" step="0.1" value="1.5" style="flex:1">
         <select class="modal-sel" id="mo-L-var" style="display:none;flex:1">${varOptsBlank}</select>
       </div>
-      <div class="modal-row"><span class="modal-label">Pivot X</span>
-        <select class="modal-sel" id="mo-pivotX-mode" style="width:80px" onchange="window.__togglePivotField('mo-pivotX',this.value)"><option value="const">Constante</option><option value="var">Variável</option></select>
+      <div class="modal-row"><span class="modal-label">${tr.pendulum.pivotX}</span>
+        <select class="modal-sel" id="mo-pivotX-mode" style="width:80px" onchange="window.__togglePivotField('mo-pivotX',this.value)"><option value="const">${tr.spring.constant}</option><option value="var">${tr.spring.variable}</option></select>
         <input class="modal-inp" id="mo-pivotX" type="number" value="0" style="flex:1">
         <select class="modal-sel" id="mo-pivotX-var" style="display:none;flex:1">${varOptsBlank}</select>
       </div>
-      <div class="modal-row"><span class="modal-label">Pivot Y</span>
-        <select class="modal-sel" id="mo-pivotY-mode" style="width:80px" onchange="window.__togglePivotField('mo-pivotY',this.value)"><option value="const">Constante</option><option value="var">Variável</option></select>
+      <div class="modal-row"><span class="modal-label">${tr.pendulum.pivotY}</span>
+        <select class="modal-sel" id="mo-pivotY-mode" style="width:80px" onchange="window.__togglePivotField('mo-pivotY',this.value)"><option value="const">${tr.spring.constant}</option><option value="var">${tr.spring.variable}</option></select>
         <input class="modal-inp" id="mo-pivotY" type="number" value="0" style="flex:1">
         <select class="modal-sel" id="mo-pivotY-var" style="display:none;flex:1">${varOptsBlank}</select>
       </div>
-      <div class="modal-row"><span class="modal-label">Raio bob</span><input class="modal-inp" id="mo-radius" type="number" value="10"></div>
-      <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" value="#f97316"></div>
-      <div class="modal-row"><span class="modal-label">Rastro</span><input type="checkbox" class="prop-check" id="mo-trail" checked></div>`,
+      <div class="modal-row"><span class="modal-label">${tr.pendulum.bobRadius}</span><input class="modal-inp" id="mo-radius" type="number" value="10"></div>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#f97316"></div>
+      <div class="modal-row"><span class="modal-label">${tr.particle.trail}</span><input type="checkbox" class="prop-check" id="mo-trail" checked></div>`,
     spring: `
-      <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Mola${_id}"></div>
-      <div class="modal-row"><span class="modal-label">Orientação</span><select class="modal-sel" id="mo-vertical"><option value="true">Vertical (mola suspensa)</option><option value="false">Horizontal</option></select></div>
-      <div class="modal-row"><span class="modal-label">Pos. bloco</span><select class="modal-sel" id="mo-x">${varOptsBlank}</select></div>
-      <div class="modal-row"><span class="modal-label">Pivot X</span>
-        <select class="modal-sel" id="mo-pivotX-mode" style="width:80px" onchange="window.__togglePivotField('mo-pivotX',this.value)"><option value="const">Constante</option><option value="var">Variável</option></select>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.spring.defaultName, { id: _id })}"></div>
+      <div class="modal-row"><span class="modal-label">${tr.spring.orientation}</span><select class="modal-sel" id="mo-vertical"><option value="true">${tr.spring.vertical}</option><option value="false">${tr.spring.horizontal}</option></select></div>
+      <div class="modal-row"><span class="modal-label">${tr.spring.blockPos}</span><select class="modal-sel" id="mo-x">${varOptsBlank}</select></div>
+      <div class="modal-row"><span class="modal-label">${tr.spring.pivotX}</span>
+        <select class="modal-sel" id="mo-pivotX-mode" style="width:80px" onchange="window.__togglePivotField('mo-pivotX',this.value)"><option value="const">${tr.spring.constant}</option><option value="var">${tr.spring.variable}</option></select>
         <input class="modal-inp" id="mo-pivotX" type="number" value="0" style="flex:1">
         <select class="modal-sel" id="mo-pivotX-var" style="display:none;flex:1">${varOptsBlank}</select>
       </div>
-      <div class="modal-row"><span class="modal-label">Pivot Y</span>
-        <select class="modal-sel" id="mo-pivotY-mode" style="width:80px" onchange="window.__togglePivotField('mo-pivotY',this.value)"><option value="const">Constante</option><option value="var">Variável</option></select>
+      <div class="modal-row"><span class="modal-label">${tr.spring.pivotY}</span>
+        <select class="modal-sel" id="mo-pivotY-mode" style="width:80px" onchange="window.__togglePivotField('mo-pivotY',this.value)"><option value="const">${tr.spring.constant}</option><option value="var">${tr.spring.variable}</option></select>
         <input class="modal-inp" id="mo-pivotY" type="number" value="5" style="flex:1">
         <select class="modal-sel" id="mo-pivotY-var" style="display:none;flex:1">${varOptsBlank}</select>
       </div>
-      <div class="modal-row"><span class="modal-label">Espiras</span><input class="modal-inp" id="mo-coils" type="number" value="10"></div>
-      <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" value="#a78bfa"></div>`,
+      <div class="modal-row"><span class="modal-label">${tr.spring.coils}</span><input class="modal-inp" id="mo-coils" type="number" value="10"></div>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#a78bfa"></div>`,
     vector: `
-      <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Vetor${_id}"></div>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.vector.defaultName, { id: _id })}"></div>
       ${mrowCV(tr.vector.originX, 'mo-x', 0, varOptsBlank)}
       ${mrowCV(tr.vector.originY, 'mo-y', 0, varOptsBlank)}
       ${mrowCV(tr.vector.componentVx, 'mo-vx', 0, varOptsBlank)}
       ${mrowCV(tr.vector.componentVy, 'mo-vy', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.vector.scale}</span><input class="modal-inp" id="mo-scale" type="number" step="0.1" value="0.3"></div>
-      <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" value="#34d399"></div>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#34d399"></div>
       <div class="modal-row"><span class="modal-label">${tr.vector.projections}</span><input type="checkbox" class="prop-check" id="mo-showproj"></div>
       <div class="modal-row"><span class="modal-label">${tr.vector.projectionColor}</span><input class="modal-inp" type="color" id="mo-projcolor" value="#94a3b8"></div>
-      <div class="modal-row"><span class="modal-label">Rótulo</span><input class="modal-inp" id="mo-label" value=""></div>`,
+      <div class="modal-row"><span class="modal-label">${tr.vector.label}</span><input class="modal-inp" id="mo-label" value=""></div>`,
     circle: `
-      <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Círculo${_id}"></div>
-      ${mrowCV('Centro X', 'mo-x', 0, varOptsBlank)}
-      ${mrowCV('Centro Y', 'mo-y', 0, varOptsBlank)}
-      ${mrowCV('Raio (unid.)', 'mo-r', 1, varOptsBlank)}
-      <div class="modal-row"><span class="modal-label">Cor borda</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.circle.defaultName, { id: _id })}"></div>
+      ${mrowCV(tr.circle.centerX, 'mo-x', 0, varOptsBlank)}
+      ${mrowCV(tr.circle.centerY, 'mo-y', 0, varOptsBlank)}
+      ${mrowCV(tr.circle.radiusUnit, 'mo-r', 1, varOptsBlank)}
+      <div class="modal-row"><span class="modal-label">${tr.circle.borderColor}</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
     rect: `
-      <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Rect${_id}"></div>
-      ${mrowCV('Centro X', 'mo-x', 0, varOptsBlank)}
-      ${mrowCV('Centro Y', 'mo-y', 0, varOptsBlank)}
-      ${mrowCV('Largura', 'mo-w', 1, varOptsBlank)}
-      ${mrowCV('Altura', 'mo-h', 1, varOptsBlank)}
-      <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.rectangle.defaultName, { id: _id })}"></div>
+      ${mrowCV(tr.circle.centerX, 'mo-x', 0, varOptsBlank)}
+      ${mrowCV(tr.circle.centerY, 'mo-y', 0, varOptsBlank)}
+      ${mrowCV(tr.rectangle.width, 'mo-w', 1, varOptsBlank)}
+      ${mrowCV(tr.rectangle.height, 'mo-h', 1, varOptsBlank)}
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
     label: `
-      <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Texto${_id}"></div>
-      <div class="modal-row"><span class="modal-label">Pos X</span><input class="modal-inp" id="mo-x" type="number" value="0"></div>
-      <div class="modal-row"><span class="modal-label">Pos Y</span><input class="modal-inp" id="mo-y" type="number" value="3"></div>
-      <div class="modal-row"><span class="modal-label">Texto</span><input class="modal-inp" id="mo-text" value="t = {t:2}s" style="width:100%"></div>
-      <div class="modal-row"><span class="modal-label">Tamanho</span><input class="modal-inp" id="mo-fontSize" type="number" value="13"></div>
-      <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" value="#e2e8f0"></div>`,
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.textLabel.defaultName, { id: _id })}"></div>
+      <div class="modal-row"><span class="modal-label">${tr.textLabel.posX}</span><input class="modal-inp" id="mo-x" type="number" value="0"></div>
+      <div class="modal-row"><span class="modal-label">${tr.textLabel.posY}</span><input class="modal-inp" id="mo-y" type="number" value="3"></div>
+      <div class="modal-row"><span class="modal-label">${tr.textLabel.text}</span><input class="modal-inp" id="mo-text" value="${tr.textLabel.textPlaceholder}" style="width:100%"></div>
+      <div class="modal-row"><span class="modal-label">${tr.textLabel.size}</span><input class="modal-inp" id="mo-fontSize" type="number" value="13"></div>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#e2e8f0"></div>`,
     vectorfield: `
-      <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Campo${_id}"></div>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.field.defaultName, { id: _id })}"></div>
       <div class="modal-row"><span class="modal-label">Fx(x,y,t)</span><input class="modal-inp" id="mo-fxExpr" value="-y" placeholder="ex: -y"></div>
       <div class="modal-row"><span class="modal-label">Fy(x,y,t)</span><input class="modal-inp" id="mo-fyExpr" value="x" placeholder="ex: x"></div>
-      <div class="modal-row"><span class="modal-label">Grade N</span><input class="modal-inp" id="mo-gridN" type="number" value="14"></div>
-      <div class="modal-row"><span class="modal-label">Alcance</span><input class="modal-inp" id="mo-gridRange" type="number" value="5"></div>
-      <div class="modal-row"><span class="modal-label">Escala seta</span><input class="modal-inp" id="mo-arrowScale" type="number" step="0.05" value="0.4"></div>
-      <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
+      <div class="modal-row"><span class="modal-label">${tr.field.gridN}</span><input class="modal-inp" id="mo-gridN" type="number" value="14"></div>
+      <div class="modal-row"><span class="modal-label">${tr.field.range}</span><input class="modal-inp" id="mo-gridRange" type="number" value="5"></div>
+      <div class="modal-row"><span class="modal-label">${tr.field.arrowScale}</span><input class="modal-inp" id="mo-arrowScale" type="number" step="0.05" value="0.4"></div>
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
   };
 
   const body = document.getElementById('modal-body');
@@ -327,10 +327,10 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
       ? `<select class="prop-val" data-prop="${propKey}" onchange="window.__updateObjProp(${obj.id},this.getAttribute('data-prop'),this.value)">${vOptsBl.replace(`value="${value}"`, `value="${value}" selected`)}</select>`
       : isTrailMode
       ? `<select class="prop-val" data-prop="${propKey}" onchange="window.__updateObjProp(${obj.id},this.getAttribute('data-prop'),this.value)">
-          <option value="persist"${value === 'persist' ? ' selected' : ''}>Persistente</option>
-          <option value="fade"${value === 'fade' ? ' selected' : ''}>Temporário</option>
-          <option value="dots"${value === 'dots' ? ' selected' : ''}>Fantasmas</option>
-          <option value="none"${value === 'none' ? ' selected' : ''}>Sem rastro</option>
+          <option value="persist"${value === 'persist' ? ' selected' : ''}>${tr.trailMode.persistent}</option>
+          <option value="fade"${value === 'fade' ? ' selected' : ''}>${tr.trailMode.temporary}</option>
+          <option value="dots"${value === 'dots' ? ' selected' : ''}>${tr.trailMode.ghosts}</option>
+          <option value="none"${value === 'none' ? ' selected' : ''}>${tr.trailMode.none}</option>
         </select>`
       : type === 'color'
       ? `<input type="color" class="prop-color" value="${value || '#4f9eff'}" data-prop="${propKey}" onchange="window.__updateObjProp(${obj.id},this.getAttribute('data-prop'),this.value)">`
@@ -348,8 +348,8 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
       <span class="prop-label">${label}</span>
       <select style="background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--txt2);font-size:10px;padding:2px 4px;width:68px;flex-shrink:0"
         onchange="(function(sel){var wrap=sel.closest('.prop-row');wrap.querySelector('.pvc-num').style.display=sel.value==='var'?'none':'';wrap.querySelector('.pvc-var').style.display=sel.value==='var'?'':'none';})(this)">
-        <option value="const"${!isVar ? ' selected' : ''}>Constante</option>
-        <option value="var"${isVar ? ' selected' : ''}>Variável</option>
+        <option value="const"${!isVar ? ' selected' : ''}>${tr.spring.constant}</option>
+        <option value="var"${isVar ? ' selected' : ''}>${tr.spring.variable}</option>
       </select>
       <input class="prop-val pvc-num" type="number" step="any" value="${numVal}" style="${isVar ? 'display:none;' : ''}flex:1"
         data-prop="${propKey}" onchange="window.__updateObjProp(${objId},this.getAttribute('data-prop'),parseFloat(this.value)||0)" onkeydown="if(event.key==='Enter')this.blur()">
@@ -362,16 +362,16 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
 
   const PROPS: Record<string, string> = {
     particle: `
-      <div class="prop-section"><div class="prop-title">Identidade</div>
-        ${row('Nome', 'name', obj.name)}
-        ${row('Cor', 'color', obj.color, 'color')}
-        ${row('Raio px', 'radius', obj.radius, 'number')}
-        ${row('Rotação °', 'rotation', obj.rotation || 0, 'number')}
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
+        ${row(tr.commonProps.color, 'color', obj.color, 'color')}
+        ${row(tr.particle.radius, 'radius', obj.radius, 'number')}
+        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
       </div>
-      <div class="prop-section"><div class="prop-title">Posição</div>
+      <div class="prop-section"><div class="prop-title">${tr.particle.position}</div>
         ${rowVarOrConst('X ←→', 'x', obj.x, vars, obj.id)}
         ${rowVarOrConst('Y ↕', 'y', obj.y, vars, obj.id)}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
       <div class="prop-section"><div class="prop-title">${tr.particle.velocityVector}</div>
         ${row(tr.particle.showVelocity, 'showVec', obj.showVec, 'checkbox')}
@@ -387,60 +387,60 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${row(tr.particle.magnitudeLabel, 'magLabel', obj.magLabel)}
         <div class="prop-section" style="font-size:10px;color:var(--txt3)">${tr.particle.interpolationHint}</div>
       </div>
-      <div class="prop-section"><div class="prop-title">Rastro</div>
-        ${row('Mostrar', 'showTrail', obj.showTrail, 'checkbox')}
-        ${row('Modo', 'trailMode', obj.trailMode || 'persist', 'trailmode')}
-        ${row('Comprimento', 'trailLen', obj.trailLen, 'number')}
+      <div class="prop-section"><div class="prop-title">${tr.particle.trail}</div>
+        ${row(tr.commonProps.show, 'showTrail', obj.showTrail, 'checkbox')}
+        ${row(tr.commonProps.mode, 'trailMode', obj.trailMode || 'persist', 'trailmode')}
+        ${row(tr.particle.vectorLength, 'trailLen', obj.trailLen, 'number')}
         ${row(tr.particle.label, 'label', obj.label)}
       </div>
-      <div class="prop-section"><div class="prop-title">Imagem</div>
-        ${row('Usar imagem', 'useImage', obj.useImage, 'checkbox')}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">PNG/JPG</span><button class="pico" onclick="window.__loadObjImage(${obj.id})" style="font-size:10px">📁 Carregar</button>${obj.imageData ? '<span style="color:#34d399;font-size:10px;margin-left:4px">✓</span>' : ''}</div>
+      <div class="prop-section"><div class="prop-title">${tr.particle.image}</div>
+        ${row(tr.particle.useImage, 'useImage', obj.useImage, 'checkbox')}
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.imageFormat}</span><button class="pico" onclick="window.__loadObjImage(${obj.id})" style="font-size:10px">📁 ${tr.particle.loadImage}</button>${obj.imageData ? '<span style="color:#34d399;font-size:10px;margin-left:4px">✓</span>' : ''}</div>
       </div>`,
     pendulum: `
-      <div class="prop-section"><div class="prop-title">Identidade</div>
-        ${row('Nome', 'name', obj.name)}
-        ${row('Cor bob', 'color', obj.color, 'color')}
-        ${row('Cor haste', 'rodColor', obj.rodColor, 'color')}
-        ${row('Raio bob', 'radius', obj.radius, 'number')}
-        ${row('Rotação °', 'rotation', obj.rotation || 0, 'number')}
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
+        ${row(tr.pendulum.bobColor, 'color', obj.color, 'color')}
+        ${row(tr.pendulum.rodColor, 'rodColor', obj.rodColor, 'color')}
+        ${row(tr.pendulum.bobRadius, 'radius', obj.radius, 'number')}
+        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
       </div>
-      <div class="prop-section"><div class="prop-title">Física</div>
-        ${row('Ângulo θ', 'theta', obj.theta, 'varsel')}
-        ${rowVarOrConst('Comprimento L', 'L', obj.L, vars, obj.id)}
-        ${rowVarOrConst('Pivot X', 'pivotX', obj.pivotX, vars, obj.id)}
-        ${rowVarOrConst('Pivot Y', 'pivotY', obj.pivotY, vars, obj.id)}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.physics}</div>
+        ${row(tr.pendulum.angle, 'theta', obj.theta, 'varsel')}
+        ${rowVarOrConst(tr.pendulum.length, 'L', obj.L, vars, obj.id)}
+        ${rowVarOrConst(tr.pendulum.pivotX, 'pivotX', obj.pivotX, vars, obj.id)}
+        ${rowVarOrConst(tr.pendulum.pivotY, 'pivotY', obj.pivotY, vars, obj.id)}
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
-      <div class="prop-section"><div class="prop-title">Rastro</div>
-        ${row('Mostrar', 'showTrail', obj.showTrail, 'checkbox')}
-        ${row('Modo', 'trailMode', obj.trailMode || 'persist', 'trailmode')}
-        ${row('Comprimento', 'trailLen', obj.trailLen, 'number')}
+      <div class="prop-section"><div class="prop-title">${tr.particle.trail}</div>
+        ${row(tr.commonProps.show, 'showTrail', obj.showTrail, 'checkbox')}
+        ${row(tr.commonProps.mode, 'trailMode', obj.trailMode || 'persist', 'trailmode')}
+        ${row(tr.particle.vectorLength, 'trailLen', obj.trailLen, 'number')}
       </div>`,
     spring: `
-      <div class="prop-section"><div class="prop-title">Identidade</div>
-        ${row('Nome', 'name', obj.name)}
-        ${row('Cor', 'color', obj.color, 'color')}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
+        ${row(tr.commonProps.color, 'color', obj.color, 'color')}
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
-      <div class="prop-section"><div class="prop-title">Configuração</div>
-        <div class="prop-row"><span class="prop-label">Orientação</span><select class="prop-val" data-prop="vertical" onchange="window.__updateObjProp(${obj.id},this.getAttribute('data-prop'),this.value)"><option value="true"${(obj.vertical === true || obj.vertical === 'true') ? ' selected' : ''}>Vertical</option><option value="false"${(obj.vertical === false || obj.vertical === 'false') ? ' selected' : ''}>Horizontal</option></select></div>
-        ${row('Bloco (var)', 'x', obj.x, 'varsel')}
-        ${rowVarOrConst('Pivot X', 'pivotX', obj.pivotX !== undefined ? obj.pivotX : obj.x1, vars, obj.id)}
-        ${rowVarOrConst('Pivot Y', 'pivotY', obj.pivotY !== undefined ? obj.pivotY : obj.y1, vars, obj.id)}
-        ${row('Espiras', 'coils', obj.coils, 'number')}
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.configuration}</div>
+        <div class="prop-row"><span class="prop-label">${tr.spring.orientation}</span><select class="prop-val" data-prop="vertical" onchange="window.__updateObjProp(${obj.id},this.getAttribute('data-prop'),this.value)"><option value="true"${(obj.vertical === true || obj.vertical === 'true') ? ' selected' : ''}>${tr.spring.vertical}</option><option value="false"${(obj.vertical === false || obj.vertical === 'false') ? ' selected' : ''}>${tr.spring.horizontal}</option></select></div>
+        ${row(tr.spring.blockPos, 'x', obj.x, 'varsel')}
+        ${rowVarOrConst(tr.spring.pivotX, 'pivotX', obj.pivotX !== undefined ? obj.pivotX : obj.x1, vars, obj.id)}
+        ${rowVarOrConst(tr.spring.pivotY, 'pivotY', obj.pivotY !== undefined ? obj.pivotY : obj.y1, vars, obj.id)}
+        ${row(tr.spring.coils, 'coils', obj.coils, 'number')}
       </div>`,
     vector: `
-      <div class="prop-section"><div class="prop-title">Identidade</div>
-        ${row('Nome', 'name', obj.name)}
-        ${row('Cor', 'color', obj.color, 'color')}
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
+        ${row(tr.commonProps.color, 'color', obj.color, 'color')}
         ${row(tr.vector.thickness, 'lineWidth', obj.lineWidth, 'number')}
-        ${row('Rotação °', 'rotation', obj.rotation || 0, 'number')}
+        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
         ${row(tr.vector.projections, 'showProj', obj.showProj, 'checkbox')}
         ${row(tr.vector.projectionColor, 'projColor', obj.projColor, 'color')}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
-      <div class="prop-section"><div class="prop-title">${tr.vector.originX.split(' ')[0]}</div>
+      <div class="prop-section"><div class="prop-title">${tr.particle.position}</div>
         ${rowVarOrConst(tr.vector.originX, 'x', obj.x, vars, obj.id)}
         ${rowVarOrConst(tr.vector.originY, 'y', obj.y, vars, obj.id)}
       </div>
@@ -455,94 +455,94 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         <div class="prop-section" style="font-size:10px;color:var(--txt3)">${tr.vector.interpolationHint}</div>
       </div>`,
     circle: `
-      <div class="prop-section"><div class="prop-title">Identidade</div>
-        ${row('Nome', 'name', obj.name)}
-        ${row('Cor borda', 'color', obj.color, 'color')}
-        ${row('Cor fill', 'fillColor', obj.fillColor, 'color')}
-        ${row('Rotação °', 'rotation', obj.rotation || 0, 'number')}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
+        ${row(tr.circle.borderColor, 'color', obj.color, 'color')}
+        ${row(tr.circle.fillColor, 'fillColor', obj.fillColor, 'color')}
+        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
-      <div class="prop-section"><div class="prop-title">Geometria</div>
-        ${rowVarOrConst('Centro X', 'x', obj.x, vars, obj.id)}
-        ${rowVarOrConst('Centro Y', 'y', obj.y, vars, obj.id)}
-        ${rowVarOrConst('Raio', 'r', obj.r, vars, obj.id)}
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.geometry}</div>
+        ${rowVarOrConst(tr.circle.centerX, 'x', obj.x, vars, obj.id)}
+        ${rowVarOrConst(tr.circle.centerY, 'y', obj.y, vars, obj.id)}
+        ${rowVarOrConst(tr.circle.radiusPixel, 'r', obj.r, vars, obj.id)}
       </div>
-      <div class="prop-section"><div class="prop-title">Imagem</div>
-        ${row('Usar imagem', 'useImage', obj.useImage, 'checkbox')}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">PNG/JPG</span><button class="pico" onclick="window.__loadObjImage(${obj.id})" style="font-size:10px">📁 Carregar</button>${obj.imageData ? '<span style="color:#34d399;font-size:10px;margin-left:4px">✓</span>' : ''}</div>
+      <div class="prop-section"><div class="prop-title">${tr.particle.image}</div>
+        ${row(tr.particle.useImage, 'useImage', obj.useImage, 'checkbox')}
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.imageFormat}</span><button class="pico" onclick="window.__loadObjImage(${obj.id})" style="font-size:10px">📁 ${tr.particle.loadImage}</button>${obj.imageData ? '<span style="color:#34d399;font-size:10px;margin-left:4px">✓</span>' : ''}</div>
       </div>`,
     rect: `
-      <div class="prop-section"><div class="prop-title">Identidade</div>
-        ${row('Nome', 'name', obj.name)}
-        ${row('Cor borda', 'color', obj.color, 'color')}
-        ${row('Cor fill', 'fillColor', obj.fillColor, 'color')}
-        ${row('Rotação °', 'rotation', obj.rotation || 0, 'number')}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
+        ${row(tr.circle.borderColor, 'color', obj.color, 'color')}
+        ${row(tr.circle.fillColor, 'fillColor', obj.fillColor, 'color')}
+        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
-      <div class="prop-section"><div class="prop-title">Geometria</div>
-        ${rowVarOrConst('Centro X', 'x', obj.x, vars, obj.id)}
-        ${rowVarOrConst('Centro Y', 'y', obj.y, vars, obj.id)}
-        ${rowVarOrConst('Largura', 'w', obj.w, vars, obj.id)}
-        ${rowVarOrConst('Altura', 'h', obj.h, vars, obj.id)}
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.geometry}</div>
+        ${rowVarOrConst(tr.circle.centerX, 'x', obj.x, vars, obj.id)}
+        ${rowVarOrConst(tr.circle.centerY, 'y', obj.y, vars, obj.id)}
+        ${rowVarOrConst(tr.rectangle.width, 'w', obj.w, vars, obj.id)}
+        ${rowVarOrConst(tr.rectangle.height, 'h', obj.h, vars, obj.id)}
       </div>
-      <div class="prop-section"><div class="prop-title">Imagem</div>
-        ${row('Usar imagem', 'useImage', obj.useImage, 'checkbox')}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">PNG/JPG</span><button class="pico" onclick="window.__loadObjImage(${obj.id})" style="font-size:10px">📁 Carregar</button>${obj.imageData ? '<span style="color:#34d399;font-size:10px;margin-left:4px">✓</span>' : ''}</div>
+      <div class="prop-section"><div class="prop-title">${tr.particle.image}</div>
+        ${row(tr.particle.useImage, 'useImage', obj.useImage, 'checkbox')}
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.imageFormat}</span><button class="pico" onclick="window.__loadObjImage(${obj.id})" style="font-size:10px">📁 ${tr.particle.loadImage}</button>${obj.imageData ? '<span style="color:#34d399;font-size:10px;margin-left:4px">✓</span>' : ''}</div>
       </div>`,
     label: `
-      <div class="prop-section"><div class="prop-title">Identidade</div>
-        ${row('Nome', 'name', obj.name)}
-        ${row('Cor', 'color', obj.color, 'color')}
-        ${row('Tamanho', 'fontSize', obj.fontSize, 'number')}
-        ${row('Rotação °', 'rotation', obj.rotation || 0, 'number')}
-        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
+        ${row(tr.commonProps.color, 'color', obj.color, 'color')}
+        ${row(tr.textLabel.size, 'fontSize', obj.fontSize, 'number')}
+        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
-      <div class="prop-section"><div class="prop-title">Conteúdo</div>
-        ${row('Texto', 'text', obj.text)}
-        ${row('Pos X', 'x', obj.x, 'number')}
-        ${row('Pos Y', 'y', obj.y, 'number')}
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.content}</div>
+        ${row(tr.textLabel.text, 'text', obj.text)}
+        ${row(tr.textLabel.posX, 'x', obj.x, 'number')}
+        ${row(tr.textLabel.posY, 'y', obj.y, 'number')}
       </div>
-      <div class="prop-section" style="font-size:10px;color:var(--txt3)">Use {varname} ou {varname:2} para interpolar valores</div>`,
+      <div class="prop-section" style="font-size:10px;color:var(--txt3)">${tr.textLabel.interpolationHint}</div>`,
     vectorfield: `
-      <div class="prop-section"><div class="prop-title">Campo Vetorial</div>
-        ${row('Nome', 'name', obj.name)}
+      <div class="prop-section"><div class="prop-title">${tr.field.fieldType}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
         ${row('Fx(x,y,t)', 'fxExpr', obj.fxExpr || '-y')}
         ${row('Fy(x,y,t)', 'fyExpr', obj.fyExpr || 'x')}
-        ${row('Alcance', 'gridRange', obj.gridRange || 5, 'number')}
+        ${row(tr.field.range, 'gridRange', obj.gridRange || 5, 'number')}
       </div>
-      <div class="prop-section"><div class="prop-title">Eixo Z → Cor</div>
+      <div class="prop-section"><div class="prop-title">${tr.field.zAxisColor}</div>
         ${row('Fz(x,y,t)', 'fzExpr', obj.fzExpr || '')}
         <div class="prop-row" style="font-size:10px;color:var(--txt3);flex-direction:column;align-items:flex-start;gap:3px">
-          <span>Se definido, a cor de cada ponto mapeia Fz:</span>
+          <span>${tr.field.zExprHint}</span>
           <div style="display:flex;align-items:center;gap:4px;margin-top:2px">
             <div style="width:60px;height:8px;border-radius:3px;background:linear-gradient(to right,#4488ff,#ffffff,#ff4444)"></div>
-            <span>negativo → zero → positivo</span>
+            <span>${tr.field.zScaleHint}</span>
           </div>
-          <span style="margin-top:2px">Ex: <code>z</code>, <code>x*y</code>, <code>sin(x)</code></span>
+          <span style="margin-top:2px">${tr.field.zExample}</span>
         </div>
-        ${obj.fzExpr ? '' : row('Cor base', 'color', obj.color || '#4f9eff', 'color')}
+        ${obj.fzExpr ? '' : row(tr.field.baseColor, 'color', obj.color || '#4f9eff', 'color')}
       </div>
-      <div class="prop-section"><div class="prop-title">Modo de Visualização</div>
-        <div class="prop-row"><span class="prop-label">Modo</span>
+      <div class="prop-section"><div class="prop-title">${tr.field.viewMode}</div>
+        <div class="prop-row"><span class="prop-label">${tr.commonProps.mode}</span>
           <select class="prop-val" data-prop="vfMode"
             onchange="window.__updateObjProp(${obj.id},this.getAttribute('data-prop'),this.value)">
-            <option value="arrows"${(obj.vfMode||'arrows')==='arrows' ? ' selected' : ''}>⊞ Vetores</option>
-            <option value="fieldlines"${obj.vfMode==='fieldlines' ? ' selected' : ''}>〰 Linhas de Campo</option>
+            <option value="arrows"${(obj.vfMode||'arrows')==='arrows' ? ' selected' : ''}>⊞ ${tr.field.vectorsMode}</option>
+            <option value="fieldlines"${obj.vfMode==='fieldlines' ? ' selected' : ''}>〰 ${tr.field.fieldLinesMode}</option>
           </select>
         </div>
         ${(obj.vfMode||'arrows')==='arrows' ? `
-        ${row('Grade N', 'gridN', obj.gridN || 14, 'number')}
-        ${row('Escala seta', 'arrowScale', obj.arrowScale || 0.4, 'number')}
+        ${row(tr.field.gridN, 'gridN', obj.gridN || 14, 'number')}
+        ${row(tr.field.arrowScale, 'arrowScale', obj.arrowScale || 0.4, 'number')}
         ` : `
-        ${row('Nº sementes', 'fieldSeeds', obj.fieldSeeds || 16, 'number')}
-        ${row('Passos', 'fieldSteps', obj.fieldSteps || 120, 'number')}
-        ${row('Tamanho passo', 'fieldDs', obj.fieldDs || 0.08, 'number')}
-        ${row('Espessura linha', 'lineWidth', obj.lineWidth || 1.2, 'number')}
+        ${row(tr.field.seeds, 'fieldSeeds', obj.fieldSeeds || 16, 'number')}
+        ${row(tr.field.steps, 'fieldSteps', obj.fieldSteps || 120, 'number')}
+        ${row(tr.field.stepSize, 'fieldDs', obj.fieldDs || 0.08, 'number')}
+        ${row(tr.field.lineThickness, 'lineWidth', obj.lineWidth || 1.2, 'number')}
         `}
       </div>`,
   };
 
-  el.innerHTML = PROPS[obj.type] || `<div class="no-obj">Tipo: ${obj.type}</div>`;
+  el.innerHTML = PROPS[obj.type] || `<div class="no-obj">${tr.commonProps.type}: ${obj.type}</div>`;
 }
 
 // ── Update property ──────────────────────────────────────────────────────────
