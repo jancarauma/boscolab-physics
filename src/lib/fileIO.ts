@@ -3,7 +3,7 @@ import type { AnimRenderer } from './AnimRenderer';
 import type { GraphRenderer } from './GraphRenderer';
 import { makeObj } from './objects';
 import { toast, closeMenus } from './uiHelpers';
-import { getEditorText, setEditorText, applyModel } from './modelEditor';
+import { getEditorText, setEditorText, applyModel, setEditorIndVar } from './modelEditor';
 import { getICValues, rebuildICPanel } from './icPanel';
 import { rebuildVarList } from './modelEditor';
 
@@ -95,10 +95,13 @@ export function onFileLoad(
 
       const indVarEl = doc.querySelector('indVar');
       if (indVarEl) {
-        sim.indVar = indVarEl.textContent?.trim() ?? 't';
+        sim.setIndependentVariable(indVarEl.textContent?.trim() ?? 't');
         const inp = document.getElementById('inp-ind-var') as HTMLInputElement | null;
         if (inp) inp.value = sim.indVar;
       }
+      setEditorIndVar(sim.indVar);
+
+      applyModel(sim, onRebuild, true);
 
       const speedFactorEl = doc.querySelector('speedFactor');
       if (speedFactorEl) {
@@ -177,7 +180,7 @@ export function onFileLoad(
 export function exportCSV(sim: SimEngine): void {
   closeMenus();
   if (sim.history.length < 2) { toast(t().messages.runSimulationFirst); return; }
-  const vars = ['t', ...Object.keys(sim.parsed?.variables || {})];
+  const vars = sim.getAllVarNames();
   const csv = [vars.join(','), ...sim.history.map((s: any) => vars.map(v => s[v] ?? '').join(','))].join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));

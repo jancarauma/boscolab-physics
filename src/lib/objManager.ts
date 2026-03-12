@@ -298,6 +298,7 @@ export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
   selectedObj = obj; obj._selected = true;
   renderObjList(anim);
   renderObjProps(obj, sim, anim);
+  const tr = getTranslations();
   toast(interpolate(tr.messages.objectAdded, { name: obj.name }));
 }
 

@@ -1,4 +1,4 @@
-import { ModelParser } from './ModelParser';
+import { ModelParser, normalizeIdentifier } from './ModelParser';
 
 // ── SIMULATION ENGINE ─────────────────────────────────
 export class SimEngine {
@@ -37,31 +37,56 @@ export class SimEngine {
     this.onStep = null; this.onStatus = null;
   }
 
+  setIndependentVariable(name: string) {
+    const normalized = normalizeIdentifier(name);
+    if (!/^[a-z_][a-z0-9_]*$/i.test(normalized)) return { ok: false, error: 'Use um identificador válido (ex.: t, x, tempo).' };
+    if (normalized === 'dt' || normalized === 'n') return { ok: false, error: `"${normalized}" é reservado.` };
+    const prev = this.indVar;
+    this.indVar = normalized;
+    this.parser.indVar = normalized;
+    this._syncIndependentVarState(prev);
+    return { ok: true, value: normalized };
+  }
+
   setModel(src: string) {
-    this.parsed = this.parser.parse(src);
+    this.parsed = this.parser.parse(src, this.indVar);
     if (this.parsed.errors.length) { this._setStatus('error'); return { ok: false, errors: this.parsed.errors }; }
+    this._syncIndependentVarState();
     this._buildFns();
     return { ok: true, errors: [] };
+  }
+
+  _syncStateTime(target: Record<string, number>, time: number, prevIndVar?: string) {
+    const previous = normalizeIdentifier(prevIndVar ?? this.indVar);
+    target.t = time;
+    target[this.indVar] = time;
+    if (previous !== 't' && previous !== this.indVar && !(this.parsed?.variables?.[previous])) delete target[previous];
+  }
+
+  _syncIndependentVarState(prevIndVar?: string) {
+    if (Object.keys(this.state).length) this._syncStateTime(this.state, this.t, prevIndVar);
+    if (Object.keys(this.initState).length) this._syncStateTime(this.initState, 0, prevIndVar);
+    this.history.forEach((entry: any) => this._syncStateTime(entry, entry.t ?? 0, prevIndVar));
   }
 
   _buildFns() {
     const { equations } = this.parsed;
     const p = this.parser;
     const constL = equations.filter((e: any) => e.type === 'const').map((e: any) => `s.${e.var}=${e.value};`);
-    const derivL = equations.filter((e: any) => e.type === 'derived').map((e: any) => `s.${e.var}=${p.compileExpr(e.expr)};`);
+    const derivL = equations.filter((e: any) => e.type === 'derived').map((e: any) => `s.${e.var}=${p.compileExpr(e.expr, this.indVar)};`);
     try { this._applyFn = new Function('s', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n')); } catch (e) { console.error('_applyFn:', e); }
     const eulerL = equations.map((e: any) => {
-      if (e.type === 'iterative') return `ns.${e.var}=${p.compileExpr(e.expr).replace(/_p_(\w+)/g, (_: string, v: string) => `prev.${v}`)};`;
-      if (e.type === 'differential') return `ns.${e.var}=s.${e.var}+(${p.compileExpr(e.expr)})*dt;`;
+      if (e.type === 'iterative') return `ns.${e.var}=${p.compileExpr(e.expr, this.indVar).replace(/_p_(\w+)/g, (_: string, v: string) => `prev.${v}`)};`;
+      if (e.type === 'differential') return `ns.${e.var}=s.${e.var}+(${p.compileExpr(e.expr, this.indVar)})*dt;`;
       return '';
     }).filter(Boolean);
     try { this._evalFn = new Function('s', 'prev', 'ns', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n') + '\n' + eulerL.join('\n')); } catch (e) { console.error('_evalFn:', e); }
     const derivStateL = equations.map((e: any) => {
       if (e.type === 'iterative') {
-        const js = p.compileExpr(e.expr).replace(/_p_(\w+)/g, (_: string, v: string) => `s.${v}`);
+        const js = p.compileExpr(e.expr, this.indVar).replace(/_p_(\w+)/g, (_: string, v: string) => `s.${v}`);
         return `d.${e.var}=((${js})-s.${e.var})/dt;`;
       }
-      if (e.type === 'differential') return `d.${e.var}=${p.compileExpr(e.expr)};`;
+      if (e.type === 'differential') return `d.${e.var}=${p.compileExpr(e.expr, this.indVar)};`;
       return '';
     }).filter(Boolean);
     try { this._derivFn = new Function('s', 'd', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n') + '\n' + derivStateL.join('\n')); } catch (e) { console.error('_derivFn:', e); }
@@ -111,8 +136,8 @@ export class SimEngine {
       }
     }
     if (this.method === 'rk4') this._stepRK4(); else this._stepEuler();
-    this.t += this.dt; this.n++; this.state.t = this.t;
-    this.state[this.indVar] = this.t;
+    this.t += this.dt; this.n++;
+    this._syncStateTime(this.state, this.t);
     if (this.history.length < this.maxHist) this.history.push({ ...this.state, t: this.t, n: this.n });
     if (this.t >= this.tMax) { this._setStatus('done'); this.stop(); }
     if (this.onStep) this.onStep(this.state, this.t, this.n);
@@ -123,7 +148,7 @@ export class SimEngine {
     this.history.pop();
     const s = this.history[this.history.length - 1];
     this.state = { ...s }; this.t = s.t || 0; this.n = s.n || 0;
-    this.state[this.indVar] = this.t;
+    this._syncStateTime(this.state, this.t);
     if (this.onStep) this.onStep(this.state, this.t, this.n);
   }
 
@@ -133,8 +158,8 @@ export class SimEngine {
     this.initState = { ...normalized }; this.state = { ...normalized };
     if (this.parsed) Object.entries(this.parsed.constVars).forEach(([k, v]: [string, any]) => { this.state[k] = v; this.initState[k] = v; });
     this.t = 0; this.n = 0;
-    this.state.t = 0;
-    this.state[this.indVar] = 0;
+    this._syncStateTime(this.state, 0);
+    this._syncStateTime(this.initState, 0);
     this._applyDerived(this.state);
     this.history = [{ ...this.state, t: 0, n: 0 }];
   }
@@ -143,8 +168,7 @@ export class SimEngine {
     this.stop();
     this.state = { ...this.initState };
     if (this.parsed) Object.entries(this.parsed.constVars).forEach(([k, v]: [string, any]) => { this.state[k] = v; });
-    this.state.t = 0;
-    this.state[this.indVar] = 0;
+    this._syncStateTime(this.state, 0);
     this._applyDerived(this.state);
     this.t = 0; this.n = 0;
     this.history = [{ ...this.state, t: 0, n: 0 }];
@@ -188,5 +212,5 @@ export class SimEngine {
   _setStatus(s: string) { this.status = s; if (this.onStatus) this.onStatus(s); }
 
   getVars() { if (!this.parsed) return []; return Object.entries(this.parsed.variables).map(([n, i]: [string, any]) => ({ name: n, ...i })); }
-  getAllVarNames() { if (!this.parsed) return []; return ['t', ...Object.keys(this.parsed.variables)]; }
+  getAllVarNames() { return Array.from(new Set(['t', this.indVar, ...Object.keys(this.parsed?.variables || {})])); }
 }

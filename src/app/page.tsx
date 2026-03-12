@@ -23,7 +23,7 @@ import { EXAMPLES } from '@/lib/examples';
 import { initTheme, toggleTheme } from '@/lib/theme';
 import { toast, setErr, clearErr, toggleMenu, closeMenus, closeModal, blabConfirm, blabAlert, setupRH, showHelp, showAbout } from '@/lib/uiHelpers';
 import { simPlay, simPause, simReset, simStep, simBack, updateStatusUI } from '@/lib/simControls';
-import { buildEditorUI, setEditorText, getEditorText, scheduleReparse, applyModel, rebuildVarList, updateVarValues, editorWrapClick } from '@/lib/modelEditor';
+import { buildEditorUI, setEditorText, getEditorText, scheduleReparse, applyModel, rebuildVarList, updateVarValues, editorWrapClick, setEditorIndVar } from '@/lib/modelEditor';
 import { rebuildICPanel, getICValues, applyIC, toggleIC } from '@/lib/icPanel';
 import { addObject, confirmAddObject, renderObjList, renderObjProps, selectObj as _selectObj, toggleObjVis, deleteObj, deleteSelectedObj, clearAllObjects, moveObjLayer, loadObjImage, resetObjOffset, updateObjProp, togglePivotField } from '@/lib/objManager';
 import { selTab, rebuildGraphSelects, updateGraphCfg, clearGraph, exportGraphCSV, exportGraphPNG } from '@/lib/graphManager';
@@ -180,6 +180,10 @@ export default function Home() {
       closeMenus();
       const ex = EXAMPLES[name]; if (!ex) return;
       doSimReset();
+      sim.setIndependentVariable('t');
+      setEditorIndVar(sim.indVar);
+      const indVarEl = document.getElementById('inp-ind-var') as HTMLInputElement | null;
+      if (indVarEl) indVarEl.value = sim.indVar;
       setEditorText(ex.model.trim());
       const dtEl  = document.getElementById('inp-dt')    as HTMLInputElement | null;
       const tmEl  = document.getElementById('inp-tmax')  as HTMLInputElement | null;
@@ -217,6 +221,10 @@ export default function Home() {
         okLabel: tr.dialogs.createNew, okClass: 'danger',
         onOk: () => {
           doSimReset(); setEditorText('');
+          sim.setIndependentVariable('t');
+          setEditorIndVar(sim.indVar);
+          const indVarEl = document.getElementById('inp-ind-var') as HTMLInputElement | null;
+          if (indVarEl) indVarEl.value = sim.indVar;
           anim.objects = []; selectedObj = null;
           renderObjList(anim); renderObjProps(null, sim, anim);
           graphs.forEach(g => g.clear());
@@ -335,7 +343,19 @@ export default function Home() {
     (document.getElementById('sel-speed') as HTMLSelectElement | null)?.addEventListener('change', function () { sim.speedFactor = parseFloat(this.value) || 1; sim._frameAcc = 0; });
     (document.getElementById('inp-dt')   as HTMLInputElement | null)?.addEventListener('change', function () { sim.dt   = parseFloat(this.value) || 0.01; sim._frameAcc = 0; });
     (document.getElementById('inp-tmax') as HTMLInputElement | null)?.addEventListener('change', function () { sim.tMax = parseFloat(this.value) || 10; });
-    (document.getElementById('inp-ind-var') as HTMLInputElement | null)?.addEventListener('change', function () { sim.indVar = this.value.trim() || 't'; });
+    (document.getElementById('inp-ind-var') as HTMLInputElement | null)?.addEventListener('change', function () {
+      const result = sim.setIndependentVariable(this.value);
+      if (!result.ok) {
+        setErr(result.error || 'Variável independente inválida.');
+        this.value = sim.indVar;
+        return;
+      }
+      clearErr();
+      this.value = sim.indVar;
+      setEditorIndVar(sim.indVar);
+      buildEditorUI(doApplyModel, sim.indVar);
+      doApplyModel(true);
+    });
     (document.getElementById('sel-method') as HTMLSelectElement | null)?.addEventListener('change', function () { sim.method = this.value; });
 
     // ── Sub-menu positioning ─────────────────────────────────────────────────
@@ -368,7 +388,7 @@ export default function Home() {
     mdiInit(graphs);
     undoInit(anim);
     doLoadEx('solar');
-    setTimeout(() => { buildEditorUI(doApplyModel); doApplyModel(true); }, 400);
+    setTimeout(() => { buildEditorUI(doApplyModel, sim.indVar); doApplyModel(true); }, 400);
 
     return () => { if (_renderRAF !== null) cancelAnimationFrame(_renderRAF); };
   }, []);
@@ -392,6 +412,7 @@ export default function Home() {
         onChange={e => {
           const w = window as any;
           onFileLoad(e as any, w.sim, w.anim, w.graphs, () => {
+            buildEditorUI(() => w.applyModel?.(), w.sim.indVar);
             rebuildVarList(w.sim);
             rebuildICPanel(w.sim);
             rebuildGraphSelects(w.__activeTab ?? 0, w.graphs, w.sim);

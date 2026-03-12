@@ -1,10 +1,24 @@
 import type { SimEngine } from './SimEngine';
 import { formatVal } from './formatVal';
 import { t, interpolate } from './i18n';
+import { normalizeIdentifier } from './ModelParser';
 
 let _editorLines: string[] = [''];
 let _activeLine = 0;
 let _parseTimer: ReturnType<typeof setTimeout> | null = null;
+let _indVar = 't';
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function indVarPattern(): string {
+  return _indVar === 't' ? 't' : `(?:${escapeRegExp(_indVar)}|t)`;
+}
+
+export function setEditorIndVar(name: string): void {
+  _indVar = normalizeIdentifier(name);
+}
 
 export function getEditorText(): string { return _editorLines.join('\n'); }
 
@@ -12,7 +26,7 @@ export function setEditorText(text: string): void {
   _editorLines = text.split('\n');
   if (_editorLines.length === 0) _editorLines = [''];
   _activeLine = 0;
-  if (document.getElementById('editor-wrap')) buildEditorUI();
+  if (document.getElementById('editor-wrap')) buildEditorUI(undefined, _indVar);
 }
 
 export function scheduleReparse(onReparse: () => void): void {
@@ -24,14 +38,18 @@ export function isEqLine(s: string): boolean {
   const t = s.replace(/\/\/.*$/, '').replace(/#.*$/, '').trim();
   if (!t) return false;
   if (s.trim().startsWith('//') || s.trim().startsWith('#')) return false;
-  return !!(t.match(/\w+\(t\+dt\)\s*=/) || t.match(/d\w+\s*\/\s*dt\s*=/) || t.match(/^\w+\s*=\s*.+/));
+  return !!(
+    t.match(new RegExp(`\\w+\\(\\s*${indVarPattern()}\\s*\\+\\s*dt\\s*\\)\\s*=`))
+    || t.match(new RegExp(`d\\w+\\s*\\/\\s*d${indVarPattern()}\\s*=`))
+    || t.match(/^\w+\s*=\s*.+/)
+  );
 }
 
 export function lineToLatex(line: string): string {
   let s = line.trim();
-  s = s.replace(/(\w+)\(t\+dt\)/g, (_, v) => `${v}_{t+\\Delta t}`);
-  s = s.replace(/(\w+)\(t\)/g, (_, v) => `${v}_t`);
-  s = s.replace(/d(\w+)\/dt/g, (_, v) => `\\frac{d${v}}{dt}`);
+  s = s.replace(new RegExp(`(\\w+)\\((${indVarPattern()})\\+dt\\)`, 'g'), (_, v, ref) => `${v}_{${ref}+\\Delta t}`);
+  s = s.replace(new RegExp(`(\\w+)\\((${indVarPattern()})\\)`, 'g'), (_, v, ref) => `${v}_{${ref}}`);
+  s = s.replace(new RegExp(`d(\\w+)\\/d(${indVarPattern()})`, 'g'), (_, v, ref) => `\\frac{d${v}}{d${ref}}`);
   s = s.replace(/\btheta\b/g, '\\theta').replace(/\bomega\b/g, '\\omega')
        .replace(/\balpha\b/g, '\\alpha').replace(/\bbeta\b/g, '\\beta')
        .replace(/\bgamma\b/g, '\\gamma').replace(/\bsigma\b/g, '\\sigma')
@@ -51,11 +69,12 @@ export function lineToLatex(line: string): string {
 }
 
 export function latexToPlain(latex: string): string {
+  const pattern = indVarPattern();
   let s = latex;
-  s = s.replace(/([a-zA-Z]\w*)\s*_\{t\+\\Delta t\}/g, '$1(t+dt)');
-  s = s.replace(/([a-zA-Z]\w*)\s*_\{t\}/g, '$1(t)');
-  s = s.replace(/([a-zA-Z]\w*)\s*_t\b/g, '$1(t)');
-  s = s.replace(/\\frac\{d\s*([a-zA-Z]\w*)\}\{dt\}/g, 'd$1/dt');
+  s = s.replace(new RegExp(`([a-zA-Z]\\w*)\\s*_\\{(${pattern})\\+\\\\Delta t\\}`, 'g'), '$1($2+dt)');
+  s = s.replace(new RegExp(`([a-zA-Z]\\w*)\\s*_\\{(${pattern})\\}`, 'g'), '$1($2)');
+  s = s.replace(new RegExp(`([a-zA-Z]\\w*)\\s*_(${pattern})\\b`, 'g'), '$1($2)');
+  s = s.replace(new RegExp(`\\\\frac\\{d\\s*([a-zA-Z]\\w*)\\}\\{d\\s*(${pattern})\\}`, 'g'), 'd$1/d$2');
   s = s.replace(/\\sqrt\{([^}]+)\}/g, 'sqrt($1)');
   s = s.replace(/\\theta/g, 'theta').replace(/\\omega/g, 'omega')
        .replace(/\\alpha/g, 'alpha').replace(/\\beta/g, 'beta')
@@ -75,7 +94,8 @@ export function latexToPlain(latex: string): string {
   return s.trim();
 }
 
-export function buildEditorUI(onReparse?: () => void): void {
+export function buildEditorUI(onReparse?: () => void, indVar?: string): void {
+  if (indVar) setEditorIndVar(indVar);
   const wrap = document.getElementById('editor-wrap');
   if (!wrap) return;
   wrap.innerHTML = '';
@@ -192,7 +212,7 @@ export function editorWrapClick(e: MouseEvent, onReparse?: () => void): void {
   if (!row) {
     _editorLines.push('');
     _activeLine = _editorLines.length - 1;
-    buildEditorUI(onReparse); focusLine(_activeLine);
+    buildEditorUI(onReparse, _indVar); focusLine(_activeLine);
   }
 }
 

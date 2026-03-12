@@ -13,7 +13,7 @@ export function selTab(i: number, graphs: GraphRenderer[]): void {
 
 export function rebuildGraphSelects(activeTab: number, graphs: GraphRenderer[], sim: SimEngine): void {
   if (!sim) return;
-  const vars = ['t', ...(sim.parsed ? Object.keys(sim.parsed.variables) : [])];
+  const vars = sim.getAllVarNames();
   const g = graphs[activeTab];
   if (!g) return;
   (['cfg-xvar', 'cfg-yvar', 'cfg-yvar2'] as const).forEach((id, si) => {
