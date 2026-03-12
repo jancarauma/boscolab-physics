@@ -1,5 +1,6 @@
 import { getPrec, setPrec, formatVal } from './formatVal';
 import { closeMenus, toast } from './uiHelpers';
+import { t } from './i18n';
 
 export function showPrecisionModal(): void {
   closeMenus();
@@ -33,5 +34,5 @@ export function applyPrecision(): void {
   if (!fmtEl || !decEl) return;
   setPrec(fmtEl.value, parseInt(decEl.value));
   document.getElementById('precision-modal-overlay')?.classList.remove('show');
-  toast('✓ Precisão aplicada');
+  toast(t().messages.precisionApplied);
 }

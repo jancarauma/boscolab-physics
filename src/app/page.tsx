@@ -31,6 +31,7 @@ import { saveFile, openFile, onFileLoad, exportCSV, exportPNG } from '@/lib/file
 import { mdiInit, mdiFocus, mdiMinimize, mdiRestore, mdiUpdateTaskbar, mdiGetLayout, mdiApplyLayout } from '@/lib/mdiSystem';
 import { showPrecisionModal, updatePrecPreview, applyPrecision } from '@/lib/precisionModal';
 import { undoInit, undoPush, undoSchedule, undoUndo, undoRedo } from '@/lib/undoRedo';
+import { t, interpolate } from '@/lib/i18n';
 
 export default function Home() {
   useEffect(() => {
@@ -98,7 +99,7 @@ export default function Home() {
     w.loadObjImage     = (id: number) => loadObjImage(id, anim, sim);
 
     w.applyModel     = () => doApplyModel();
-    w.verifyModel    = () => { doApplyModel(); if (sim.parsed && !sim.parsed.errors.length) toast(`✓ Modelo OK — ${Object.keys(sim.parsed.variables).length} variáveis`); };
+    w.verifyModel    = () => { doApplyModel(); if (sim.parsed && !sim.parsed.errors.length) toast(interpolate(t().messages.modelOk, { count: Object.keys(sim.parsed.variables).length })); };
     w.applyIC        = () => applyIC(sim, anim, graphs);
     w.toggleIC       = () => toggleIC();
     w.getICValues    = () => getICValues(sim);
@@ -209,10 +210,11 @@ export default function Home() {
 
     function doNewProject() {
       closeMenus();
+      const tr = t();
       blabConfirm({
-        icon: '', title: 'Novo Projeto',
-        message: '<p>Deseja criar um novo projeto?</p><p style="color:var(--acc5);font-size:12px">⚠️ Dados não salvos serão perdidos.</p>',
-        okLabel: 'Criar Novo', okClass: 'danger',
+        icon: '', title: tr.modals.newProject,
+        message: `<p>${tr.dialogs.newProjectMsg}</p><p style="color:var(--acc5);font-size:12px">${tr.dialogs.unsavedData}</p>`,
+        okLabel: tr.dialogs.createNew, okClass: 'danger',
         onOk: () => {
           doSimReset(); setEditorText('');
           anim.objects = []; selectedObj = null;
@@ -220,8 +222,8 @@ export default function Home() {
           graphs.forEach(g => g.clear());
           const vl = document.getElementById('varlist'); if (vl) vl.innerHTML = '';
           sim.parsed = null;
-          const ps = document.getElementById('parse-status'); if (ps) ps.textContent = 'Pronto';
-          toast('✓ Novo projeto');
+          const ps = document.getElementById('parse-status'); if (ps) ps.textContent = tr.ui.ready;
+          toast(tr.messages.newProjectCreated);
         },
       });
     }

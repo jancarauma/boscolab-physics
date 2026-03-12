@@ -5,12 +5,15 @@ import { t, onLocaleChange } from '@/lib/i18n';
 const close = () => document.getElementById('precision-modal-overlay')?.classList.remove('show');
 
 export default function PrecisionModal() {
-  const [labels, setLabels] = useState({ title: 'Precisão', format: 'Formato', decimals: 'Casas decimais', preview: 'Prévia', cancel: 'Cancelar', apply: 'Aplicar' });
+  const [labels, setLabels] = useState(() => {
+    const tr = t();
+    return { title: tr.options.precision, format: tr.precision.format, decimals: tr.precision.decimals, preview: tr.precision.preview, fixed: tr.precision.fixed, scientific: tr.precision.scientific, automatic: tr.precision.automatic, engineering: tr.precision.engineering, cancel: tr.modals.cancel, apply: tr.modals.apply };
+  });
 
   useEffect(() => {
     const updateLabels = () => {
       const tr = t();
-      const newLabels = { title: tr.options.precision, format: 'Formato', decimals: 'Casas decimais', preview: 'Prévia', cancel: tr.modals.cancel, apply: tr.modals.apply };
+      const newLabels = { title: tr.options.precision, format: tr.precision.format, decimals: tr.precision.decimals, preview: tr.precision.preview, fixed: tr.precision.fixed, scientific: tr.precision.scientific, automatic: tr.precision.automatic, engineering: tr.precision.engineering, cancel: tr.modals.cancel, apply: tr.modals.apply };
       setLabels(newLabels);
     };
     updateLabels();
@@ -28,10 +31,10 @@ export default function PrecisionModal() {
           <div className="prec-row">
             <span className="prec-label">{labels.format}</span>
             <select className="prec-sel" id="prec-format" onChange={() => (window as any).updatePrecPreview?.()}>
-              <option value="fixed">Decimal fixo</option>
-              <option value="sci">Notação científica</option>
-              <option value="auto">Automática</option>
-              <option value="eng">Engenharia (x10e3)</option>
+              <option value="fixed">{labels.fixed}</option>
+              <option value="sci">{labels.scientific}</option>
+              <option value="auto">{labels.automatic}</option>
+              <option value="eng">{labels.engineering}</option>
             </select>
           </div>
           <div className="prec-row" id="prec-dec-row">

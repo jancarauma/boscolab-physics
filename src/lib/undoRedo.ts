@@ -1,5 +1,6 @@
 import type { AnimRenderer } from './AnimRenderer';
 import { toast } from './uiHelpers';
+import { t } from './i18n';
 
 const MAX_HISTORY = 60;
 
@@ -66,24 +67,24 @@ export function undoSchedule(anim: AnimRenderer): void {
 }
 
 export function undoUndo(anim: AnimRenderer, onRender: () => void): void {
-  if (!_undoStack.length) { toast('Nada para desfazer'); return; }
+  if (!_undoStack.length) { toast(t().messages.noUndoAction); return; }
   _redoStack.push(_lastSnap);
   const prev = _undoStack.pop()!;
   _lastSnap = prev;
   restore(anim, prev);
   _updateButtons();
-  toast('↩ Desfeito');
+  toast(t().messages.undoDone);
   onRender();
 }
 
 export function undoRedo(anim: AnimRenderer, onRender: () => void): void {
-  if (!_redoStack.length) { toast('Nada para refazer'); return; }
+  if (!_redoStack.length) { toast(t().messages.noRedoAction); return; }
   _undoStack.push(_lastSnap);
   const next = _redoStack.pop()!;
   _lastSnap = next;
   restore(anim, next);
   _updateButtons();
-  toast('↪ Refeito');
+  toast(t().messages.redoDone);
   onRender();
 }
 

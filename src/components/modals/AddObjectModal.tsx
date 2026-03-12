@@ -5,7 +5,10 @@ import { t, onLocaleChange, type Locale } from '@/lib/i18n';
 const close = () => document.getElementById('modal-add')?.classList.remove('show');
 
 export default function AddObjectModal() {
-  const [labels, setLabels] = useState(() => ({ title: 'Novo Objeto', cancel: 'Cancelar', add: 'Adicionar' }));
+  const [labels, setLabels] = useState(() => {
+    const tr = t();
+    return { title: tr.modals.newObject, cancel: tr.modals.cancel, add: tr.modals.add };
+  });
 
   useEffect(() => {
     const updateLabels = () => {

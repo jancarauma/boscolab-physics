@@ -1,4 +1,5 @@
 import type { GraphRenderer } from './GraphRenderer';
+import { t } from './i18n';
 
 interface MdiWindowCfg {
   title: string;
@@ -63,13 +64,19 @@ export function mdiRestore(id: string, graphs: GraphRenderer[]): void {
 export function mdiUpdateTaskbar(): void {
   const tb = document.getElementById('mdi-taskbar');
   if (!tb) return;
+  const tr = t();
+  const titles: Record<string, string> = {
+    'mdi-model': tr.ui.model,
+    'mdi-objects': tr.panels.objects,
+    'mdi-graphs': tr.panels.graphs,
+  };
   tb.innerHTML = '';
   Object.entries(MDI_WINDOWS).forEach(([id, cfg]) => {
     const win = document.getElementById(id);
     if (win?.classList.contains('mdi-minimized')) {
       const btn = document.createElement('button');
       btn.className = 'mdi-taskbtn';
-      btn.innerHTML = `<span class="mdi-taskdot" style="background:${cfg.dot}"></span>${cfg.title}`;
+      btn.innerHTML = `<span class="mdi-taskdot" style="background:${cfg.dot}"></span>${titles[id] || cfg.title}`;
       btn.onclick = () => mdiRestore(id, (window as any).__graphs ?? []);
       tb.appendChild(btn);
     }

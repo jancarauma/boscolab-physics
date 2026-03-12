@@ -2,6 +2,7 @@ import type { SimEngine } from './SimEngine';
 import type { GraphRenderer } from './GraphRenderer';
 import { closeMenus, toast } from './uiHelpers';
 import { formatVal } from './formatVal';
+import { t, interpolate } from './i18n';
 
 export function selTab(i: number, graphs: GraphRenderer[]): void {
   (window as any).__activeTab = i;
@@ -49,9 +50,9 @@ export function clearGraph(i: number, graphs: GraphRenderer[]): void {
 export function exportGraphCSV(idx: number, graphs: GraphRenderer[]): void {
   closeMenus();
   const g = graphs[idx];
-  if (!g) { toast('Gráfico não encontrado'); return; }
-  if (!g.yvar) { toast('Selecione uma variável Y no gráfico primeiro'); return; }
-  if (g.data.length < 2) { toast('Execute a simulação primeiro (ou mude a variável Y)'); return; }
+  if (!g) { toast(t().messages.graphNotFound); return; }
+  if (!g.yvar) { toast(t().messages.selectYVar); return; }
+  if (g.data.length < 2) { toast(t().messages.runSimulationOrChange); return; }
   const hasY2 = g.data2 && g.data2.length > 1;
   const header = hasY2 ? `${g.xvar},${g.yvar},${g.yvar2}` : `${g.xvar},${g.yvar}`;
   const rows = [header];
@@ -63,15 +64,15 @@ export function exportGraphCSV(idx: number, graphs: GraphRenderer[]): void {
   a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv' }));
   a.download = `grafico_${idx + 1}_${g.yvar}_vs_${g.xvar}.csv`;
   a.click();
-  toast(`✓ CSV Gráfico ${idx + 1}: ${g.data.length} pontos`);
+  toast(interpolate(t().messages.csvExported, { idx: idx + 1, count: g.data.length }));
 }
 
 export function exportGraphPNG(idx: number, graphs: GraphRenderer[]): void {
   closeMenus();
   const g = graphs[idx];
-  if (!g) { toast('Gráfico não encontrado'); return; }
-  if (!g.yvar) { toast('Selecione uma variável Y no gráfico primeiro'); return; }
-  if (g.data.length < 2) { toast('Execute a simulação primeiro (ou mude a variável Y)'); return; }
+  if (!g) { toast(t().messages.graphNotFound); return; }
+  if (!g.yvar) { toast(t().messages.selectYVar); return; }
+  if (g.data.length < 2) { toast(t().messages.runSimulationOrChange); return; }
 
   const SCALE = 3;
   const W = 900, H = 540;
@@ -88,7 +89,7 @@ export function exportGraphPNG(idx: number, graphs: GraphRenderer[]): void {
   ctx.strokeRect(pad.l, pad.t, pw, ph);
 
   let { xmin, xmax, ymin, ymax } = g;
-  if (!isFinite(xmin)) { toast('Sem dados'); return; }
+  if (!isFinite(xmin)) { toast(t().messages.noData); return; }
   if (xmin === xmax) { xmin -= 1; xmax += 1; }
   if (ymin === ymax) { ymin -= 1; ymax += 1; }
   const xr = xmax - xmin, yr = ymax - ymin;
@@ -158,5 +159,5 @@ export function exportGraphPNG(idx: number, graphs: GraphRenderer[]): void {
   a.download = `grafico_${idx + 1}_${g.yvar}_vs_${g.xvar}.png`;
   a.href = offCanvas.toDataURL('image/png');
   a.click();
-  toast(`✓ PNG HD exportado (${W * SCALE}x${H * SCALE}px)`);
+  toast(interpolate(t().messages.hdPngExported, { width: W * SCALE, height: H * SCALE }));
 }

@@ -2,6 +2,7 @@ import type { SimEngine } from './SimEngine';
 import type { AnimRenderer } from './AnimRenderer';
 import { makeObj, OBJECT_ICONS } from './objects';
 import { toast, closeModal } from './uiHelpers';
+import { t as getTranslations, interpolate } from './i18n';
 
 let _pendingObjType: string | null = null;
 export let selectedObj: any = null;
@@ -11,7 +12,8 @@ export function renderObjList(anim: AnimRenderer): void {
   const el = document.getElementById('obj-list');
   if (!el) return;
   if (!anim.objects.length) {
-    el.innerHTML = '<div class="no-obj">Sem objetos.<br>Adicione abaixo ↓</div>';
+    const tr = getTranslations();
+    el.innerHTML = `<div class="no-obj">${tr.panels.noObjects}<br>${tr.panels.noObjectsDesc}</div>`;
     return;
   }
   el.innerHTML = anim.objects.map((o: any) => `
@@ -83,7 +85,7 @@ export function loadObjImage(id: number, anim: AnimRenderer, sim: SimEngine): vo
       const img = new Image(); img.src = o.imageData; o._imgEl = img;
       o.useImage = true;
       renderObjProps(o, sim, anim);
-      toast('✓ Imagem carregada — salva no projeto .modx');
+      toast(getTranslations().messages.imageLoaded);
     };
     reader.readAsDataURL(f);
   };
@@ -94,19 +96,20 @@ export function resetObjOffset(id: number, anim: AnimRenderer): void {
   const o = anim.objects.find((o: any) => o.id === id);
   if (!o) return;
   o._vox = 0; o._voy = 0;
-  toast('↺ Offset visual resetado');
+  toast(getTranslations().messages.visualOffsetReset);
 }
 
 // ── Add Object Modal ─────────────────────────────────────────────────────────
 export function addObject(type: string, sim: SimEngine, getObjId: () => number): void {
   _pendingObjType = type;
+  const tr = getTranslations();
   const icons: Record<string, string> = { particle: '●', pendulum: '🔴', spring: '🌀', vector: '➡', circle: '◯', rect: '▭', label: 'T', vectorfield: '⊞' };
-  const labels: Record<string, string> = { particle: 'Partícula', pendulum: 'Pêndulo', spring: 'Mola + Bloco', vector: 'Vetor', circle: 'Círculo', rect: 'Retângulo', label: 'Texto', vectorfield: 'Campo Vetorial' };
+  const labels: Record<string, string> = { particle: tr.objectTypes.particle, pendulum: tr.objectTypes.pendulum, spring: tr.objectTypes.spring, vector: tr.objectTypes.vector, circle: tr.objectTypes.circle, rect: tr.objectTypes.rectangle, label: tr.objectTypes.text, vectorfield: tr.objectTypes.field };
 
   const iconEl = document.getElementById('modal-icon');
   const labelEl = document.getElementById('modal-type-label');
   if (iconEl) iconEl.textContent = icons[type] || '●';
-  if (labelEl) labelEl.textContent = 'Novo — ' + (labels[type] || type);
+  if (labelEl) labelEl.textContent = `${tr.modals.newObject} — ${labels[type] || type}`;
 
   const vars = sim.getAllVarNames();
   const varOpts = vars.map((v: string) => `<option value="${v}">${v}</option>`).join('');
@@ -295,14 +298,18 @@ export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
   selectedObj = obj; obj._selected = true;
   renderObjList(anim);
   renderObjProps(obj, sim, anim);
-  toast(`✓ ${obj.name} adicionado`);
+  toast(interpolate(tr.messages.objectAdded, { name: obj.name }));
 }
 
 // ── Object Properties Panel ──────────────────────────────────────────────────
 export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): void {
   const el = document.getElementById('obj-props');
   if (!el) return;
-  if (!obj) { el.innerHTML = '<div class="no-obj">Clique num objeto<br>para ver propriedades</div>'; return; }
+  if (!obj) {
+    const tr = getTranslations();
+    el.innerHTML = `<div class="no-obj">${tr.panels.noProps}<br>${tr.panels.noPropsDesc}</div>`;
+    return;
+  }
 
   const vars: string[] = sim.getAllVarNames();
   const vOptsBl = '<option value="">—</option>' + vars.map(v => `<option value="${v}">${v}</option>`).join('');

@@ -9,6 +9,8 @@ export default function Toolbar() {
       play: tr.toolbar.play,
       pause: tr.toolbar.pause,
       restart: tr.toolbar.restart,
+      stepBack: tr.toolbar.stepBack,
+      stepForward: tr.toolbar.stepForward,
       undo: tr.toolbar.undoTooltip,
       redo: tr.toolbar.redoTooltip,
       method: tr.settings.method,
@@ -26,6 +28,7 @@ export default function Toolbar() {
       trailPersistent: tr.trailMode.persistent,
       trailGhosts: tr.trailMode.ghosts,
       trailNone: tr.trailMode.none,
+      globalTrailMode: tr.ui.globalTrailMode,
     };
   });
 
@@ -36,6 +39,8 @@ export default function Toolbar() {
         play: tr.toolbar.play,
         pause: tr.toolbar.pause,
         restart: tr.toolbar.restart,
+        stepBack: tr.toolbar.stepBack,
+        stepForward: tr.toolbar.stepForward,
         undo: tr.toolbar.undoTooltip,
         redo: tr.toolbar.redoTooltip,
         method: tr.settings.method,
@@ -53,6 +58,7 @@ export default function Toolbar() {
         trailPersistent: tr.trailMode.persistent,
         trailGhosts: tr.trailMode.ghosts,
         trailNone: tr.trailMode.none,
+        globalTrailMode: tr.ui.globalTrailMode,
       });
       // Update button text
       const btnPlay = document.getElementById('btn-play') as HTMLButtonElement;
@@ -107,8 +113,8 @@ export default function Toolbar() {
       <button className="btn primary" id="btn-play" onClick={() => (window as any).simPlay?.()}>{text.play}</button>
       <button className="btn" id="btn-pause" onClick={() => (window as any).simPause?.()}>{text.pause}</button>
       <button className="btn" id="btn-reset" onClick={() => (window as any).simReset?.()}>{text.restart}</button>
-      <button className="btn" id="btn-back" onClick={() => (window as any).simBack?.()}>◀|</button>
-      <button className="btn" id="btn-step" onClick={() => (window as any).simStep?.()}>|▶</button>
+      <button className="btn" id="btn-back" onClick={() => (window as any).simBack?.()} title={text.stepBack}>◀|</button>
+      <button className="btn" id="btn-step" onClick={() => (window as any).simStep?.()} title={text.stepForward}>|▶</button>
       <div className="tbsep" />
       <button className="btn" id="btn-undo" onClick={() => (window as any).undoUndo?.()} title={text.undo}>{text.undo.split(' ')[0]}</button>
       <button className="btn" id="btn-redo" onClick={() => (window as any).undoRedo?.()} title={text.redo}>{text.redo.split(' ')[0]}</button>
@@ -144,7 +150,7 @@ export default function Toolbar() {
       <button className="btn" onClick={() => (window as any).toggleIC?.()}>⚙ {text.initialConditions}</button>
       <div className="tbsep" />
       <span className="tblabel">{text.trail}</span>
-      <select className="tbsel" id="sel-trail-mode" onChange={(e) => (window as any).setGlobalTrailMode?.(e.target.value)} title="Global trail mode">
+      <select className="tbsel" id="sel-trail-mode" onChange={(e) => (window as any).setGlobalTrailMode?.(e.target.value)} title={text.globalTrailMode}>
         <option value="fade">{text.trailTemporary}</option>
         <option value="persist" defaultValue="persist">{text.trailPersistent}</option>
         <option value="dots">{text.trailGhosts}</option>

@@ -9,7 +9,7 @@ import { rebuildVarList } from './modelEditor';
 
 import { applyTheme } from './theme';
 import { getPrec, setPrec } from './formatVal';
-import { getLocale, setLocale, type Locale } from './i18n';
+import { getLocale, setLocale, type Locale, t, interpolate } from './i18n';
 
 type RebuildCb = () => void;
 
@@ -46,7 +46,7 @@ export function saveFile(
   a.href = URL.createObjectURL(new Blob([xml], { type: 'text/xml' }));
   a.download = 'simulacao.modx';
   a.click();
-  toast('✓ Arquivo salvo');
+  toast(t().messages.fileSaved);
 }
 
 // ── Open ────────────────────────────────────────────────────────────────────
@@ -70,7 +70,7 @@ export function onFileLoad(
     try {
       const doc = new DOMParser().parseFromString((ev.target as FileReader).result as string, 'text/xml');
       const eqs = doc.querySelector('equations');
-      if (!eqs) { toast('❌ Arquivo inválido'); return; }
+      if (!eqs) { toast(t().messages.invalidFile); return; }
 
       setEditorText(eqs.textContent?.trim() ?? '');
 
@@ -164,9 +164,9 @@ export function onFileLoad(
         if (loc) setLocale(loc);
       }
 
-      toast('✓ Arquivo carregado');
+      toast(t().messages.fileLoaded);
     } catch (err: any) {
-      toast('❌ Erro: ' + err.message);
+      toast(interpolate(t().messages.fileError, { message: err.message }));
     }
   };
   r.readAsText(f);
@@ -176,14 +176,14 @@ export function onFileLoad(
 // ── Export CSV ───────────────────────────────────────────────────────────────
 export function exportCSV(sim: SimEngine): void {
   closeMenus();
-  if (sim.history.length < 2) { toast('Execute a simulação primeiro'); return; }
+  if (sim.history.length < 2) { toast(t().messages.runSimulationFirst); return; }
   const vars = ['t', ...Object.keys(sim.parsed?.variables || {})];
   const csv = [vars.join(','), ...sim.history.map((s: any) => vars.map(v => s[v] ?? '').join(','))].join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
   a.download = 'dados.csv';
   a.click();
-  toast(`✓ CSV: ${sim.history.length} pontos`);
+  toast(interpolate(t().messages.csvDataExported, { count: sim.history.length }));
 }
 
 // ── Export PNG ───────────────────────────────────────────────────────────────
@@ -195,5 +195,5 @@ export function exportPNG(): void {
   a.download = 'animacao.png';
   a.href = canvas.toDataURL();
   a.click();
-  toast('✓ PNG exportado');
+  toast(t().messages.pngExported);
 }

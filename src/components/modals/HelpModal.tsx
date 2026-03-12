@@ -9,7 +9,7 @@ export default function HelpModal() {
     const tr = t();
     return {
       title: tr.help.syntax,
-      shortcuts: 'Keyboard Shortcuts',
+      shortcuts: tr.helpContent.shortcutsTitle,
       newProjectKey: tr.helpContent.newProjectKey,
       saveKey: tr.helpContent.saveKey,
       playKey: tr.helpContent.playKey,
@@ -17,11 +17,14 @@ export default function HelpModal() {
       stepForwardKey: tr.helpContent.stepForwardKey,
       stepBackKey: tr.helpContent.stepBackKey,
       deleteKey: tr.helpContent.deleteKey,
-      statements: 'Statements',
+      statements: tr.helpContent.statementsTitle,
       constantDesc: tr.helpContent.constantDesc,
       expressionDesc: tr.helpContent.expressionDesc,
       availableFunctions: tr.helpContent.availableFunctions,
       conditional: tr.helpContent.conditional,
+      iterativeExample: tr.helpContent.iterativeExample,
+      differentialExample: tr.helpContent.differentialExample,
+      conditionalExample: tr.helpContent.conditionalExample,
       usageTips: tr.helpContent.usageTips,
       dragTip: tr.helpContent.dragTip,
       shiftDragTip: tr.helpContent.shiftDragTip,
@@ -39,7 +42,7 @@ export default function HelpModal() {
       const tr = t();
       setText({
         title: tr.help.syntax,
-        shortcuts: 'Keyboard Shortcuts',
+        shortcuts: tr.helpContent.shortcutsTitle,
         newProjectKey: tr.helpContent.newProjectKey,
         saveKey: tr.helpContent.saveKey,
         playKey: tr.helpContent.playKey,
@@ -47,11 +50,14 @@ export default function HelpModal() {
         stepForwardKey: tr.helpContent.stepForwardKey,
         stepBackKey: tr.helpContent.stepBackKey,
         deleteKey: tr.helpContent.deleteKey,
-        statements: 'Statements',
+        statements: tr.helpContent.statementsTitle,
         constantDesc: tr.helpContent.constantDesc,
         expressionDesc: tr.helpContent.expressionDesc,
         availableFunctions: tr.helpContent.availableFunctions,
         conditional: tr.helpContent.conditional,
+        iterativeExample: tr.helpContent.iterativeExample,
+        differentialExample: tr.helpContent.differentialExample,
+        conditionalExample: tr.helpContent.conditionalExample,
         usageTips: tr.helpContent.usageTips,
         dragTip: tr.helpContent.dragTip,
         shiftDragTip: tr.helpContent.shiftDragTip,
@@ -87,8 +93,8 @@ export default function HelpModal() {
           <div className="help-section">
             <h3>{text.statements}</h3>
             <div className="help-grid">
-              <div className="help-card"><code>x(t+dt) = x(t) + vx*dt</code><small>Iterative — example of definition with time (t)</small></div>
-              <div className="help-card"><code>dx/dt = vx</code><small>Differential — integrated through Euler or RK4 method</small></div>
+              <div className="help-card"><code>x(t+dt) = x(t) + vx*dt</code><small>{text.iterativeExample}</small></div>
+              <div className="help-card"><code>dx/dt = vx</code><small>{text.differentialExample}</small></div>
               <div className="help-card"><code>g = 9.8</code><small>{text.constantDesc}</small></div>
               <div className="help-card"><code>r = sqrt(x^2 + y^2)</code><small>{text.expressionDesc}</small></div>
             </div>
@@ -106,14 +112,14 @@ export default function HelpModal() {
             <h3>{text.conditional}</h3>
             <div className="help-card" style={{ maxWidth: '100%' }}>
               <code>if(cond, valueIfTrue, valueIfFalse)</code>
-              <small>Example: <code style={{ color: 'var(--acc3)' }}>vy(t+dt) = vy(t) + if(y &gt; 0, -g, 0)*dt</code></small>
+              <small>{text.conditionalExample} <code style={{ color: 'var(--acc3)' }}>vy(t+dt) = vy(t) + if(y &gt; 0, -g, 0)*dt</code></small>
             </div>
           </div>
           <div className="help-section">
             <h3>{text.usageTips}</h3>
             <div style={{ fontSize: 12, color: 'var(--txt2)', lineHeight: 1.8 }}>
               • {text.dragTip}<br />
-              • <strong>Shift+drag</strong> {text.shiftDragTip.replace('Shift+arraste ', '').toLowerCase()}<br />
+              • {text.shiftDragTip}<br />
               • {text.scrollTip}<br />
               • {text.saveTip}<br />
               • {text.rk4Tip}

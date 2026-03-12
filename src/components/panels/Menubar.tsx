@@ -145,7 +145,7 @@ export default function Menubar() {
         </div>
       </div>
 
-      <button id="theme-btn" onClick={() => (window as any).toggleTheme?.()} title="Alternar tema">☾</button>
+      <button id="theme-btn" onClick={() => (window as any).toggleTheme?.()} title={tr.ui.toggleTheme}>☾</button>
     </div>
   );
 }

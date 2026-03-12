@@ -142,7 +142,7 @@ export default function AnimationPanel() {
             <div id="model-footer">
               <span id="parse-status">{text.ready}</span>
             </div>
-            <div id="varlist-resize" title="Drag to resize" />
+            <div id="varlist-resize" title={text.resizeDrag} />
             <div id="varlist" />
           </div>
           <div className="mdi-resize" id="mdi-model-resize" />

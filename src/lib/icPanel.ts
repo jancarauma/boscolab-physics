@@ -2,6 +2,7 @@ import type { SimEngine } from './SimEngine';
 import type { AnimRenderer } from './AnimRenderer';
 import type { GraphRenderer } from './GraphRenderer';
 import { toast } from './uiHelpers';
+import { t } from './i18n';
 
 export function rebuildICPanel(sim: SimEngine): void {
   const vars = sim.getVars().filter((v: any) => v.type === 'state');
@@ -36,7 +37,7 @@ export function applyIC(
   sim.setIC(getICValues(sim));
   document.getElementById('ic-panel')?.classList.remove('show');
   rebuildICPanel(sim);
-  toast('✓ Condições iniciais aplicadas');
+  toast(t().messages.icApplied);
 }
 
 export function toggleIC(): void {

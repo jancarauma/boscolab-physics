@@ -1,6 +1,7 @@
 import type { SimEngine } from './SimEngine';
 import type { AnimRenderer } from './AnimRenderer';
 import type { GraphRenderer } from './GraphRenderer';
+import { t } from './i18n';
 import { clearErr, setErr } from './uiHelpers';
 
 interface SimRefs {
@@ -10,7 +11,14 @@ interface SimRefs {
 }
 
 export function simPlay({ sim }: SimRefs): void {
-  if (!sim.parsed || sim.parsed.errors.length) { setErr('Modelo com erros.'); return; }
+  if (!sim.parsed || sim.parsed.equations.length === 0) {
+    setErr(t().messages.emptyModel);
+    return;
+  }
+  if (sim.parsed.errors.length) {
+    setErr(t().messages.modelError);
+    return;
+  }
   sim.start();
 }
 

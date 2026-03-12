@@ -263,21 +263,37 @@ export interface Translations {
   messages: {
     modelOk: string;
     modelError: string;
+    emptyModel: string;
     noUndoAction: string;
     noRedoAction: string;
+    undoDone: string;
+    redoDone: string;
     graphNotFound: string;
     selectYVar: string;
     runSimulationFirst: string;
     csvExported: string;
+    csvDataExported: string;
     fileSaved: string;
+    fileLoaded: string;
+    invalidFile: string;
     fileError: string;
     numericError: string;
     imageLoaded: string;
+    objectAdded: string;
+    icApplied: string;
+    precisionApplied: string;
+    pngExported: string;
+    hdPngExported: string;
+    noData: string;
+    visualOffsetReset: string;
+    newProjectCreated: string;
     runSimulationOrChange: string;
   };
   
   // ── HELP MODAL ────────────────────────────────────────────────────────
   helpContent: {
+    shortcutsTitle: string;
+    statementsTitle: string;
     newProjectKey: string;
     saveKey: string;
     playKey: string;
@@ -289,6 +305,9 @@ export interface Translations {
     expressionDesc: string;
     availableFunctions: string;
     conditional: string;
+    iterativeExample: string;
+    differentialExample: string;
+    conditionalExample: string;
     usageTips: string;
     dragTip: string;
     shiftDragTip: string;
@@ -301,8 +320,29 @@ export interface Translations {
   
   // ── ABOUT MODAL ───────────────────────────────────────────────────────
   about: {
+    subtitle: string;
+    versionLabel: string;
+    authorLabel: string;
+    websiteLabel: string;
+    websiteValue: string;
+    copyrightLabel: string;
+    copyrightValue: string;
+    mathParserLabel: string;
+    mathParserValue: string;
+    integratorsLabel: string;
+    integratorsValue: string;
     graphs: string;
     equations: string;
+  };
+
+  precision: {
+    format: string;
+    decimals: string;
+    preview: string;
+    fixed: string;
+    scientific: string;
+    automatic: string;
+    engineering: string;
   };
   
   // ── GRÁFICOS ──────────────────────────────────────────────────────────
@@ -343,10 +383,16 @@ export interface Translations {
     auto: string;
     image: string;
     data: string;
+    fps: string;
+    points: string;
+    objectsCount: string;
     x: string;
     y1: string;
     y2: string;
     error: string;
+    resizeDrag: string;
+    toggleTheme: string;
+    globalTrailMode: string;
   };
   
   // ── MODO DE RASTRO ────────────────────────────────────────────────────
@@ -385,12 +431,13 @@ const translations: Record<Locale, Translations> = {
     field: { defaultName: 'Campo{id}', fieldType: 'Campo Vetorial' },
     modals: { newProject: 'Novo Projeto', newObject: 'Novo Objeto', cancel: 'Cancelar', add: 'Adicionar', apply: 'Aplicar', close: 'Fechar', confirm: 'Confirmar', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Aviso', info: 'ℹ️', error: 'Erro', newProjectMsg: 'Deseja criar um novo projeto?', unsavedData: '⚠️ Dados não salvos serão perdidos.', createNew: 'Criar Novo' },
-    messages: { modelOk: '✓ Modelo OK — {count} variáveis', modelError: 'Modelo com erros.', noUndoAction: 'Nada para desfazer', noRedoAction: 'Nada para refazer', graphNotFound: 'Gráfico não encontrado', selectYVar: 'Selecione uma variável Y no gráfico primeiro', runSimulationFirst: 'Execute a simulação primeiro', csvExported: '✓ CSV Gráfico {idx}: {count} pontos', fileSaved: '✓ Arquivo salvo', fileError: '❌ Erro: {message}', numericError: 'Erro numérico: {message}', imageLoaded: '✓ Imagem carregada — salva no projeto .modx', runSimulationOrChange: 'Execute a simulação primeiro (ou mude a variável Y)' },
-    helpContent: { newProjectKey: 'Novo projeto', saveKey: 'Salvar arquivo .modx', playKey: 'Iniciar / Parar simulação', restartKey: 'Reiniciar simulação a partir do início', stepForwardKey: 'Executar passo para frente', stepBackKey: 'Executar passo para trás', deleteKey: 'Remover objeto selecionado', constantDesc: 'Constante — valor numérico fixo', expressionDesc: 'Expressão — recalculada a cada passo', availableFunctions: 'Funções Disponíveis', conditional: 'Condicional', usageTips: 'Dicas de Uso', dragTip: 'Arraste objetos na área de animação para reposicioná-los visualmente.', shiftDragTip: 'Shift+arraste modifica as condições iniciais em tempo real.', scrollTip: 'Use scroll do mouse para zoom na animação.', saveTip: 'Salve sua simulação: .modx (arquivo do tipo XML).', rk4Tip: 'O método RK4 é mais preciso para sistemas físicos contínuos.', constants: 'Constantes:', power: 'Potência:' },
-    about: { graphs: 'Gráficos', equations: 'Equações' },
+    messages: { modelOk: '✓ Modelo OK — {count} variáveis', modelError: 'Modelo com erros.', emptyModel: 'Escreva um modelo antes de simular.', noUndoAction: 'Nada para desfazer', noRedoAction: 'Nada para refazer', undoDone: '↩ Desfeito', redoDone: '↪ Refeito', graphNotFound: 'Gráfico não encontrado', selectYVar: 'Selecione uma variável Y no gráfico primeiro', runSimulationFirst: 'Execute a simulação primeiro', csvExported: '✓ CSV Gráfico {idx}: {count} pontos', csvDataExported: '✓ CSV: {count} pontos', fileSaved: '✓ Arquivo salvo', fileLoaded: '✓ Arquivo carregado', invalidFile: '❌ Arquivo inválido', fileError: '❌ Erro: {message}', numericError: 'Erro numérico: {message}', imageLoaded: '✓ Imagem carregada — salva no projeto .modx', objectAdded: '✓ {name} adicionado', icApplied: '✓ Condições iniciais aplicadas', precisionApplied: '✓ Precisão aplicada', pngExported: '✓ PNG exportado', hdPngExported: '✓ PNG HD exportado ({width}x{height}px)', noData: 'Sem dados', visualOffsetReset: '↺ Offset visual resetado', newProjectCreated: '✓ Novo projeto', runSimulationOrChange: 'Execute a simulação primeiro (ou mude a variável Y)' },
+    helpContent: { shortcutsTitle: 'Atalhos de Teclado', statementsTitle: 'Instruções', newProjectKey: 'Novo projeto', saveKey: 'Salvar arquivo .modx', playKey: 'Iniciar / Parar simulação', restartKey: 'Reiniciar simulação a partir do início', stepForwardKey: 'Executar passo para frente', stepBackKey: 'Executar passo para trás', deleteKey: 'Remover objeto selecionado', constantDesc: 'Constante — valor numérico fixo', expressionDesc: 'Expressão — recalculada a cada passo', availableFunctions: 'Funções Disponíveis', conditional: 'Condicional', iterativeExample: 'Iterativo — exemplo de definição com tempo (t)', differentialExample: 'Diferencial — integrado pelos métodos Euler ou RK4', conditionalExample: 'Exemplo:', usageTips: 'Dicas de Uso', dragTip: 'Arraste objetos na área de animação para reposicioná-los visualmente.', shiftDragTip: 'Shift+arraste modifica as condições iniciais em tempo real.', scrollTip: 'Use scroll do mouse para zoom na animação.', saveTip: 'Salve sua simulação: .modx (arquivo do tipo XML).', rk4Tip: 'O método RK4 é mais preciso para sistemas físicos contínuos.', constants: 'Constantes:', power: 'Potência:' },
+    about: { subtitle: 'Simulador Interativo de Física Computacional', versionLabel: 'Versão', authorLabel: 'Autor', websiteLabel: 'Site', websiteValue: 'Saiba mais em', copyrightLabel: 'Copyright', copyrightValue: '© Todos os direitos reservados', mathParserLabel: 'Parser Matemático', mathParserValue: 'Substituição recursiva', integratorsLabel: 'Integradores', integratorsValue: 'Euler · RK4 (Runge-Kutta de 4ª ordem)', graphs: 'Gráficos', equations: 'Equações' },
+    precision: { format: 'Formato', decimals: 'Casas decimais', preview: 'Prévia', fixed: 'Decimal fixo', scientific: 'Notação científica', automatic: 'Automática', engineering: 'Engenharia (x10e3)' },
     graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulação parada' },
     settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro' },
+    ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro', resizeDrag: 'Arraste para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro' },
     trailMode: { temporary: 'Temporário', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sem rastro' },
   },
 
@@ -417,12 +464,13 @@ const translations: Record<Locale, Translations> = {
     field: { defaultName: 'Field{id}', fieldType: 'Vector Field' },
     modals: { newProject: 'New Project', newObject: 'New Object', cancel: 'Cancel', add: 'Add', apply: 'Apply', close: 'Close', confirm: 'Confirm', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Warning', info: 'ℹ️', error: 'Error', newProjectMsg: 'Do you want to create a new project?', unsavedData: '⚠️ Unsaved data will be lost.', createNew: 'Create New' },
-    messages: { modelOk: '✓ Model OK — {count} variables', modelError: 'Model with errors.', noUndoAction: 'Nothing to undo', noRedoAction: 'Nothing to redo', graphNotFound: 'Graph not found', selectYVar: 'Select a Y variable in the graph first', runSimulationFirst: 'Run the simulation first', csvExported: '✓ CSV Graph {idx}: {count} points', fileSaved: '✓ File saved', fileError: '❌ Error: {message}', numericError: 'Numeric error: {message}', imageLoaded: '✓ Image loaded — saved in .modx project', runSimulationOrChange: 'Run the simulation first (or change the Y variable)' },
-    helpContent: { newProjectKey: 'New project', saveKey: 'Save .modx file', playKey: 'Play / Pause simulation', restartKey: 'Restart simulation from the beginning', stepForwardKey: 'Step forward', stepBackKey: 'Step backward', deleteKey: 'Remove selected object', constantDesc: 'Constant — fixed numeric value', expressionDesc: 'Expression — recalculated each step', availableFunctions: 'Available Functions', conditional: 'Conditional', usageTips: 'Usage Tips', dragTip: 'Drag objects in the animation area to reposition them visually.', shiftDragTip: 'Shift+drag modifies initial conditions in real time.', scrollTip: 'Use mouse scroll to zoom in the animation.', saveTip: 'Save your simulation: .modx (XML file format).', rk4Tip: 'The RK4 method is more accurate for continuous physical systems.', constants: 'Constants:', power: 'Power:' },
-    about: { graphs: 'Graphs', equations: 'Equations' },
+    messages: { modelOk: '✓ Model OK — {count} variables', modelError: 'Model with errors.', emptyModel: 'Write a model before running the simulation.', noUndoAction: 'Nothing to undo', noRedoAction: 'Nothing to redo', undoDone: '↩ Undone', redoDone: '↪ Redone', graphNotFound: 'Graph not found', selectYVar: 'Select a Y variable in the graph first', runSimulationFirst: 'Run the simulation first', csvExported: '✓ CSV Graph {idx}: {count} points', csvDataExported: '✓ CSV: {count} points', fileSaved: '✓ File saved', fileLoaded: '✓ File loaded', invalidFile: '❌ Invalid file', fileError: '❌ Error: {message}', numericError: 'Numeric error: {message}', imageLoaded: '✓ Image loaded — saved in .modx project', objectAdded: '✓ {name} added', icApplied: '✓ Initial conditions applied', precisionApplied: '✓ Precision applied', pngExported: '✓ PNG exported', hdPngExported: '✓ HD PNG exported ({width}x{height}px)', noData: 'No data', visualOffsetReset: '↺ Visual offset reset', newProjectCreated: '✓ New project', runSimulationOrChange: 'Run the simulation first (or change the Y variable)' },
+    helpContent: { shortcutsTitle: 'Keyboard Shortcuts', statementsTitle: 'Statements', newProjectKey: 'New project', saveKey: 'Save .modx file', playKey: 'Play / Pause simulation', restartKey: 'Restart simulation from the beginning', stepForwardKey: 'Step forward', stepBackKey: 'Step backward', deleteKey: 'Remove selected object', constantDesc: 'Constant — fixed numeric value', expressionDesc: 'Expression — recalculated each step', availableFunctions: 'Available Functions', conditional: 'Conditional', iterativeExample: 'Iterative — example of definition with time (t)', differentialExample: 'Differential — integrated through Euler or RK4 method', conditionalExample: 'Example:', usageTips: 'Usage Tips', dragTip: 'Drag objects in the animation area to reposition them visually.', shiftDragTip: 'Shift+drag modifies initial conditions in real time.', scrollTip: 'Use mouse scroll to zoom in the animation.', saveTip: 'Save your simulation: .modx (XML file format).', rk4Tip: 'The RK4 method is more accurate for continuous physical systems.', constants: 'Constants:', power: 'Power:' },
+    about: { subtitle: 'Interactive Computational Physics Simulator', versionLabel: 'Version', authorLabel: 'Author', websiteLabel: 'Website', websiteValue: 'Learn more at', copyrightLabel: 'Copyright', copyrightValue: '© All rights reserved', mathParserLabel: 'Math Parser', mathParserValue: 'Recursive substitution', integratorsLabel: 'Integrators', integratorsValue: 'Euler · RK4 (Runge-Kutta 4th order)', graphs: 'Graphs', equations: 'Equations' },
+    precision: { format: 'Format', decimals: 'Decimal places', preview: 'Preview', fixed: 'Fixed decimal', scientific: 'Scientific notation', automatic: 'Automatic', engineering: 'Engineering (x10e3)' },
     graphs: { graph1: 'Graph 1', graph2: 'Graph 2', graph3: 'Graph 3', graph4: 'Graph 4', simulationStopped: 'simulation stopped' },
     settings: { method: 'Method', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't max', speed: 'speed', indVar: 'ind var', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '─', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error' },
+    ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '─', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Drag to resize', toggleTheme: 'Toggle theme', globalTrailMode: 'Global trail mode' },
     trailMode: { temporary: 'Temporary', persistent: 'Persistent', ghosts: 'Ghosts', none: 'No Trail' },
   },
 
@@ -449,12 +497,13 @@ const translations: Record<Locale, Translations> = {
     field: { defaultName: 'Campo{id}', fieldType: 'Campo Vectorial' },
     modals: { newProject: 'Nuevo Proyecto', newObject: 'Nuevo Objeto', cancel: 'Cancelar', add: 'Agregar', apply: 'Aplicar', close: 'Cerrar', confirm: 'Confirmar', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Advertencia', info: 'ℹ️', error: 'Error', newProjectMsg: '¿Desea crear un nuevo proyecto?', unsavedData: '⚠️ Los datos no guardados se perderán.', createNew: 'Crear Nuevo' },
-    messages: { modelOk: '✓ Modelo OK — {count} variables', modelError: 'Modelo con errores.', noUndoAction: 'Nada para deshacer', noRedoAction: 'Nada para rehacer', graphNotFound: 'Gráfico no encontrado', selectYVar: 'Seleccione primero una variable Y en el gráfico', runSimulationFirst: 'Ejecute la simulación primero', csvExported: '✓ CSV Gráfico {idx}: {count} puntos', fileSaved: '✓ Archivo guardado', fileError: '❌ Error: {message}', numericError: 'Error numérico: {message}', imageLoaded: '✓ Imagen cargada — guardada en proyecto .modx', runSimulationOrChange: 'Ejecute la simulación primero (o cambie la variable Y)' },
-    helpContent: { newProjectKey: 'Nuevo proyecto', saveKey: 'Guardar archivo .modx', playKey: 'Reproducir / Pausar simulación', restartKey: 'Reiniciar simulación desde el principio', stepForwardKey: 'Paso adelante', stepBackKey: 'Paso atrás', deleteKey: 'Eliminar objeto seleccionado', constantDesc: 'Constante — valor numérico fijo', expressionDesc: 'Expresión — recalculada en cada paso', availableFunctions: 'Funciones Disponibles', conditional: 'Condicional', usageTips: 'Consejos de Uso', dragTip: 'Arrastre objetos en el área de animación para reposicionarlos visualmente.', shiftDragTip: 'Shift+arrastrar modifica las condiciones iniciales en tiempo real.', scrollTip: 'Use la rueda del mouse para hacer zoom en la animación.', saveTip: 'Guarde su simulación: .modx (formato de archivo XML).', rk4Tip: 'El método RK4 es más preciso para sistemas físicos continuos.', constants: 'Constantes:', power: 'Potencia:' },
-    about: { graphs: 'Gráficos', equations: 'Ecuaciones' },
+    messages: { modelOk: '✓ Modelo OK — {count} variables', modelError: 'Modelo con errores.', emptyModel: 'Escriba un modelo antes de ejecutar la simulación.', noUndoAction: 'Nada para deshacer', noRedoAction: 'Nada para rehacer', undoDone: '↩ Deshecho', redoDone: '↪ Rehecho', graphNotFound: 'Gráfico no encontrado', selectYVar: 'Seleccione primero una variable Y en el gráfico', runSimulationFirst: 'Ejecute la simulación primero', csvExported: '✓ CSV Gráfico {idx}: {count} puntos', csvDataExported: '✓ CSV: {count} puntos', fileSaved: '✓ Archivo guardado', fileLoaded: '✓ Archivo cargado', invalidFile: '❌ Archivo inválido', fileError: '❌ Error: {message}', numericError: 'Error numérico: {message}', imageLoaded: '✓ Imagen cargada — guardada en proyecto .modx', objectAdded: '✓ {name} agregado', icApplied: '✓ Condiciones iniciales aplicadas', precisionApplied: '✓ Precisión aplicada', pngExported: '✓ PNG exportado', hdPngExported: '✓ PNG HD exportado ({width}x{height}px)', noData: 'Sin datos', visualOffsetReset: '↺ Desplazamiento visual restablecido', newProjectCreated: '✓ Nuevo proyecto', runSimulationOrChange: 'Ejecute la simulación primero (o cambie la variable Y)' },
+    helpContent: { shortcutsTitle: 'Atajos de Teclado', statementsTitle: 'Instrucciones', newProjectKey: 'Nuevo proyecto', saveKey: 'Guardar archivo .modx', playKey: 'Reproducir / Pausar simulación', restartKey: 'Reiniciar simulación desde el principio', stepForwardKey: 'Paso adelante', stepBackKey: 'Paso atrás', deleteKey: 'Eliminar objeto seleccionado', constantDesc: 'Constante — valor numérico fijo', expressionDesc: 'Expresión — recalculada en cada paso', availableFunctions: 'Funciones Disponibles', conditional: 'Condicional', iterativeExample: 'Iterativo — ejemplo de definición con tiempo (t)', differentialExample: 'Diferencial — integrado por los métodos Euler o RK4', conditionalExample: 'Ejemplo:', usageTips: 'Consejos de Uso', dragTip: 'Arrastre objetos en el área de animación para reposicionarlos visualmente.', shiftDragTip: 'Shift+arrastrar modifica las condiciones iniciales en tiempo real.', scrollTip: 'Use la rueda del mouse para hacer zoom en la animación.', saveTip: 'Guarde su simulación: .modx (formato de archivo XML).', rk4Tip: 'El método RK4 es más preciso para sistemas físicos continuos.', constants: 'Constantes:', power: 'Potencia:' },
+    about: { subtitle: 'Simulador Interactivo de Física Computacional', versionLabel: 'Versión', authorLabel: 'Autor', websiteLabel: 'Sitio web', websiteValue: 'Más información en', copyrightLabel: 'Copyright', copyrightValue: '© Todos los derechos reservados', mathParserLabel: 'Parser Matemático', mathParserValue: 'Sustitución recursiva', integratorsLabel: 'Integradores', integratorsValue: 'Euler · RK4 (Runge-Kutta de 4º orden)', graphs: 'Gráficos', equations: 'Ecuaciones' },
+    precision: { format: 'Formato', decimals: 'Decimales', preview: 'Vista previa', fixed: 'Decimal fijo', scientific: 'Notación científica', automatic: 'Automática', engineering: 'Ingeniería (x10e3)' },
     graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulación detenida' },
     settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error' },
+    ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Arrastre para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro' },
     trailMode: { temporary: 'Temporal', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sin Rastro' },
   },
 
@@ -481,12 +530,13 @@ const translations: Record<Locale, Translations> = {
     field: { defaultName: '场{id}', fieldType: '矢量场' },
     modals: { newProject: '新项目', newObject: '新对象', cancel: '取消', add: '添加', apply: '应用', close: '关闭', confirm: '确认', ok: '确定' },
     dialogs: { confirmation: '⚠️', warning: '警告', info: 'ℹ️', error: '错误', newProjectMsg: '是否要创建新项目？', unsavedData: '⚠️ 未保存的数据将丢失。', createNew: '创建新项目' },
-    messages: { modelOk: '✓ 模型正常 — {count} 个变量', modelError: '模型有错误。', noUndoAction: '没有可撤销的操作', noRedoAction: '没有可重做的操作', graphNotFound: '未找到图表', selectYVar: '请先在图表中选择 Y 变量', runSimulationFirst: '请先运行模拟', csvExported: '✓ CSV 图表 {idx}：{count} 个点', fileSaved: '✓ 文件已保存', fileError: '❌ 错误：{message}', numericError: '数值错误：{message}', imageLoaded: '✓ 图像已加载 — 已保存到 .modx 项目', runSimulationOrChange: '请先运行模拟（或更改 Y 变量）' },
-    helpContent: { newProjectKey: '新项目', saveKey: '保存 .modx 文件', playKey: '播放 / 暂停模拟', restartKey: '从头开始重新启动模拟', stepForwardKey: '向前步进', stepBackKey: '向后步进', deleteKey: '删除选定的对象', constantDesc: '常数 — 固定数值', expressionDesc: '表达式 — 每步重新计算', availableFunctions: '可用函数', conditional: '条件语句', usageTips: '使用技巧', dragTip: '在动画区域中拖动对象以直观地重新定位它们。', shiftDragTip: 'Shift + 拖动可实时修改初始条件。', scrollTip: '使用鼠标滚轮在动画中进行缩放。', saveTip: '保存您的模拟：.modx（XML 文件格式）。', rk4Tip: 'RK4 方法对连续物理系统更加精确。', constants: '常数：', power: '幂：' },
-    about: { graphs: '图表', equations: '方程' },
+    messages: { modelOk: '✓ 模型正常 — {count} 个变量', modelError: '模型有错误。', emptyModel: '请先编写模型再运行模拟。', noUndoAction: '没有可撤销的操作', noRedoAction: '没有可重做的操作', undoDone: '↩ 已撤销', redoDone: '↪ 已重做', graphNotFound: '未找到图表', selectYVar: '请先在图表中选择 Y 变量', runSimulationFirst: '请先运行模拟', csvExported: '✓ CSV 图表 {idx}：{count} 个点', csvDataExported: '✓ CSV：{count} 个点', fileSaved: '✓ 文件已保存', fileLoaded: '✓ 文件已加载', invalidFile: '❌ 无效文件', fileError: '❌ 错误：{message}', numericError: '数值错误：{message}', imageLoaded: '✓ 图像已加载 — 已保存到 .modx 项目', objectAdded: '✓ 已添加 {name}', icApplied: '✓ 初始条件已应用', precisionApplied: '✓ 精度已应用', pngExported: '✓ PNG 已导出', hdPngExported: '✓ 高清 PNG 已导出（{width}x{height}px）', noData: '无数据', visualOffsetReset: '↺ 视觉偏移已重置', newProjectCreated: '✓ 新项目', runSimulationOrChange: '请先运行模拟（或更改 Y 变量）' },
+    helpContent: { shortcutsTitle: '键盘快捷键', statementsTitle: '语句', newProjectKey: '新项目', saveKey: '保存 .modx 文件', playKey: '播放 / 暂停模拟', restartKey: '从头开始重新启动模拟', stepForwardKey: '向前步进', stepBackKey: '向后步进', deleteKey: '删除选定的对象', constantDesc: '常数 — 固定数值', expressionDesc: '表达式 — 每步重新计算', availableFunctions: '可用函数', conditional: '条件语句', iterativeExample: '迭代式 — 带时间 (t) 的定义示例', differentialExample: '微分式 — 通过 Euler 或 RK4 方法积分', conditionalExample: '示例：', usageTips: '使用技巧', dragTip: '在动画区域中拖动对象以直观地重新定位它们。', shiftDragTip: 'Shift + 拖动可实时修改初始条件。', scrollTip: '使用鼠标滚轮在动画中进行缩放。', saveTip: '保存您的模拟：.modx（XML 文件格式）。', rk4Tip: 'RK4 方法对连续物理系统更加精确。', constants: '常数：', power: '幂：' },
+    about: { subtitle: '交互式计算物理模拟器', versionLabel: '版本', authorLabel: '作者', websiteLabel: '网站', websiteValue: '了解更多', copyrightLabel: '版权', copyrightValue: '© 版权所有', mathParserLabel: '数学解析器', mathParserValue: '递归替换', integratorsLabel: '积分器', integratorsValue: 'Euler · RK4（四阶 Runge-Kutta）', graphs: '图表', equations: '方程' },
+    precision: { format: '格式', decimals: '小数位', preview: '预览', fixed: '定点小数', scientific: '科学计数法', automatic: '自动', engineering: '工程记数法 (x10e3)' },
     graphs: { graph1: '图表 1', graph2: '图表 2', graph3: '图表 3', graph4: '图表 4', simulationStopped: '模拟已停止' },
     settings: { method: '方法', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't 最大值', speed: '速度', indVar: '独立变量', time: 't =', steps: 'n =' },
-    ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '─', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误' },
+    ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '─', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', fps: 'FPS', points: '点', objectsCount: '对象', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误', resizeDrag: '拖动以调整大小', toggleTheme: '切换主题', globalTrailMode: '全局轨迹模式' },
     trailMode: { temporary: '临时', persistent: '持久', ghosts: '幻影', none: '无轨迹' },
   },
 };

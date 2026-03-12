@@ -1,5 +1,6 @@
 import type { SimEngine } from './SimEngine';
 import { formatVal } from './formatVal';
+import { t, interpolate } from './i18n';
 
 let _editorLines: string[] = [''];
 let _activeLine = 0;
@@ -229,7 +230,7 @@ export function applyModel(
   const r = sim.setModel(src);
   const st = document.getElementById('parse-status');
   if (r.ok) {
-    if (st) { st.textContent = '✓ Modelo OK'; st.style.color = '#34d399'; }
+    if (st) { st.textContent = interpolate(t().messages.modelOk, { count: Object.keys(sim.parsed?.variables || {}).length }); st.style.color = '#34d399'; }
     clearErrImport();
     onRebuild();
   } else {
