@@ -400,6 +400,7 @@ button,select,input{font-family:var(--ui)}
 .mdi-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);flex:1}
 .mdi-controls{display:flex;gap:3px;align-items:center;margin-left:auto}
 .mdi-btn{background:none;border:1px solid var(--border);border-radius:3px;color:var(--txt3);font-size:10px;padding:1px 6px;cursor:pointer;line-height:1.4;transition:all .1s;white-space:nowrap;font-family:var(--mono)}
+.mdi-btn.mdi-verify{color:var(--txt2);border-color:var(--border2)}
 .mdi-btn:hover{border-color:var(--acc);color:var(--acc)}
 .mdi-btn.mdi-min:hover{border-color:#f59e0b;color:#f59e0b}
 .mdi-body{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;}

@@ -32,6 +32,7 @@ export default function AnimationPanel() {
       minimize: tr.ui.minimize,
       dragObject: tr.ui.dragObject,
       shiftDrag: tr.ui.shiftDrag,
+      resizeDrag: tr.ui.resizeDrag,
       ready: tr.ui.ready,
       clear: tr.ui.clear,
       auto: tr.ui.auto,
@@ -77,6 +78,7 @@ export default function AnimationPanel() {
         minimize: tr.ui.minimize,
         dragObject: tr.ui.dragObject,
         shiftDrag: tr.ui.shiftDrag,
+        resizeDrag: tr.ui.resizeDrag,
         ready: tr.ui.ready,
         clear: tr.ui.clear,
         auto: tr.ui.auto,
@@ -133,7 +135,7 @@ export default function AnimationPanel() {
             <span className="mdi-dot" style={{ background: 'var(--acc)' }} />
             <span className="mdi-title">{text.model}</span>
             <div className="mdi-controls">
-              <button className="mdi-btn" onClick={() => (window as any).verifyModel?.()} title={text.verify}>{text.verify}</button>
+              <button className="mdi-btn mdi-verify" onClick={() => (window as any).verifyModel?.()} title={text.verify}>{text.verify}</button>
               <button className="mdi-btn mdi-min" onClick={() => (window as any).mdiMinimize?.('mdi-model')} title={text.minimize}>{text.minimize}</button>
             </div>
           </div>
