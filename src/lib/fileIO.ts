@@ -127,7 +127,7 @@ export function onFileLoad(
           const n = parseFloat(v);
           props[k] = isNaN(n) ? v : n;
         });
-        (['showVec', 'showVecProj', 'showTrail', 'useImage', 'visible'] as const).forEach(bp => {
+        (['showVec', 'showVecProj', 'showProj', 'showTrail', 'useImage', 'visible'] as const).forEach(bp => {
           if (props[bp] !== undefined) props[bp] = (props[bp] === 'true' || props[bp] === true);
         });
         const imgEl = oel.querySelector('imageData');

@@ -19,16 +19,17 @@ export function makeObj(type: string, props: Record<string, any> = {}) {
     useImage: false, imageData: '', _imgEl: null,
   };
   const defaults: Record<string, any> = {
-    particle: { x: 'x', y: 'y', radius: 8, showTrail: true, trailMode: 'persist', showVec: false, showVecProj: true, vx: 'vx', vy: 'vy', vecScale: 0.3, vecColor: '#34d399', trailLen: 300, label: '' },
+    particle: { x: 'x', y: 'y', radius: 8, showTrail: true, trailMode: 'persist', showVec: false, showVecProj: true, vx: 'vx', vy: 'vy', vecScale: 0.3, vecColor: '#34d399', projColor: '#93c5fd', vecLabel: '', projXLabel: '', projYLabel: '', magLabel: '', trailLen: 300, label: '' },
     pendulum: { theta: 'theta', L: 1.5, pivotX: 0, pivotY: 0, radius: 10, rodColor: '#94a3b8', showTrail: true, trailMode: 'persist', trailLen: 400 },
     spring: { x: 'x', y: 'y', x1: 0, y1: 5, pivotX: 0, pivotY: 5, coils: 10, vertical: true },
-    vector: { x: 'x', y: 'y', vx: 'vx', vy: 'vy', scale: 0.3, lineWidth: 2, label: '' },
+    vector: { x: 'x', y: 'y', vx: 'vx', vy: 'vy', scale: 0.3, lineWidth: 2, showProj: false, projColor: '#94a3b8', vecLabel: '', projXLabel: '', projYLabel: '', magLabel: '', label: '' },
     circle: { x: 'x', y: 'y', r: 'r', fillColor: 'rgba(79,158,255,.15)', lineWidth: 1.5 },
     rect: { x: 'x', y: 'y', w: 1, h: 1, fillColor: 'rgba(79,158,255,.12)', lineWidth: 1.5 },
     label: { x: 0, y: 3, text: 't = {t:2}', fontSize: 13 },
     vectorfield: { fxExpr: '-y', fyExpr: 'x', gridN: 14, gridRange: 5, arrowScale: 0.4, color: '#4f9eff' },
   };
   const obj = { ...base, ...(defaults[type] || {}), ...props };
+  if (type === 'vector' && props.vecLabel === undefined && props.label !== undefined) obj.vecLabel = props.label;
   if (obj.imageData) {
     const img = new Image();
     img.src = obj.imageData;

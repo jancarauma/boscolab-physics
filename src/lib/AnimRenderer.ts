@@ -239,6 +239,62 @@ export class AnimRenderer {
     ctx.restore();
   }
 
+  _drawVectorProjections(ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, color: string) {
+    ctx.save();
+    ctx.setLineDash([3, 4]);
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = 0.35;
+    ctx.lineWidth = 0.85;
+    ctx.beginPath(); ctx.moveTo(x2, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y2); ctx.lineTo(x2, y2); ctx.stroke();
+    ctx.restore();
+
+    if (Math.abs(x2 - x1) > 4) {
+      ctx.save();
+      ctx.globalAlpha = 0.65;
+      this._arrow(ctx, x1, y1, x2, y1, color, 1.2);
+      ctx.restore();
+    }
+    if (Math.abs(y2 - y1) > 4) {
+      ctx.save();
+      ctx.globalAlpha = 0.65;
+      this._arrow(ctx, x1, y1, x1, y2, color, 1.2);
+      ctx.restore();
+    }
+  }
+
+  _getVectorLabelAnchors(x1: number, y1: number, x2: number, y2: number) {
+    const midX = (x1 + x2) / 2;
+    const midY = (y1 + y2) / 2;
+    const yOffset = y2 >= y1 ? 14 : -8;
+    const xOffset = x2 >= x1 ? 6 : -6;
+    return {
+      vector: { x: midX + 5, y: midY - 6, align: 'left' as CanvasTextAlign },
+      magnitude: { x: midX + 5, y: midY - 18, align: 'left' as CanvasTextAlign },
+      projX: { x: midX, y: y1 + yOffset, align: 'center' as CanvasTextAlign },
+      projY: { x: x1 + xOffset, y: midY + 3, align: x2 >= x1 ? 'left' as CanvasTextAlign : 'right' as CanvasTextAlign },
+    };
+  }
+
+  _renderTemplate(text: string, state: Record<string, number>, extra: Record<string, number | string> = {}) {
+    return String(text).replace(/\{(\w+)(?::(\d+))?\}/g, (_: string, key: string, digits: string) => {
+      const lookup = key.toLowerCase();
+      const val = extra[lookup] ?? extra[key] ?? state[lookup];
+      if (val === undefined) return key;
+      if (typeof val === 'number') return Number(val).toFixed(digits !== undefined ? parseInt(digits) : 2);
+      return String(val);
+    });
+  }
+
+  _drawVectorText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, align: CanvasTextAlign, state: Record<string, number>, extra: Record<string, number | string>) {
+    if (!text) return;
+    const rendered = this._renderTemplate(text, state, extra);
+    ctx.fillStyle = color;
+    ctx.font = '10px DM Sans,sans-serif';
+    ctx.textAlign = align;
+    ctx.fillText(rendered, x, y);
+  }
+
   _drawObj(ctx: CanvasRenderingContext2D, o: any, state: Record<string, number>) {
     const g = (k: string) => this._evalProp(o[k], state);
     const color = o.color || '#4f9eff';
@@ -299,36 +355,18 @@ export class AnimRenderer {
       if (o.showVec && (o.vx || o.vy)) {
         const vx = g('vx'), vy = g('vy'), vs = o.vecScale || 0.3;
         const vecCol = o.vecColor || '#34d399';
+        const projColor = o.projColor || vecCol;
         const [ex, ey] = this.toPx(mx + vx * vs, my + vy * vs);
+        const vectorTextVars = { vx, vy, mag: Math.hypot(vx, vy), mod: Math.hypot(vx, vy) };
+        const anchors = this._getVectorLabelAnchors(px, py, ex, ey);
         if (o.showVecProj !== false) {
-          const projColor = 'rgba(180,200,255,0.32)';
-          ctx.save(); ctx.setLineDash([3, 4]);
-          ctx.strokeStyle = projColor; ctx.lineWidth = 0.85;
-          ctx.beginPath(); ctx.moveTo(ex, py); ctx.lineTo(ex, ey); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(px, ey); ctx.lineTo(ex, ey); ctx.stroke();
-          ctx.setLineDash([]);
-          const xCompColor = 'rgba(100,200,255,0.6)', yCompColor = 'rgba(100,255,180,0.6)';
-          if (Math.abs(ex - px) > 4) {
-            ctx.strokeStyle = xCompColor; ctx.lineWidth = 1.2;
-            ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, py); ctx.stroke();
-            const axd = ex > px ? 1 : -1;
-            ctx.fillStyle = xCompColor; ctx.beginPath(); ctx.moveTo(ex, py); ctx.lineTo(ex - axd * 6, py - 3); ctx.lineTo(ex - axd * 6, py + 3); ctx.closePath(); ctx.fill();
-            ctx.font = '9px JetBrains Mono,monospace'; ctx.textAlign = 'center';
-            ctx.fillText(`Vx=${(vx * vs).toFixed(2)}`, (px + ex) / 2, py + 11);
-          }
-          if (Math.abs(ey - py) > 4) {
-            ctx.strokeStyle = yCompColor; ctx.lineWidth = 1.2;
-            ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, ey); ctx.stroke();
-            const ayd = ey > py ? 1 : -1;
-            ctx.fillStyle = yCompColor; ctx.beginPath(); ctx.moveTo(px, ey); ctx.lineTo(px - 3, ey - ayd * 6); ctx.lineTo(px + 3, ey - ayd * 6); ctx.closePath(); ctx.fill();
-            ctx.fillStyle = yCompColor; ctx.font = '9px JetBrains Mono,monospace'; ctx.textAlign = 'right';
-            ctx.fillText(`Vy=${(vy * vs).toFixed(2)}`, px - 5, (py + ey) / 2 + 3);
-          }
-          ctx.restore();
+          this._drawVectorProjections(ctx, px, py, ex, ey, projColor);
+          this._drawVectorText(ctx, o.projXLabel || '', anchors.projX.x, anchors.projX.y, projColor, anchors.projX.align, state, vectorTextVars);
+          this._drawVectorText(ctx, o.projYLabel || '', anchors.projY.x, anchors.projY.y, projColor, anchors.projY.align, state, vectorTextVars);
         }
         this._arrow(ctx, px, py, ex, ey, vecCol, 2);
-        const modV = Math.hypot(vx * vs, vy * vs) * this.scale;
-        if (modV > 12) { ctx.fillStyle = vecCol; ctx.font = 'bold 10px JetBrains Mono,monospace'; ctx.textAlign = 'left'; ctx.fillText(`|V|=${Math.hypot(vx, vy).toFixed(2)}`, (px + ex) / 2 + 5, (py + ey) / 2 - 5); }
+        this._drawVectorText(ctx, o.vecLabel || '', anchors.vector.x, anchors.vector.y, vecCol, anchors.vector.align, state, vectorTextVars);
+        this._drawVectorText(ctx, o.magLabel || '', anchors.magnitude.x, anchors.magnitude.y, vecCol, anchors.magnitude.align, state, vectorTextVars);
       }
       ctx.save(); ctx.translate(px, py); ctx.rotate(rot);
       if (o.useImage && o._imgEl && o._imgEl.complete && o._imgEl.naturalWidth > 0) {
@@ -339,7 +377,7 @@ export class AnimRenderer {
       if (o.label) {
         const isLight = document.documentElement.classList.contains('light');
         ctx.fillStyle = isLight ? 'rgba(26,34,54,.9)' : 'rgba(226,232,240,.85)';
-        ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(o.label, px + r + 4, py - 4);
+        ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(this._renderTemplate(o.label, state), px + r + 4, py - 4);
       }
 
     } else if (o.type === 'pendulum') {
@@ -394,10 +432,18 @@ export class AnimRenderer {
       o._rx = sx; o._ry = sy;
       const [spx, spy] = this.toPx(sx, sy);
       const [epx, epy] = this.toPx(sx + vx2 * vs2, sy + vy2 * vs2);
+      const vectorTextVars = { vx: vx2, vy: vy2, mag: Math.hypot(vx2, vy2), mod: Math.hypot(vx2, vy2) };
+      const anchors = this._getVectorLabelAnchors(spx, spy, epx, epy);
+      if (o.showProj) {
+        this._drawVectorProjections(ctx, spx, spy, epx, epy, o.projColor || color);
+        this._drawVectorText(ctx, o.projXLabel || '', anchors.projX.x, anchors.projX.y, o.projColor || color, anchors.projX.align, state, vectorTextVars);
+        this._drawVectorText(ctx, o.projYLabel || '', anchors.projY.x, anchors.projY.y, o.projColor || color, anchors.projY.align, state, vectorTextVars);
+      }
       ctx.save(); ctx.translate(spx, spy); ctx.rotate(rot); ctx.translate(-spx, -spy);
       this._arrow(ctx, spx, spy, epx, epy, color, o.lineWidth || 2);
       ctx.restore();
-      if (o.label) { ctx.fillStyle = color; ctx.font = '10px DM Sans,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(o.label, (spx + epx) / 2 + 4, (spy + epy) / 2 - 4); }
+      this._drawVectorText(ctx, o.vecLabel || '', anchors.vector.x, anchors.vector.y, color, anchors.vector.align, state, vectorTextVars);
+      this._drawVectorText(ctx, o.magLabel || '', anchors.magnitude.x, anchors.magnitude.y, color, anchors.magnitude.align, state, vectorTextVars);
       this._drawSelectionRing(ctx, spx, spy, 6, sel, hov);
 
     } else if (o.type === 'circle') {
@@ -437,10 +483,7 @@ export class AnimRenderer {
       const lx = (g('x') || 0) + vox, ly = (g('y') || 0) + voy;
       const [lpx, lpy] = this.toPx(lx, ly);
       const text = o.text || o.label || 'Texto';
-      const rendered = text.replace(/\{(\w+)(?::(\d+))?\}/g, (_: string, v: string, d: string) => {
-        const val = state[v.toLowerCase()];
-        return val !== undefined ? Number(val).toFixed(d !== undefined ? parseInt(d) : 2) : v;
-      });
+      const rendered = this._renderTemplate(text, state);
       ctx.save(); ctx.translate(lpx, lpy); ctx.rotate(rot);
       ctx.fillStyle = color; ctx.font = `${o.fontSize || 13}px DM Sans,sans-serif`;
       ctx.textAlign = 'left'; ctx.fillText(rendered, 0, 0);

@@ -131,11 +131,14 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Partícula${_id}"></div>
       ${mrowCV('Posição X', 'mo-x', 0, varOptsBlank)}
       ${mrowCV('Posição Y', 'mo-y', 0, varOptsBlank)}
-      ${mrowCV('Vel. X', 'mo-vx', 0, varOptsBlank)}
-      ${mrowCV('Vel. Y', 'mo-vy', 0, varOptsBlank)}
+      ${mrowCV(tr.vector.componentVx, 'mo-vx', 0, varOptsBlank)}
+      ${mrowCV(tr.vector.componentVy, 'mo-vy', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">Raio (px)</span><input class="modal-inp" id="mo-radius" type="number" value="8"></div>
       <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" style="width:60px;padding:2px" value="#4f9eff"></div>
-      <div class="modal-row"><span class="modal-label">Mostrar vel.</span><input type="checkbox" class="prop-check" id="mo-showvec"></div>
+      <div class="modal-row"><span class="modal-label">${tr.particle.showVelocity}</span><input type="checkbox" class="prop-check" id="mo-showvec"></div>
+      <div class="modal-row"><span class="modal-label">${tr.particle.projections}</span><input type="checkbox" class="prop-check" id="mo-showvecproj" checked></div>
+      <div class="modal-row"><span class="modal-label">${tr.particle.vectorColor}</span><input class="modal-inp" type="color" id="mo-veccolor" value="#34d399"></div>
+      <div class="modal-row"><span class="modal-label">${tr.particle.projectionColor}</span><input class="modal-inp" type="color" id="mo-projcolor" value="#93c5fd"></div>
       <div class="modal-row"><span class="modal-label">Rastro</span><input type="checkbox" class="prop-check" id="mo-trail" checked></div>
       <div class="modal-row"><span class="modal-label">Rótulo</span><input class="modal-inp" id="mo-label" value="" placeholder="ex: bola"></div>`,
     pendulum: `
@@ -177,12 +180,14 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" value="#a78bfa"></div>`,
     vector: `
       <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Vetor${_id}"></div>
-      ${mrowCV('Origem X', 'mo-x', 0, varOptsBlank)}
-      ${mrowCV('Origem Y', 'mo-y', 0, varOptsBlank)}
-      ${mrowCV('Comp. Vx', 'mo-vx', 0, varOptsBlank)}
-      ${mrowCV('Comp. Vy', 'mo-vy', 0, varOptsBlank)}
-      <div class="modal-row"><span class="modal-label">Escala</span><input class="modal-inp" id="mo-scale" type="number" step="0.1" value="0.3"></div>
+      ${mrowCV(tr.vector.originX, 'mo-x', 0, varOptsBlank)}
+      ${mrowCV(tr.vector.originY, 'mo-y', 0, varOptsBlank)}
+      ${mrowCV(tr.vector.componentVx, 'mo-vx', 0, varOptsBlank)}
+      ${mrowCV(tr.vector.componentVy, 'mo-vy', 0, varOptsBlank)}
+      <div class="modal-row"><span class="modal-label">${tr.vector.scale}</span><input class="modal-inp" id="mo-scale" type="number" step="0.1" value="0.3"></div>
       <div class="modal-row"><span class="modal-label">Cor</span><input class="modal-inp" type="color" id="mo-color" value="#34d399"></div>
+      <div class="modal-row"><span class="modal-label">${tr.vector.projections}</span><input type="checkbox" class="prop-check" id="mo-showproj"></div>
+      <div class="modal-row"><span class="modal-label">${tr.vector.projectionColor}</span><input class="modal-inp" type="color" id="mo-projcolor" value="#94a3b8"></div>
       <div class="modal-row"><span class="modal-label">Rótulo</span><input class="modal-inp" id="mo-label" value=""></div>`,
     circle: `
       <div class="modal-row"><span class="modal-label">Nome</span><input class="modal-inp" id="mo-name" value="Círculo${_id}"></div>
@@ -280,10 +285,10 @@ export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
   const common = { name: v('mo-name') || undefined, color: v('mo-color') || undefined };
 
   const props: Record<string, any> = {
-    particle: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, vx: readPivotVal('mo-vx') || 0, vy: readPivotVal('mo-vy') || 0, radius: n('mo-radius') || 8, showVec: b('mo-showvec'), showTrail: b('mo-trail'), label: v('mo-label') || '' },
+    particle: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, vx: readPivotVal('mo-vx') || 0, vy: readPivotVal('mo-vy') || 0, radius: n('mo-radius') || 8, showVec: b('mo-showvec'), showVecProj: b('mo-showvecproj'), vecColor: v('mo-veccolor') || undefined, projColor: v('mo-projcolor') || undefined, showTrail: b('mo-trail'), label: v('mo-label') || '' },
     pendulum: { ...common, theta: v('mo-theta') || 'theta', L: readPivotVal('mo-L') || 1.5, pivotX: readPivotVal('mo-pivotX'), pivotY: readPivotVal('mo-pivotY'), radius: n('mo-radius') || 10, showTrail: b('mo-trail') },
     spring: { ...common, x: readPivotVal('mo-x') || 0, y: 0, x1: readPivotVal('mo-pivotX'), y1: readPivotVal('mo-pivotY'), pivotX: readPivotVal('mo-pivotX'), pivotY: readPivotVal('mo-pivotY'), coils: n('mo-coils') || 10, vertical: v('mo-vertical') || 'true' },
-    vector: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, vx: readPivotVal('mo-vx') || 0, vy: readPivotVal('mo-vy') || 0, scale: n('mo-scale') || 0.3, label: v('mo-label') || '' },
+    vector: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, vx: readPivotVal('mo-vx') || 0, vy: readPivotVal('mo-vy') || 0, scale: n('mo-scale') || 0.3, showProj: b('mo-showproj'), projColor: v('mo-projcolor') || undefined, label: v('mo-label') || '' },
     circle: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, r: String(readPivotVal('mo-r') || 1) },
     rect: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, w: String(readPivotVal('mo-w') || 1), h: String(readPivotVal('mo-h') || 1) },
     label: { ...common, x: n('mo-x'), y: n('mo-y'), text: v('mo-text') || 't = {t:2}', fontSize: n('mo-fontSize') || 13 },
@@ -306,8 +311,8 @@ export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
 export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): void {
   const el = document.getElementById('obj-props');
   if (!el) return;
+  const tr = getTranslations();
   if (!obj) {
-    const tr = getTranslations();
     el.innerHTML = `<div class="no-obj">${tr.panels.noProps}<br>${tr.panels.noPropsDesc}</div>`;
     return;
   }
@@ -368,19 +373,25 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${rowVarOrConst('Y ↕', 'y', obj.y, vars, obj.id)}
         <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
       </div>
-      <div class="prop-section"><div class="prop-title">Vetor Velocidade</div>
-        ${row('Mostrar', 'showVec', obj.showVec, 'checkbox')}
-        ${row('Projeções', 'showVecProj', obj.showVecProj !== false, 'checkbox')}
-        ${rowVarOrConst('Vx', 'vx', obj.vx, vars, obj.id)}
-        ${rowVarOrConst('Vy', 'vy', obj.vy, vars, obj.id)}
-        ${row('Escala', 'vecScale', obj.vecScale, 'number')}
-        ${row('Cor vetor', 'vecColor', obj.vecColor, 'color')}
+      <div class="prop-section"><div class="prop-title">${tr.particle.velocityVector}</div>
+        ${row(tr.particle.showVelocity, 'showVec', obj.showVec, 'checkbox')}
+        ${row(tr.particle.projections, 'showVecProj', obj.showVecProj !== false, 'checkbox')}
+        ${rowVarOrConst(tr.vector.componentVx, 'vx', obj.vx, vars, obj.id)}
+        ${rowVarOrConst(tr.vector.componentVy, 'vy', obj.vy, vars, obj.id)}
+        ${row(tr.particle.scale, 'vecScale', obj.vecScale, 'number')}
+        ${row(tr.particle.vectorColor, 'vecColor', obj.vecColor, 'color')}
+        ${row(tr.particle.projectionColor, 'projColor', obj.projColor, 'color')}
+        ${row(tr.particle.vectorLabel, 'vecLabel', obj.vecLabel)}
+        ${row(tr.particle.projectionXLabel, 'projXLabel', obj.projXLabel)}
+        ${row(tr.particle.projectionYLabel, 'projYLabel', obj.projYLabel)}
+        ${row(tr.particle.magnitudeLabel, 'magLabel', obj.magLabel)}
+        <div class="prop-section" style="font-size:10px;color:var(--txt3)">${tr.particle.interpolationHint}</div>
       </div>
       <div class="prop-section"><div class="prop-title">Rastro</div>
         ${row('Mostrar', 'showTrail', obj.showTrail, 'checkbox')}
         ${row('Modo', 'trailMode', obj.trailMode || 'persist', 'trailmode')}
         ${row('Comprimento', 'trailLen', obj.trailLen, 'number')}
-        ${row('Rótulo', 'label', obj.label)}
+        ${row(tr.particle.label, 'label', obj.label)}
       </div>
       <div class="prop-section"><div class="prop-title">Imagem</div>
         ${row('Usar imagem', 'useImage', obj.useImage, 'checkbox')}
@@ -423,19 +434,25 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
       <div class="prop-section"><div class="prop-title">Identidade</div>
         ${row('Nome', 'name', obj.name)}
         ${row('Cor', 'color', obj.color, 'color')}
-        ${row('Espessura', 'lineWidth', obj.lineWidth, 'number')}
+        ${row(tr.vector.thickness, 'lineWidth', obj.lineWidth, 'number')}
         ${row('Rotação °', 'rotation', obj.rotation || 0, 'number')}
-        ${row('Rótulo', 'label', obj.label)}
+        ${row(tr.vector.projections, 'showProj', obj.showProj, 'checkbox')}
+        ${row(tr.vector.projectionColor, 'projColor', obj.projColor, 'color')}
         <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">Offset visual</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ Resetar</button></div>
       </div>
-      <div class="prop-section"><div class="prop-title">Origem</div>
-        ${rowVarOrConst('X', 'x', obj.x, vars, obj.id)}
-        ${rowVarOrConst('Y', 'y', obj.y, vars, obj.id)}
+      <div class="prop-section"><div class="prop-title">${tr.vector.originX.split(' ')[0]}</div>
+        ${rowVarOrConst(tr.vector.originX, 'x', obj.x, vars, obj.id)}
+        ${rowVarOrConst(tr.vector.originY, 'y', obj.y, vars, obj.id)}
       </div>
-      <div class="prop-section"><div class="prop-title">Componentes</div>
-        ${rowVarOrConst('Vx', 'vx', obj.vx, vars, obj.id)}
-        ${rowVarOrConst('Vy', 'vy', obj.vy, vars, obj.id)}
-        ${row('Escala', 'scale', obj.scale, 'number')}
+      <div class="prop-section"><div class="prop-title">${tr.vector.components}</div>
+        ${rowVarOrConst(tr.vector.componentVx, 'vx', obj.vx, vars, obj.id)}
+        ${rowVarOrConst(tr.vector.componentVy, 'vy', obj.vy, vars, obj.id)}
+        ${row(tr.vector.scale, 'scale', obj.scale, 'number')}
+        ${row(tr.vector.vectorLabel, 'vecLabel', obj.vecLabel)}
+        ${row(tr.vector.projectionXLabel, 'projXLabel', obj.projXLabel)}
+        ${row(tr.vector.projectionYLabel, 'projYLabel', obj.projYLabel)}
+        ${row(tr.vector.magnitudeLabel, 'magLabel', obj.magLabel)}
+        <div class="prop-section" style="font-size:10px;color:var(--txt3)">${tr.vector.interpolationHint}</div>
       </div>`,
     circle: `
       <div class="prop-section"><div class="prop-title">Identidade</div>
@@ -535,8 +552,8 @@ export function updateObjProp(id: number, prop: string, value: any, anim: AnimRe
 
   const numProps = new Set(['radius', 'trailLen', 'vecScale', 'scale', 'lineWidth', 'fontSize', 'coils', 'rotation', 'fieldSeeds', 'fieldSteps', 'fieldDs']);
   const varOrNumProps = new Set(['pivotX', 'pivotY', 'L', 'x1', 'y1', 'x', 'y', 'vx', 'vy', 'r', 'w', 'h']);
-  const boolProps = new Set(['showVec', 'showVecProj', 'showTrail', 'useImage', 'visible']);
-  const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'fzExpr', 'text', 'label', 'theta', 'vfMode']);
+  const boolProps = new Set(['showVec', 'showVecProj', 'showProj', 'showTrail', 'useImage', 'visible']);
+  const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'projColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'fzExpr', 'text', 'label', 'vecLabel', 'projXLabel', 'projYLabel', 'magLabel', 'theta', 'vfMode']);
 
   if (numProps.has(prop)) {
     o[prop] = parseFloat(value) || 0;
@@ -551,6 +568,7 @@ export function updateObjProp(id: number, prop: string, value: any, anim: AnimRe
     o[prop] = (value === true || value === 'true' || value === 1);
   } else if (strProps.has(prop)) {
     o[prop] = value;
+    if (prop === 'vecLabel' && o.type === 'vector') o.label = value;
   } else if (prop === 'name') {
     o.name = value;
   } else {
