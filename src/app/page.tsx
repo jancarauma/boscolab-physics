@@ -184,6 +184,7 @@ export default function Home() {
         rebuildICPanel(sim);
         rebuildGraphSelects(activeTab, graphs, sim);
       }, silent);
+      syncTimelineUI();
     }
 
     function doSelTab(i: number) {
@@ -394,6 +395,8 @@ export default function Home() {
     const syncTimelineUI = () => {
       const slider = document.getElementById('timeline-slider') as HTMLInputElement | null;
       if (!slider) return;
+      const hasModel = !!(sim.parsed && !sim.parsed.errors.length && (sim._evalFn || sim._derivFn));
+      slider.disabled = !hasModel;
       const maxStep = getMaxSeekStep();
       slider.max = String(maxStep);
       slider.value = String(Math.max(0, Math.min(sim.n, maxStep)));
@@ -403,6 +406,7 @@ export default function Home() {
 
     const seekToStep = (target: number) => {
       if (!Number.isFinite(target)) return;
+      if (!sim.parsed || sim.parsed.errors.length || (!sim._evalFn && !sim._derivFn)) return;
       if (sim.running) sim.pause();
 
       const maxStep = getMaxSeekStep();
