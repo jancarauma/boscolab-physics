@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Menubar from '@/components/panels/Menubar';
 import Toolbar from '@/components/panels/Toolbar';
+import SimControlBar from '@/components/panels/SimControlBar';
 import AnimationPanel from '@/components/panels/AnimationPanel';
 import BottomBar from '@/components/panels/BottomBar';
 import AddObjectModal from '@/components/modals/AddObjectModal';
@@ -246,9 +247,18 @@ export default function Home() {
       const el = (id: string) => document.getElementById(id);
       const dispT = el('disp-t'); if (dispT) dispT.textContent = formatVal(sim.t);
       const dispN = el('disp-n'); if (dispN) dispN.textContent = String(sim.n);
+      const dispNMirror = el('disp-n-mirror'); if (dispNMirror) dispNMirror.textContent = String(sim.n);
       const dispFps = el('disp-fps'); if (dispFps) dispFps.textContent = String(sim.fps || '—');
       const dispPts = el('disp-pts'); if (dispPts) dispPts.textContent = String(sim.history.length);
       const dispObj = el('disp-objs'); if (dispObj) dispObj.textContent = String(anim.objects.length);
+      const slider = el('timeline-slider') as HTMLInputElement | null;
+      if (slider) {
+        const maxStep = Math.max(0, Math.floor(sim.tMax / Math.max(sim.dt, 1e-9)));
+        slider.max = String(maxStep);
+        slider.value = String(Math.max(0, Math.min(sim.n, maxStep)));
+        const dispMax = el('disp-n-max');
+        if (dispMax) dispMax.textContent = String(maxStep);
+      }
       graphs[activeTab].render();
       _renderRAF = requestAnimationFrame(renderLoop);
     }
@@ -361,6 +371,71 @@ export default function Home() {
     });
     (document.getElementById('sel-method') as HTMLSelectElement | null)?.addEventListener('change', function () { sim.method = this.value; });
 
+    // ── Timeline seekbar ─────────────────────────────────────────────────────
+    const getMaxSeekStep = () => Math.max(0, Math.floor(sim.tMax / Math.max(sim.dt, 1e-9)));
+    const syncTimelineUI = () => {
+      const slider = document.getElementById('timeline-slider') as HTMLInputElement | null;
+      if (!slider) return;
+      const maxStep = getMaxSeekStep();
+      slider.max = String(maxStep);
+      slider.value = String(Math.max(0, Math.min(sim.n, maxStep)));
+      const dispMax = document.getElementById('disp-n-max');
+      if (dispMax) dispMax.textContent = String(maxStep);
+    };
+
+    const seekToStep = (target: number) => {
+      if (!Number.isFinite(target)) return;
+      if (sim.running) sim.pause();
+
+      const maxStep = getMaxSeekStep();
+      const goal = Math.max(0, Math.min(Math.floor(target), maxStep));
+      if (goal === sim.n) {
+        syncTimelineUI();
+        return;
+      }
+
+      if (goal < sim.n) {
+        const keep = Math.max(1, goal + 1);
+        sim.history = sim.history.slice(0, keep);
+        const s = sim.history[sim.history.length - 1];
+        if (s) {
+          sim.state = { ...s };
+          sim.t = Number.isFinite(s.t) ? s.t : goal * sim.dt;
+          sim.n = Number.isFinite(s.n) ? s.n : goal;
+          sim._syncStateTime(sim.state, sim.t);
+        }
+        if (sim.status === 'done') {
+          sim.status = 'paused';
+          sim.onStatus?.('paused');
+        }
+      } else {
+        while (sim.n < goal && sim.status !== 'done') sim.step();
+      }
+
+      // Rebuild visual traces/graphs so seek remains consistent in both directions.
+      anim.clearTrails();
+      graphs.forEach(g => g.clear());
+      sim.history.forEach((h: any) => {
+        anim.sampleTrails(h);
+        graphs.forEach((g: any) => g.append(h));
+      });
+
+      updateStatusUI(sim.status, sim);
+      syncTimelineUI();
+    };
+
+    let seekRaf: number | null = null;
+    let pendingSeek = 0;
+    const slider = document.getElementById('timeline-slider') as HTMLInputElement | null;
+    slider?.addEventListener('input', function () {
+      pendingSeek = parseInt(this.value, 10) || 0;
+      if (seekRaf !== null) cancelAnimationFrame(seekRaf);
+      seekRaf = requestAnimationFrame(() => {
+        seekToStep(pendingSeek);
+        seekRaf = null;
+      });
+    });
+
     // ── Sub-menu positioning ─────────────────────────────────────────────────
     document.querySelectorAll<HTMLElement>('.di.has-sub').forEach(item => {
       const sub = item.querySelector<HTMLElement>('.sub-drop');
@@ -385,6 +460,7 @@ export default function Home() {
 
     // ── Init ─────────────────────────────────────────────────────────────────
     updateStatusUI('idle', sim);
+    syncTimelineUI();
     const ss = document.getElementById('sel-speed') as HTMLSelectElement | null;
     if (ss) ss.value = '1';
     sim.stepsPerFrame = 1; sim._frameAcc = 0;
@@ -400,6 +476,7 @@ export default function Home() {
     <div id="app">
       <Menubar />
       <Toolbar />
+      <SimControlBar />
       <div id="main"><AnimationPanel /></div>
       <BottomBar />
       <Analytics />
