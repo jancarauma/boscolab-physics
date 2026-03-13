@@ -466,7 +466,7 @@ export default function Home() {
     sim.stepsPerFrame = 1; sim._frameAcc = 0;
     mdiInit(graphs);
     undoInit(anim);
-    doLoadEx('solar');
+    doLoadEx('projetil');
     setTimeout(() => { buildEditorUI(doApplyModel, sim.indVar); doApplyModel(true); }, 400);
 
     return () => { if (_renderRAF !== null) cancelAnimationFrame(_renderRAF); };
