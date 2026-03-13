@@ -74,13 +74,13 @@ export class SimEngine {
     const p = this.parser;
     const constL = equations.filter((e: any) => e.type === 'const').map((e: any) => `s.${e.var}=${e.value};`);
     const derivL = equations.filter((e: any) => e.type === 'derived').map((e: any) => `s.${e.var}=${p.compileExpr(e.expr, this.indVar)};`);
-    try { this._applyFn = new Function('s', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n')); } catch (e) { console.error('_applyFn:', e); }
+    try { this._applyFn = new Function('s', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n')); } catch (e) { console.debug('_applyFn (syntax, likely mid-typing):', e); }
     const eulerL = equations.map((e: any) => {
       if (e.type === 'iterative') return `ns.${e.var}=${p.compileExpr(e.expr, this.indVar).replace(/_p_(\w+)/g, (_: string, v: string) => `prev.${v}`)};`;
       if (e.type === 'differential') return `ns.${e.var}=s.${e.var}+(${p.compileExpr(e.expr, this.indVar)})*dt;`;
       return '';
     }).filter(Boolean);
-    try { this._evalFn = new Function('s', 'prev', 'ns', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n') + '\n' + eulerL.join('\n')); } catch (e) { console.error('_evalFn:', e); }
+    try { this._evalFn = new Function('s', 'prev', 'ns', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n') + '\n' + eulerL.join('\n')); } catch (e) { console.debug('_evalFn (syntax, likely mid-typing):', e); }
     const derivStateL = equations.map((e: any) => {
       if (e.type === 'iterative') {
         const js = p.compileExpr(e.expr, this.indVar).replace(/_p_(\w+)/g, (_: string, v: string) => `s.${v}`);
@@ -89,7 +89,7 @@ export class SimEngine {
       if (e.type === 'differential') return `d.${e.var}=${p.compileExpr(e.expr, this.indVar)};`;
       return '';
     }).filter(Boolean);
-    try { this._derivFn = new Function('s', 'd', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n') + '\n' + derivStateL.join('\n')); } catch (e) { console.error('_derivFn:', e); }
+    try { this._derivFn = new Function('s', 'd', 'dt', 't', 'n', '_if', constL.join('\n') + '\n' + derivL.join('\n') + '\n' + derivStateL.join('\n')); } catch (e) { console.debug('_derivFn (syntax, likely mid-typing):', e); }
   }
 
   _applyDerived(s: Record<string, number>) {

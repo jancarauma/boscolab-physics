@@ -158,7 +158,7 @@ function createLineEl(lineText: string, idx: number, onReparse?: () => void): HT
     inp.addEventListener('input', () => {
       _editorLines[idx] = inp.value;
       setModelDirty(true);
-      if (isEqLine(inp.value)) { buildEditorUI(onReparse); focusLine(idx); }
+      if (isEqLine(inp.value) && typeof (window as any).MathfieldElement !== 'undefined') { buildEditorUI(onReparse); focusLine(idx); }
       if (onReparse) scheduleReparse(onReparse);
     });
     inp.addEventListener('focus', () => setActiveLine(idx));

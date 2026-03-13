@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <body>{children}</body>
+      <Script src="https://unpkg.com/mathlive@0.99.3/dist/mathlive.min.js" strategy="afterInteractive" />
     </html>
   );
 }
