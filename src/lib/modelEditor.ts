@@ -7,6 +7,17 @@ let _editorLines: string[] = [''];
 let _activeLine = 0;
 let _parseTimer: ReturnType<typeof setTimeout> | null = null;
 let _indVar = 't';
+let _modelDirty = false;
+
+function emitModelDirty(): void {
+  window.dispatchEvent(new CustomEvent<boolean>('boscolab:model-dirty-change', { detail: _modelDirty }));
+}
+
+export function setModelDirty(isDirty: boolean): void {
+  if (_modelDirty === isDirty) return;
+  _modelDirty = isDirty;
+  emitModelDirty();
+}
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -26,6 +37,7 @@ export function setEditorText(text: string): void {
   _editorLines = text.split('\n');
   if (_editorLines.length === 0) _editorLines = [''];
   _activeLine = 0;
+  setModelDirty(false);
   if (document.getElementById('editor-wrap')) buildEditorUI(undefined, _indVar);
 }
 
@@ -130,6 +142,7 @@ function createLineEl(lineText: string, idx: number, onReparse?: () => void): HT
     mf.value = lineToLatex(lineText);
     mf.addEventListener('input', () => {
       _editorLines[idx] = latexToPlain(mf.value);
+      setModelDirty(true);
       if (onReparse) scheduleReparse(onReparse);
     });
     mf.addEventListener('focus', () => setActiveLine(idx));
@@ -144,6 +157,7 @@ function createLineEl(lineText: string, idx: number, onReparse?: () => void): HT
     inp.placeholder = idx === 0 ? '// equação ou comentário' : '';
     inp.addEventListener('input', () => {
       _editorLines[idx] = inp.value;
+      setModelDirty(true);
       if (isEqLine(inp.value)) { buildEditorUI(onReparse); focusLine(idx); }
       if (onReparse) scheduleReparse(onReparse);
     });
@@ -161,6 +175,7 @@ function handleLineKeydown(e: KeyboardEvent, idx: number, el: any, onReparse?: (
   if (e.key === 'Enter') {
     e.preventDefault();
     _editorLines.splice(idx + 1, 0, '');
+    setModelDirty(true);
     _activeLine = idx + 1;
     buildEditorUI(onReparse); focusLine(idx + 1);
   } else if (e.key === 'Backspace') {
@@ -168,6 +183,7 @@ function handleLineKeydown(e: KeyboardEvent, idx: number, el: any, onReparse?: (
     if (val === '' && _editorLines.length > 1) {
       e.preventDefault();
       _editorLines.splice(idx, 1);
+      setModelDirty(true);
       _activeLine = Math.max(0, idx - 1);
       buildEditorUI(onReparse); focusLine(_activeLine);
     }
@@ -178,6 +194,7 @@ function handleLineKeydown(e: KeyboardEvent, idx: number, el: any, onReparse?: (
   } else if (e.key === 'Tab') {
     e.preventDefault();
     _editorLines.splice(idx + 1, 0, '');
+    setModelDirty(true);
     _activeLine = idx + 1;
     buildEditorUI(onReparse); focusLine(idx + 1);
   }
@@ -211,6 +228,7 @@ export function editorWrapClick(e: MouseEvent, onReparse?: () => void): void {
   const row = (e.target as HTMLElement).closest('.eq-line');
   if (!row) {
     _editorLines.push('');
+    setModelDirty(true);
     _activeLine = _editorLines.length - 1;
     buildEditorUI(onReparse, _indVar); focusLine(_activeLine);
   }

@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import Menubar from '@/components/panels/Menubar';
-import Toolbar from '@/components/panels/Toolbar';
 import SimControlBar from '@/components/panels/SimControlBar';
 import AnimationPanel from '@/components/panels/AnimationPanel';
 import BottomBar from '@/components/panels/BottomBar';
@@ -25,7 +24,7 @@ import { EXAMPLES } from '@/lib/examples';
 import { initTheme, toggleTheme } from '@/lib/theme';
 import { toast, setErr, clearErr, toggleMenu, closeMenus, closeModal, blabConfirm, blabAlert, setupRH, showHelp, showAbout } from '@/lib/uiHelpers';
 import { simPlay, simPause, simReset, simStep, simBack, updateStatusUI } from '@/lib/simControls';
-import { buildEditorUI, setEditorText, getEditorText, scheduleReparse, applyModel, rebuildVarList, updateVarValues, editorWrapClick, setEditorIndVar } from '@/lib/modelEditor';
+import { buildEditorUI, setEditorText, getEditorText, scheduleReparse, applyModel, rebuildVarList, updateVarValues, editorWrapClick, setEditorIndVar, setModelDirty } from '@/lib/modelEditor';
 import { rebuildICPanel, getICValues, applyIC, toggleIC } from '@/lib/icPanel';
 import { addObject, confirmAddObject, renderObjList, renderObjProps, selectObj as _selectObj, toggleObjVis, deleteObj, deleteSelectedObj, clearAllObjects, moveObjLayer, loadObjImage, resetObjOffset, updateObjProp, togglePivotField } from '@/lib/objManager';
 import { selTab, rebuildGraphSelects, updateGraphCfg, clearGraph, exportGraphCSV, exportGraphPNG } from '@/lib/graphManager';
@@ -101,7 +100,13 @@ export default function Home() {
     w.loadObjImage     = (id: number) => loadObjImage(id, anim, sim);
 
     w.applyModel     = () => doApplyModel();
-    w.verifyModel    = () => { doApplyModel(); if (sim.parsed && !sim.parsed.errors.length) toast(interpolate(t().messages.modelOk, { count: Object.keys(sim.parsed.variables).length })); };
+    w.verifyModel    = () => {
+      doApplyModel();
+      setModelDirty(false);
+      if (sim.parsed && !sim.parsed.errors.length) {
+        toast(interpolate(t().messages.modelOk, { count: Object.keys(sim.parsed.variables).length }));
+      }
+    };
     w.applyIC        = () => applyIC(sim, anim, graphs);
     w.toggleIC       = () => toggleIC();
     w.getICValues    = () => getICValues(sim);
@@ -135,9 +140,17 @@ export default function Home() {
     w.undoRedo = () => undoRedo(anim, doRenderAfterUndo);
     w.loadEx   = (name: string) => doLoadEx(name);
     w.newProject = () => doNewProject();
-    w.setGlobalTrailMode = (mode: string) => {
+    w.setGlobalTrailMode = (mode: 'fade' | 'persist' | 'dots' | 'none') => {
+      w.__globalTrailMode = mode;
       anim.objects.forEach((o: any) => { if (o.type === 'particle' || o.type === 'pendulum') { o.trailMode = mode; o._trail = []; } });
+      window.dispatchEvent(new CustomEvent('boscolab:trail-mode-change', { detail: mode }));
     };
+    w.getGlobalTrailMode = () => (w.__globalTrailMode || 'persist');
+    w.setSimMethod = (method: 'euler' | 'rk4') => {
+      sim.method = method;
+      window.dispatchEvent(new CustomEvent('boscolab:method-change', { detail: method }));
+    };
+    w.getSimMethod = () => (sim.method === 'euler' || sim.method === 'rk4' ? sim.method : 'rk4');
     w.toggleGrid  = () => { anim.showGrid  = !anim.showGrid; };
     w.toggleAxes  = () => { anim.showAxes  = !anim.showAxes; };
     w.clearTrails = () => { anim.clearTrails(); };
@@ -193,8 +206,10 @@ export default function Home() {
       if (dtEl)  dtEl.value  = String(ex.dt);
       if (tmEl)  tmEl.value  = String(ex.tmax);
       if (metEl) metEl.value = 'rk4';
-      sim.dt = ex.dt; sim.tMax = ex.tmax; sim.method = 'rk4';
+      sim.dt = ex.dt; sim.tMax = ex.tmax;
+      w.setSimMethod('rk4');
       doApplyModel(true);
+      setModelDirty(false);
       const ic = { ...ex.ic, ...(sim.parsed ? sim.parsed.constVars : {}) };
       sim.setIC(ic); rebuildICPanel(sim);
       anim.objects = ex.objects.map((o: any) => makeObj(o.type, o));
@@ -232,6 +247,7 @@ export default function Home() {
           graphs.forEach(g => g.clear());
           const vl = document.getElementById('varlist'); if (vl) vl.innerHTML = '';
           sim.parsed = null;
+          setModelDirty(false);
           const ps = document.getElementById('parse-status'); if (ps) ps.textContent = tr.ui.ready;
           toast(tr.messages.newProjectCreated);
         },
@@ -369,7 +385,9 @@ export default function Home() {
       buildEditorUI(doApplyModel, sim.indVar);
       doApplyModel(true);
     });
-    (document.getElementById('sel-method') as HTMLSelectElement | null)?.addEventListener('change', function () { sim.method = this.value; });
+    (document.getElementById('sel-method') as HTMLSelectElement | null)?.addEventListener('change', function () {
+      if (this.value === 'euler' || this.value === 'rk4') w.setSimMethod(this.value);
+    });
 
     // ── Timeline seekbar ─────────────────────────────────────────────────────
     const getMaxSeekStep = () => Math.max(0, Math.floor(sim.tMax / Math.max(sim.dt, 1e-9)));
@@ -467,6 +485,7 @@ export default function Home() {
     mdiInit(graphs);
     undoInit(anim);
     doLoadEx('projetil');
+    setModelDirty(false);
     setTimeout(() => { buildEditorUI(doApplyModel, sim.indVar); doApplyModel(true); }, 400);
 
     return () => { if (_renderRAF !== null) cancelAnimationFrame(_renderRAF); };
@@ -475,7 +494,6 @@ export default function Home() {
   return (
     <div id="app">
       <Menubar />
-      <Toolbar />
       <SimControlBar />
       <div id="main"><AnimationPanel /></div>
       <BottomBar />
@@ -498,6 +516,7 @@ export default function Home() {
             rebuildICPanel(w.sim);
             rebuildGraphSelects(w.__activeTab ?? 0, w.graphs, w.sim);
             renderObjList(w.anim);
+            setModelDirty(false);
           });
         }}
       />

@@ -11,6 +11,7 @@ export interface Translations {
   // ── MENU PRINCIPAL ────────────────────────────────────────────────────
   menu: {
     file: string;
+    edit: string;
     examples: string;
     view: string;
     options: string;
@@ -448,7 +449,7 @@ export interface Translations {
 const translations: Record<Locale, Translations> = {
   pt: {
     meta: { appTitle: 'Boscolab', appDescription: 'Simulador de equações diferenciais' },
-    menu: { file: 'Arquivo', examples: 'Exemplos', view: 'Exibir', options: 'Opções', help: 'Ajuda' },
+    menu: { file: 'Arquivo', edit: 'Editar', examples: 'Exemplos', view: 'Exibir', options: 'Opções', help: 'Ajuda' },
     file: { new: 'Novo', open: 'Abrir .modx', save: 'Salvar', exportData: 'Exportar Dados', exportImage: 'Exportar Imagem', precision: 'Precisão' },
     exCategories: { mechanics: 'Mecânica', kinematics: 'Cinemática', gravitation: 'Gravitação', waves: 'Ondas', oscillations: 'Oscilações', other: 'Outros', electromagnetism: 'Eletromagnetismo', complex: 'Sistemas Complexos' },
     exItems: { projetil: 'Lançamento de Projétil', projetil_drag: 'Projétil com Arrasto', queda: 'Queda Livre', queda_lua: 'Queda: Terra vs Lua', orbita: 'Lei de Kepler', orbita3: 'Problema dos 3 Corpos', solar: 'Sistema Planetário', batimento: 'Batimento', pendulo: 'Pêndulo Simples', pendulo_duplo: 'Pêndulo Duplo', mola: 'Oscilador Harmônico Simples', amortecido: 'Oscilador Amortecido', onda: 'Oscilador Forçado', mola2d: 'Mola 2D', vanderpol: 'Van der Pol', rc: 'Circuito RC', cargas: 'Cargas Elétricas', campo_eletrico: 'Campo Vetorial', campo_magnetico_terrestre: 'Campo Magnético Terrestre', lotka: 'Lotka-Volterra', lorenz: 'Atrator de Lorenz' },
@@ -481,7 +482,7 @@ const translations: Record<Locale, Translations> = {
 
   en: {
     meta: { appTitle: 'Boscolab', appDescription: 'Differential equations simulator' },
-    menu: { file: 'File', examples: 'Examples', view: 'View', options: 'Options', help: 'Help' },
+    menu: { file: 'File', edit: 'Edit', examples: 'Examples', view: 'View', options: 'Options', help: 'Help' },
     file: { new: 'New', open: 'Open .modx', save: 'Save', exportData: 'Export Data', exportImage: 'Export Image', precision: 'Precision' },
     exCategories: { mechanics: 'Mechanics', kinematics: 'Kinematics', gravitation: 'Gravitation', waves: 'Waves', oscillations: 'Oscillations', other: 'Other', electromagnetism: 'Electromagnetism', complex: 'Complex Systems' },
     exItems: { projetil: 'Projectile Launch', projetil_drag: 'Projectile with Drag', queda: 'Free Fall', queda_lua: 'Free Fall: Earth vs Moon', orbita: 'Kepler\'s Law', orbita3: 'Three-Body Problem', solar: 'Planetary System', batimento: 'Wave Beating', pendulo: 'Simple Pendulum', pendulo_duplo: 'Double Pendulum', mola: 'Simple Harmonic Oscillator', amortecido: 'Damped Oscillator', onda: 'Forced Oscillator', mola2d: '2D Spring', vanderpol: 'Van der Pol', rc: 'RC Circuit', cargas: 'Electric Charges', campo_eletrico: 'Vector Field', campo_magnetico_terrestre: 'Earth Magnetic Field', lotka: 'Lotka-Volterra', lorenz: 'Lorenz Attractor' },
@@ -514,7 +515,7 @@ const translations: Record<Locale, Translations> = {
 
   es: {
     meta: { appTitle: 'Boscolab', appDescription: 'Simulador de ecuaciones diferenciales' },
-    menu: { file: 'Archivo', examples: 'Ejemplos', view: 'Vista', options: 'Opciones', help: 'Ayuda' },
+    menu: { file: 'Archivo', edit: 'Editar', examples: 'Ejemplos', view: 'Vista', options: 'Opciones', help: 'Ayuda' },
     file: { new: 'Nuevo', open: 'Abrir .modx', save: 'Guardar', exportData: 'Exportar Datos', exportImage: 'Exportar Imagen', precision: 'Precisión' },
     exCategories: { mechanics: 'Mecánica', kinematics: 'Cinemática', gravitation: 'Gravitación', waves: 'Ondas', oscillations: 'Oscilaciones', other: 'Otros', electromagnetism: 'Electromagnetismo', complex: 'Sistemas Complejos' },
     exItems: { projetil: 'Lanzamiento de Proyectil', projetil_drag: 'Proyectil con Arrastre', queda: 'Caída Libre', queda_lua: 'Caída: Tierra vs Luna', orbita: 'Ley de Kepler', orbita3: 'Problema de los 3 Cuerpos', solar: 'Sistema Planetario', batimento: 'Batido de Ondas', pendulo: 'Péndulo Simple', pendulo_duplo: 'Péndulo Doble', mola: 'Oscilador Armónico Simple', amortecido: 'Oscilador Amortiguado', onda: 'Oscilador Forzado', mola2d: 'Resorte 2D', vanderpol: 'Van der Pol', rc: 'Circuito RC', cargas: 'Cargas Eléctricas', campo_eletrico: 'Campo Vectorial', campo_magnetico_terrestre: 'Campo Magnético Terrestre', lotka: 'Lotka-Volterra', lorenz: 'Atractor de Lorenz' },
@@ -547,7 +548,7 @@ const translations: Record<Locale, Translations> = {
 
   zh: {
     meta: { appTitle: 'Boscolab', appDescription: '微分方程模拟器' },
-    menu: { file: '文件', examples: '示例', view: '视图', options: '选项', help: '帮助' },
+    menu: { file: '文件', edit: '编辑', examples: '示例', view: '视图', options: '选项', help: '帮助' },
     file: { new: '新建', open: '打开 .modx', save: '保存', exportData: '导出数据', exportImage: '导出图像', precision: '精度' },
     exCategories: { mechanics: '力学', kinematics: '运动学', gravitation: '万有引力', waves: '波动', oscillations: '振动', other: '其他', electromagnetism: '电磁学', complex: '复杂系统' },
     exItems: { projetil: '抛体运动', projetil_drag: '带阻力的抛体', queda: '自由落体', queda_lua: '自由落体：地球 vs 月球', orbita: '开普勒定律', orbita3: '三体问题', solar: '行星系统', batimento: '波的干涉', pendulo: '简单摆', pendulo_duplo: '双摆', mola: '简谐振子', amortecido: '阻尼振子', onda: '强迫振子', mola2d: '二维弹簧', vanderpol: '范德波尔', rc: 'RC 电路', cargas: '电荷', campo_eletrico: '矢量场', campo_magnetico_terrestre: '地球磁场', lotka: '洛卡-沃尔泰拉', lorenz: '洛伦茨吸引子' },

@@ -1,13 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { t, getLocale, setLocale, loadLocale, onLocaleChange, type Locale, translations } from '@/lib/i18n';
 
 const LOCALE_FLAGS: Record<Locale, string> = { pt: '🇧🇷', en: '🇺🇸', es: '🇪🇸', zh: '🇨🇳' };
 const LOCALE_LABELS: Record<Locale, string> = { pt: 'Português', en: 'English', es: 'Español', zh: '中文' };
+type SimMethod = 'euler' | 'rk4';
+type TrailMode = 'fade' | 'persist' | 'dots' | 'none';
 
 export default function Menubar() {
   const [locale, setLocaleState] = useState<Locale>('pt');
+  const [method, setMethod] = useState<SimMethod>('rk4');
+  const [trailMode, setTrailMode] = useState<TrailMode>('persist');
 
   useEffect(() => {
     setLocaleState(loadLocale());
@@ -15,11 +19,49 @@ export default function Menubar() {
     return unsub;
   }, []);
 
+  useEffect(() => {
+    const syncFromWindow = () => {
+      const nextMethod = (window as any).getSimMethod?.();
+      const nextTrailMode = (window as any).getGlobalTrailMode?.();
+      if (nextMethod === 'euler' || nextMethod === 'rk4') setMethod(nextMethod);
+      if (nextTrailMode === 'fade' || nextTrailMode === 'persist' || nextTrailMode === 'dots' || nextTrailMode === 'none') setTrailMode(nextTrailMode);
+    };
+
+    const onMethodChange = (event: Event) => {
+      const nextMethod = (event as CustomEvent<SimMethod>).detail;
+      if (nextMethod === 'euler' || nextMethod === 'rk4') setMethod(nextMethod);
+    };
+
+    const onTrailModeChange = (event: Event) => {
+      const nextTrailMode = (event as CustomEvent<TrailMode>).detail;
+      if (nextTrailMode === 'fade' || nextTrailMode === 'persist' || nextTrailMode === 'dots' || nextTrailMode === 'none') setTrailMode(nextTrailMode);
+    };
+
+    syncFromWindow();
+    window.addEventListener('boscolab:method-change', onMethodChange as EventListener);
+    window.addEventListener('boscolab:trail-mode-change', onTrailModeChange as EventListener);
+
+    return () => {
+      window.removeEventListener('boscolab:method-change', onMethodChange as EventListener);
+      window.removeEventListener('boscolab:trail-mode-change', onTrailModeChange as EventListener);
+    };
+  }, []);
+
   const tr = t();
 
   function changeLocale(l: Locale) {
     setLocale(l);
     (window as any).__locale = l;
+  }
+
+  function changeMethod(nextMethod: SimMethod) {
+    setMethod(nextMethod);
+    (window as any).setSimMethod?.(nextMethod);
+  }
+
+  function changeTrailMode(nextTrailMode: TrailMode) {
+    setTrailMode(nextTrailMode);
+    (window as any).setGlobalTrailMode?.(nextTrailMode);
   }
 
   return (
@@ -40,12 +82,42 @@ export default function Menubar() {
         </div>
       </div>
 
+      {/* ── Editar ──────────────────────────────────────────────────────── */}
+      <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>
+        {tr.menu.edit}
+        <div className="drop">
+          <div className="di" onClick={() => (window as any).undoUndo?.()}>{tr.toolbar.undoTooltip} <span className="sc">Ctrl+Z</span></div>
+          <div className="di" onClick={() => (window as any).undoRedo?.()}>{tr.toolbar.redoTooltip} <span className="sc">Ctrl+Y</span></div>
+        </div>
+      </div>
+
       {/* ── Exibir ──────────────────────────────────────────────────────── */}
       <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>
         {tr.menu.view}
         <div className="drop">
           <div className="di" onClick={() => (window as any).toggleGrid?.()}>{tr.view.grid}</div>
           <div className="di" onClick={() => (window as any).toggleAxes?.()}>{tr.view.axes}</div>
+          <div className="di has-sub">
+            {tr.particle.trail}
+            <div className="sub-drop" style={{ minWidth: 180 }}>
+              <div className="di" onClick={() => changeTrailMode('fade')} style={trailMode === 'fade' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.trailMode.temporary}
+                {trailMode === 'fade' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+              <div className="di" onClick={() => changeTrailMode('persist')} style={trailMode === 'persist' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.trailMode.persistent}
+                {trailMode === 'persist' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+              <div className="di" onClick={() => changeTrailMode('dots')} style={trailMode === 'dots' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.trailMode.ghosts}
+                {trailMode === 'dots' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+              <div className="di" onClick={() => changeTrailMode('none')} style={trailMode === 'none' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.trailMode.none}
+                {trailMode === 'none' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+            </div>
+          </div>
           <div className="di" onClick={() => (window as any).clearTrails?.()}>{tr.view.clearTrails}</div>
           <div className="dsep" />
           <div className="di" onClick={() => (window as any).resetView?.()}>{tr.view.centerView}</div>
@@ -116,6 +188,20 @@ export default function Menubar() {
           {/* Precisão */}
           <div className="di" onClick={() => (window as any).showPrecisionModal?.()}>
             {tr.options.precision}
+          </div>
+
+          <div className="di has-sub">
+            {tr.settings.method}
+            <div className="sub-drop" style={{ minWidth: 150 }}>
+              <div className="di" onClick={() => changeMethod('euler')} style={method === 'euler' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.settings.euler}
+                {method === 'euler' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+              <div className="di" onClick={() => changeMethod('rk4')} style={method === 'rk4' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.settings.rk4}
+                {method === 'rk4' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+            </div>
           </div>
 
           <div className="dsep" />

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { t, onLocaleChange } from '@/lib/i18n';
 
 export default function AnimationPanel() {
+  const [verifyPending, setVerifyPending] = useState(false);
   const [text, setText] = useState(() => {
     const tr = t();
     return {
@@ -98,6 +99,15 @@ export default function AnimationPanel() {
     return unsub;
   }, []);
 
+  useEffect(() => {
+    const onDirtyChange = (event: Event) => {
+      setVerifyPending(Boolean((event as CustomEvent<boolean>).detail));
+    };
+
+    window.addEventListener('boscolab:model-dirty-change', onDirtyChange as EventListener);
+    return () => window.removeEventListener('boscolab:model-dirty-change', onDirtyChange as EventListener);
+  }, []);
+
   return (
     <div className="panel" id="panel-anim" style={{ flex: 1, flexDirection: 'column', borderRight: 'none', position: 'relative' }}>
       <div className="phdr" id="anim-phdr">
@@ -135,7 +145,8 @@ export default function AnimationPanel() {
             <span className="mdi-dot" style={{ background: 'var(--acc)' }} />
             <span className="mdi-title">{text.model}</span>
             <div className="mdi-controls">
-              <button className="mdi-btn mdi-verify" onClick={() => (window as any).verifyModel?.()} title={text.verify}>{text.verify}</button>
+              <button className="mdi-btn mdi-ic" onClick={() => (window as any).toggleIC?.()} title={text.initialConditions}>{text.initialConditions}</button>
+              <button className={`mdi-btn mdi-verify${verifyPending ? ' pending' : ''}`} onClick={() => (window as any).verifyModel?.()} title={text.verify}>{text.verify}</button>
               <button className="mdi-btn mdi-min" onClick={() => (window as any).mdiMinimize?.('mdi-model')} title={text.minimize}>{text.minimize}</button>
             </div>
           </div>
