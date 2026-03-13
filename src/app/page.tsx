@@ -246,7 +246,6 @@ export default function Home() {
       updateVarValues(sim);
       const el = (id: string) => document.getElementById(id);
       const dispT = el('disp-t'); if (dispT) dispT.textContent = formatVal(sim.t);
-      const dispN = el('disp-n'); if (dispN) dispN.textContent = String(sim.n);
       const dispNMirror = el('disp-n-mirror'); if (dispNMirror) dispNMirror.textContent = String(sim.n);
       const dispFps = el('disp-fps'); if (dispFps) dispFps.textContent = String(sim.fps || '—');
       const dispPts = el('disp-pts'); if (dispPts) dispPts.textContent = String(sim.history.length);

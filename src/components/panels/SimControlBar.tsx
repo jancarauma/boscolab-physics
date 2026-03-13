@@ -58,11 +58,6 @@ export default function SimControlBar() {
       <div className="seekbar-wrap" title={text.timeline}>
         <span className="tblabel">{text.timeline}</span>
         <input type="range" id="timeline-slider" min="0" max="0" defaultValue="0" step="1" />
-        <div className="simbar-step-readout">
-          <span className="tbval tbval-inline" id="disp-n">0</span>
-          <span className="tblabel">/</span>
-          <span className="tbval tbval-inline" id="disp-n-max">0</span>
-        </div>
       </div>
 
       <div className="simbar-group simbar-group-state">
@@ -70,6 +65,8 @@ export default function SimControlBar() {
         <div className="tbval" id="disp-t">0.000</div>
         <span className="tblabel">{text.steps}</span>
         <div className="tbval" style={{ minWidth: 52 }} id="disp-n-mirror">0</div>
+        <span className="tblabel">/</span>
+        <span className="tbval tbval-inline" id="disp-n-max">0</span>
       </div>
 
       <div className="tbsep" />
