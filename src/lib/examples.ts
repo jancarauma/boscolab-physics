@@ -139,16 +139,16 @@ e_cap = 0.5*C*vc^2
 
 // % de carregamento do capacitor
 percent_charge = 100*(vc/Vs)`,
-    ic: { vc: 0 }, dt: 0.001, tmax: 5.0,
+    ic: { vc: 0 }, dt: 0.001, tmax: 8.0,
     objects: [
-      { type: 'particle', x: '0', y: 'vc', color: '#4f9eff', showTrail: true, trailLen: 2500, radius: 9, showVec: true, vy: 'i', vx: '0', vecScale: 0.3, vecColor: '#34d399', label: 'Carregamento' },
-      { type: 'label', x: -5.8, y: 5.8, text: '═══════════════════════════════════', fontSize: 12, color: '#475569' },
+      { type: 'particle', x: 't', y: 'vc', color: '#4f9eff', showTrail: true, trailLen: 2500, radius: 9, showVec: true, vy: 'i', vx: '0', vecScale: 0.3, vecColor: '#34d399', label: 'Carregamento' },
+      { type: 'label', x: 1.1, y: 5.0, text: '═══════════════════════════════════', fontSize: 12, color: '#475569' },
       { type: 'label', x: 1.1, y: 3.1, text: 'CARREGAMENTO DE CAPACITOR RC', fontSize: 14, color: '#f0f9ff' },
       { type: 'label', x: 1.1, y: 2.8, text: 'TENSÃO DO CAPACITOR', fontSize: 11, color: '#94a3b8' },
       { type: 'label', x: 1.1, y: 2.5, text: 'Vc = {vc:5} V  |  {percent_charge:0}% carregado', fontSize: 12, color: '#4f9eff' },
       { type: 'label', x: 1.1, y: 2.2, text: 'CORRENTE (decaimento exponencial)', fontSize: 11, color: '#94a3b8' },
       { type: 'label', x: 1.1, y: 1.9, text: 'i = {i:8} A', fontSize: 12, color: '#34d399' },
-      { type: 'label', x: 1.1, y: 1.6, text: 'DIFERENÇAS DE POTENCIAL (DDP)', fontSize: 11, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 1.6, text: 'DIFERENÇAS DE POTENCIAIS (DDPs)', fontSize: 11, color: '#94a3b8' },
       { type: 'label', x: 1.1, y: 1.3, text: 'Vs = {Vs:3} V  |  Vr = {vr:5} V  (Vc + Vr = Vs)', fontSize: 11, color: '#fbbf24' },
       { type: 'label', x: 1.1, y: 1.0, text: 'PARÂMETROS & ENERGIA', fontSize: 11, color: '#94a3b8' },
       { type: 'label', x: 1.1, y: 0.7, text: 'τ = {tau:4} s  |  E = {e_cap:8} J', fontSize: 11, color: '#a78bfa' },
@@ -156,7 +156,7 @@ percent_charge = 100*(vc/Vs)`,
     ],
     g0: { xvar: 't', yvar: 'vc', yvar2: 'vr' }, 
     g1: { xvar: 't', yvar: 'i' }, 
-    scale: 100, ox: .08, oy: .15
+    scale: 60, ox: .08, oy: .15
   },
   onda: {
     model: `// Oscilador Forçado com Ressonância\nm = 1.0\nb = 0.2\nk = 4.0\nF0 = 2.0\nomega_f = 2.0\n\nomega0 = sqrt(k/m)\n\nx(t+dt) = x(t) + v*dt\nv(t+dt) = v(t) + (-b/m*v - k/m*x + F0/m*cos(omega_f*t))*dt`,

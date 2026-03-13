@@ -96,7 +96,11 @@ export default function Menubar() {
         {tr.menu.view}
         <div className="drop">
           <div className="di" onClick={() => (window as any).toggleGrid?.()}>{tr.view.grid}</div>
-          <div className="di" onClick={() => (window as any).toggleAxes?.()}>{tr.view.axes}</div>
+          <div className="di" onClick={() => (window as any).toggleAxes?.()}>{tr.view.axes}</div>          
+          <div className="di" onClick={() => (window as any).clearTrails?.()}>{tr.view.clearTrails}</div>
+          <div className="dsep" />
+          <div className="di" onClick={() => (window as any).resetView?.()}>{tr.view.centerView}</div>
+          <div className="dsep" />
           <div className="di has-sub">
             {tr.particle.trail}
             <div className="sub-drop" style={{ minWidth: 180 }}>
@@ -118,9 +122,6 @@ export default function Menubar() {
               </div>
             </div>
           </div>
-          <div className="di" onClick={() => (window as any).clearTrails?.()}>{tr.view.clearTrails}</div>
-          <div className="dsep" />
-          <div className="di" onClick={() => (window as any).resetView?.()}>{tr.view.centerView}</div>
         </div>
       </div>
 
