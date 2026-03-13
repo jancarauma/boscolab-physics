@@ -29,7 +29,7 @@ export default function AboutModal() {
         </div>
         <div className="about-body">
           <div className="about-row"><span className="label">{text.versionLabel}</span><span className="val">1.0.0-AR — 2026</span></div>
-          <div className="about-row"><span className="label">{text.authorLabel}</span><span className="val">J. Caraumã</span><a href="https://github.com/jancarauma" target="_blank" rel="noopener">github.com/jancarauma ↗</a></div>
+          <div className="about-row"><span className="label">{text.authorLabel}</span><span className="val">J. Caraumã</span><a href="https://github.com/jancarauma/boscolab-physics" target="_blank" rel="noopener">github.com/jancarauma ↗</a></div>
           <div className="about-row"><span className="label">{text.websiteLabel}</span><span className="val">{text.websiteValue}</span><a href="https://carauma.com" target="_blank" rel="noopener">carauma.com ↗</a></div>
           <div className="about-row"><span className="label">{text.copyrightLabel}</span><span className="val">{text.copyrightValue}</span></div>
           <div className="about-row"><span className="label">{text.mathParserLabel}</span><span className="val">{text.mathParserValue}</span></div>
