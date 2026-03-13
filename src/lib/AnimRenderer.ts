@@ -32,7 +32,10 @@ export class AnimRenderer {
   resize() {
     const dpr = window.devicePixelRatio || 1;
     const wrap = this.cv.parentElement!;
-    const w = wrap.clientWidth; const h = wrap.clientHeight;
+    const cvStyle = window.getComputedStyle(this.cv);
+    const usesFlowLayout = cvStyle.position !== 'absolute';
+    const w = usesFlowLayout ? (this.cv.clientWidth || wrap.clientWidth) : wrap.clientWidth;
+    const h = usesFlowLayout ? (this.cv.clientHeight || wrap.clientHeight) : wrap.clientHeight;
     this.cv.width = w * dpr; this.cv.height = h * dpr;
     this.cv.style.width = w + 'px'; this.cv.style.height = h + 'px';
     this.ctx.scale(dpr, dpr);

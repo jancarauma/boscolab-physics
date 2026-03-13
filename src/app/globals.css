@@ -483,7 +483,7 @@ button,select,input{font-family:var(--ui)}
   #mdi-graphs{order:2}
   #mdi-taskbar{display:none!important}
   #anim-wrap{position:relative!important;display:flex;flex-direction:column}
-  #anim-canvas{position:static!important;width:100%!important;height:300px!important;display:block}
+  #anim-canvas{position:static!important;width:100%!important;height:clamp(220px,48vh,420px)!important;display:block}
   .mdi-resize{display:none!important}
   #panel-anim{overflow:auto!important}
   #mdi-model .mdi-body{max-height:300px}
