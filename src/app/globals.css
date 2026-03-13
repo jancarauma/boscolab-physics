@@ -305,6 +305,24 @@ button,select,input{font-family:var(--ui)}
 #toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--panel2);border:1px solid var(--border2);border-radius:6px;padding:7px 16px;font-size:12px;color:var(--txt);z-index:9999;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+.install-pwa-btn{
+  position:fixed;
+  right:14px;
+  bottom:38px;
+  z-index:10000;
+  border:1px solid var(--acc);
+  background:linear-gradient(135deg,var(--acc),#79b8ff);
+  color:#08111f;
+  font-weight:700;
+  letter-spacing:.2px;
+  border-radius:999px;
+  padding:8px 14px;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(15,23,42,.35);
+}
+.install-pwa-btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+@media(max-width:600px){.install-pwa-btn{bottom:12px;right:10px;padding:8px 12px;font-size:12px}}
+
 /* ─── CUSTOM DIALOGS ─── */
 #blab-dlg-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:8000;

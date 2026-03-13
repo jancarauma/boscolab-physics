@@ -1,15 +1,26 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  applicationName: 'BoscoLab',
   title: 'BoscoLab — Simulador de Equações Diferenciais',
   description: 'Simule e visualize equações diferenciais em tempo real. Pêndulos, órbitas, circuitos, atratores e muito mais.',
+  manifest: '/manifest.webmanifest',
   keywords: ['simulação', 'equações diferenciais', 'física', 'modelagem', 'ODE'],
   authors: [{ name: 'Seu Nome' }],
   icons: {
-    icon: '/favicon.ico',       
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
     shortcut: '/favicon.ico',
-    apple: '/favicon.ico',         // se tiver um apple-touch-icon.png, trocar aqui
+    apple: '/apple-touch-icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'BoscoLab',
+    statusBarStyle: 'default',
   },
   openGraph: {
     title: 'BoscoLab',
@@ -19,6 +30,12 @@ export const metadata: Metadata = {
     locale: 'pt_BR',
     type: 'website',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0b0f17',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

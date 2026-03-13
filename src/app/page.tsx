@@ -12,6 +12,7 @@ import AboutModal from '@/components/modals/AboutModal';
 import PrecisionModal from '@/components/modals/PrecisionModal';
 import CustomDialog from '@/components/ui/CustomDialog';
 import Toast from '@/components/ui/Toast';
+import InstallPWAButton from '@/components/ui/InstallPWAButton';
 import { Analytics } from '@vercel/analytics/next';
 
 import { SimEngine } from '@/lib/SimEngine';
@@ -485,6 +486,7 @@ export default function Home() {
       <PrecisionModal />
       <CustomDialog />
       <Toast />
+      <InstallPWAButton />
       <input
         type="file" id="file-input" accept=".modx"
         style={{ display: 'none' }}
