@@ -1,6 +1,4 @@
-# BOSCOLAB
-
-**Interactive Computational Physics Simulator**
+# BOSCOLAB - Interactive Computational Physics Simulator
 
 BOSCOLAB is a browser-based physics simulation environment designed for students, educators, and researchers. It allows users to define dynamic systems through differential and iterative equations, visualize motion in real time, and analyze results through interactive graphs — all without installing any software.
 
