@@ -215,7 +215,7 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       <div class="modal-row"><span class="modal-label">Fy(x,y,t)</span><input class="modal-inp" id="mo-fyExpr" value="x" placeholder="ex: x"></div>
       <div class="modal-row"><span class="modal-label">${tr.field.gridN}</span><input class="modal-inp" id="mo-gridN" type="number" value="14"></div>
       <div class="modal-row"><span class="modal-label">${tr.field.range}</span><input class="modal-inp" id="mo-gridRange" type="number" value="5"></div>
-      <div class="modal-row"><span class="modal-label">${tr.field.arrowScale}</span><input class="modal-inp" id="mo-arrowScale" type="number" step="0.05" value="0.4"></div>
+      <div class="modal-row"><span class="modal-label">${tr.field.arrowScale}</span><input class="modal-inp" id="mo-arrowScale" type="number" step="0.05" value="0.6"></div>
       <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
   };
 
@@ -292,7 +292,7 @@ export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
     circle: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, r: String(readPivotVal('mo-r') || 1) },
     rect: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, w: String(readPivotVal('mo-w') || 1), h: String(readPivotVal('mo-h') || 1) },
     label: { ...common, x: n('mo-x'), y: n('mo-y'), text: v('mo-text') || 't = {t:2}', fontSize: n('mo-fontSize') || 13 },
-    vectorfield: { ...common, fxExpr: v('mo-fxExpr') || '-y', fyExpr: v('mo-fyExpr') || 'x', gridN: n('mo-gridN') || 14, gridRange: n('mo-gridRange') || 5, arrowScale: n('mo-arrowScale') || 0.4 },
+    vectorfield: { ...common, fxExpr: v('mo-fxExpr') || '-y', fyExpr: v('mo-fyExpr') || 'x', gridN: n('mo-gridN') || 14, gridRange: n('mo-gridRange') || 5, arrowScale: n('mo-arrowScale') || 0.6 },
   };
 
   const obj = makeObj(t, props[t] || common);
@@ -532,7 +532,7 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         </div>
         ${(obj.vfMode||'arrows')==='arrows' ? `
         ${row(tr.field.gridN, 'gridN', obj.gridN || 14, 'number')}
-        ${row(tr.field.arrowScale, 'arrowScale', obj.arrowScale || 0.4, 'number')}
+        ${row(tr.field.arrowScale, 'arrowScale', obj.arrowScale || 0.6, 'number')}
         ` : `
         ${row(tr.field.seeds, 'fieldSeeds', obj.fieldSeeds || 16, 'number')}
         ${row(tr.field.steps, 'fieldSteps', obj.fieldSteps || 120, 'number')}

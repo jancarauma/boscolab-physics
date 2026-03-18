@@ -679,15 +679,21 @@ export class AnimRenderer {
       } else {
         // ── Vetores (modo padrão) ─────────────────────────────────────────
         const N = o.gridN || 14;
-        const arrowScale = o.arrowScale || 0.4;
+        const arrowScale = o.arrowScale || 0.6;
         const step = R * 2 / (N - 1);
-        const maxMag = (() => {
-          let m = 0;
+        const refMag = (() => {
+          const mags: number[] = [];
           for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
             const xi = -R + i * step, yj = -R + j * step;
-            try { m = Math.max(m, Math.hypot(fxFn(xi, yj, T, Math), fyFn(xi, yj, T, Math))); } catch (_) {}
+            try {
+              const m = Math.hypot(fxFn(xi, yj, T, Math), fyFn(xi, yj, T, Math));
+              if (isFinite(m)) mags.push(m);
+            } catch (_) {}
           }
-          return m || 1;
+          if (mags.length === 0) return 1;
+          mags.sort((a, b) => a - b);
+          const p90 = mags[Math.floor((mags.length - 1) * 0.9)] || 0;
+          return Math.max(p90, 1e-6);
         })();
         for (let i = 0; i < N; i++) {
           for (let j = 0; j < N; j++) {
@@ -695,14 +701,19 @@ export class AnimRenderer {
             let fx = 0, fy = 0;
             try { fx = fxFn(xi, yj, T, Math); fy = fyFn(xi, yj, T, Math); } catch (_) {}
             if (!isFinite(fx) || !isFinite(fy)) continue;
-            const mag = Math.hypot(fx, fy), norm = mag / maxMag;
-            const alpha2 = 0.22 + norm * 0.68;
-            const len = norm * step * arrowScale * this.scale;
-            if (len < 1) continue;
+            const mag = Math.hypot(fx, fy);
+            if (mag < refMag * 1e-3) continue;
+            const norm = Math.min(1, mag / refMag);
+            // Slight easing boosts weak regions without saturating strong regions.
+            const vis = Math.pow(norm, 0.7);
+            const alpha2 = 0.28 + vis * 0.68;
+            const lenRaw = vis * step * arrowScale * this.scale;
+            if (lenRaw < 0.45) continue;
+            const len = Math.max(lenRaw, 1.25);
             const [apx, apy] = this.toPx(xi, yj);
             const angle = Math.atan2(-fy, fx);
             const aex = apx + len * Math.cos(angle), aey = apy + len * Math.sin(angle);
-            this._arrow(ctx, apx, apy, aex, aey, getColor(xi, yj, norm, alpha2), 0.9 + norm * 0.6);
+            this._arrow(ctx, apx, apy, aex, aey, getColor(xi, yj, vis, alpha2), 1.0 + vis * 0.8);
           }
         }
       }

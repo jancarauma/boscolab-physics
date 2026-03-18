@@ -224,6 +224,8 @@ percent_charge = 100*(vc/Vs)`,
       { type: 'spring', x: '0', y: 'x', x1: 0, y1: 5, pivotX: 0, pivotY: 5, coils: 10, vertical: true, color: '#a78bfa' },
       { type: 'label', x: -4, y: 4.5, text: 'ζ={zeta:3}  ω₀={omega0:2} rad/s', fontSize: 13, color: '#94a3b8' },
       { type: 'label', x: -4, y: 3.2, text: 'E = {E:3} J', fontSize: 13, color: '#fbbf24' },
+      { type: 'label', x: -4, y: 2.2, text: 'Ek = {Ek:3} J', fontSize: 13, color: '#fbbf24' },
+      { type: 'label', x: -4, y: 1.2, text: 'Ep = {Ep:3} J', fontSize: 13, color: '#fbbf24' },
     ],
     g0: { xvar: 't', yvar: 'x', yvar2: 'v' }, g1: { xvar: 'x', yvar: 'v' }, scale: 50, ox: .5, oy: .15
   },
