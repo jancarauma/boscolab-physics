@@ -111,7 +111,7 @@ export default function AnimationPanel() {
   return (
     <div className="panel" id="panel-anim" style={{ flex: 1, flexDirection: 'column', borderRight: 'none', position: 'relative' }}>
       <div className="phdr" id="anim-phdr">
-        <span className="phdr-dot" style={{ background: 'var(--acc2)' }} />
+        {/*<span className="phdr-dot" style={{ background: 'var(--acc2)' }} />*/}
         <span className="phdr-title">{text.animation}</span>
         <div className="phdr-right" style={{ gap: 6 }}>
           <span style={{ fontSize: 10, color: 'var(--txt3)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.5px' }}>{text.windows}</span>
