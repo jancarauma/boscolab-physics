@@ -146,6 +146,11 @@ export default function Home() {
       window.dispatchEvent(new CustomEvent('boscolab:trail-mode-change', { detail: mode }));
     };
     w.getGlobalTrailMode = () => (w.__globalTrailMode || 'persist');
+    w.setAngleUnit = (unit: 'rad' | 'deg') => {
+      w.__angleUnit = unit;
+      window.dispatchEvent(new CustomEvent('boscolab:angle-unit-change', { detail: unit }));
+    };
+    w.getAngleUnit = () => (w.__angleUnit === 'deg' ? 'deg' : 'rad');
     w.setSimMethod = (method: 'euler' | 'rk4') => {
       sim.method = method;
       window.dispatchEvent(new CustomEvent('boscolab:method-change', { detail: method }));

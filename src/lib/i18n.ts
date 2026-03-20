@@ -83,6 +83,9 @@ export interface Translations {
   options: {
     precision: string;
     language: string;
+    angleUnit: string;
+    radians: string;
+    degrees: string;
   };
   
   // --- TOOLBAR -------
@@ -469,7 +472,7 @@ const translations: Record<Locale, Translations> = {
     exItems: { projetil: 'Lançamento de Projétil', projetil_drag: 'Projétil com Arrasto', queda: 'Queda Livre', queda_lua: 'Queda: Terra vs Lua', orbita: 'Lei de Kepler', orbita3: 'Problema dos 3 Corpos', solar: 'Sistema Planetário', batimento: 'Batimento', pendulo: 'Pêndulo Simples', pendulo_duplo: 'Pêndulo Duplo', mola: 'Oscilador Harmônico Simples', amortecido: 'Oscilador Amortecido', onda: 'Oscilador Forçado', mola2d: 'Mola 2D', vanderpol: 'Van der Pol', rc: 'Circuito RC', cargas: 'Cargas Elétricas', campo_eletrico: 'Campo Vetorial', campo_magnetico_terrestre: 'Campo Magnético Terrestre', lotka: 'Lotka-Volterra', lorenz: 'Atrator de Lorenz' },
     view: { grid: '⊞ Grade', axes: '↔ Eixos', clearTrails: '✕ Limpar Rastros', centerView: '⊙ Centralizar Vista' },
     help: { syntax: 'Sintaxe das Equações', about: 'Sobre' },
-    options: { precision: 'Precisão', language: 'Idioma' },
+    options: { precision: 'Precisão', language: 'Idioma', angleUnit: 'Unidade de Ângulo', radians: 'Radianos (rad)', degrees: 'Graus (°)' },
     toolbar: { play: '▶ Iniciar', pause: '⏸  Parar', restart: '↺ Reiniciar', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Desfazer (Ctrl+Z)', redoTooltip: 'Refazer (Ctrl+Y)' },
     panels: { showObjects: 'Mostrar Objetos', showGraphs: 'Mostrar Gráficos', objects: 'Objetos', graphs: 'Gráficos', noObjects: 'Sem objetos.', noObjectsDesc: 'Adicione abaixo ↓', noProps: 'Clique num objeto', noPropsDesc: 'para ver propriedades', applyAndRestart: '✓ Aplicar e Reiniciar', clearAll: 'Limpar tudo', minimize: 'Minimizar' },
     objectTypes: { particle: '● Partícula', pendulum: '℘ Pêndulo', spring: '⇝ Mola', vector: '➡ Vetor', circle: '◯ Círculo', rectangle: '▭ Retângulo', text: 'T Texto', field: '⊞ Campo', video: '▶ Vídeo' },
@@ -503,7 +506,7 @@ const translations: Record<Locale, Translations> = {
     exItems: { projetil: 'Projectile Launch', projetil_drag: 'Projectile with Drag', queda: 'Free Fall', queda_lua: 'Free Fall: Earth vs Moon', orbita: 'Kepler\'s Law', orbita3: 'Three-Body Problem', solar: 'Planetary System', batimento: 'Wave Beating', pendulo: 'Simple Pendulum', pendulo_duplo: 'Double Pendulum', mola: 'Simple Harmonic Oscillator', amortecido: 'Damped Oscillator', onda: 'Forced Oscillator', mola2d: '2D Spring', vanderpol: 'Van der Pol', rc: 'RC Circuit', cargas: 'Electric Charges', campo_eletrico: 'Vector Field', campo_magnetico_terrestre: 'Earth Magnetic Field', lotka: 'Lotka-Volterra', lorenz: 'Lorenz Attractor' },
     view: { grid: '⊞ Grid', axes: '↔ Axes', clearTrails: '✕ Clear Trails', centerView: '⊙ Center View' },
     help: { syntax: 'Equation Syntax', about: 'About' },
-    options: { precision: 'Precision', language: 'Language' },
+    options: { precision: 'Precision', language: 'Language', angleUnit: 'Angle Unit', radians: 'Radians (rad)', degrees: 'Degrees (°)' },
     toolbar: { play: '▶ Play', pause: '⏸  Pause', restart: '↺ Restart', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Undo (Ctrl+Z)', redoTooltip: 'Redo (Ctrl+Y)' },
     panels: { showObjects: 'Show Objects', showGraphs: 'Show Graphs', objects: 'Objects', graphs: 'Graphs', noObjects: 'No objects.', noObjectsDesc: 'Add below ↓', noProps: 'Click on an object', noPropsDesc: 'to see properties', applyAndRestart: '✓ Apply and Restart', clearAll: 'Clear all', minimize: 'Minimize' },
     objectTypes: { particle: '● Particle', pendulum: '℘ Pendulum', spring: '⇝ Spring', vector: '➡ Vector', circle: '◯ Circle', rectangle: '▭ Rectangle', text: 'T Text', field: '⊞ Field', video: '▶ Video' },
@@ -537,7 +540,7 @@ const translations: Record<Locale, Translations> = {
     exItems: { projetil: 'Lanzamiento de Proyectil', projetil_drag: 'Proyectil con Arrastre', queda: 'Caída Libre', queda_lua: 'Caída: Tierra vs Luna', orbita: 'Ley de Kepler', orbita3: 'Problema de los 3 Cuerpos', solar: 'Sistema Planetario', batimento: 'Batido de Ondas', pendulo: 'Péndulo Simple', pendulo_duplo: 'Péndulo Doble', mola: 'Oscilador Armónico Simple', amortecido: 'Oscilador Amortiguado', onda: 'Oscilador Forzado', mola2d: 'Resorte 2D', vanderpol: 'Van der Pol', rc: 'Circuito RC', cargas: 'Cargas Eléctricas', campo_eletrico: 'Campo Vectorial', campo_magnetico_terrestre: 'Campo Magnético Terrestre', lotka: 'Lotka-Volterra', lorenz: 'Atractor de Lorenz' },
     view: { grid: '⊞ Cuadrícula', axes: '↔ Ejes', clearTrails: '✕ Limpiar Rastros', centerView: '⊙ Centrar Vista' },
     help: { syntax: 'Sintaxis de Ecuaciones', about: 'Acerca de' },
-    options: { precision: 'Precisión', language: 'Idioma' },
+    options: { precision: 'Precisión', language: 'Idioma', angleUnit: 'Unidad de Ángulo', radians: 'Radianes (rad)', degrees: 'Grados (°)' },
     toolbar: { play: '▶ Iniciar', pause: '⏸  Pausar', restart: '↺ Reiniciar', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Deshacer (Ctrl+Z)', redoTooltip: 'Rehacer (Ctrl+Y)' },
     panels: { showObjects: 'Mostrar Objetos', showGraphs: 'Mostrar Gráficos', objects: 'Objetos', graphs: 'Gráficos', noObjects: 'Sin objetos.', noObjectsDesc: 'Agregue abajo ↓', noProps: 'Haga clic en un objeto', noPropsDesc: 'para ver propiedades', applyAndRestart: '✓ Aplicar e Reiniciar', clearAll: 'Limpiar todo', minimize: 'Minimizar' },
     objectTypes: { particle: '● Partícula', pendulum: '℘ Péndulo', spring: '⇝ Resorte', vector: '➡ Vector', circle: '◯ Círculo', rectangle: '▭ Rectángulo', text: 'T Texto', field: '⊞ Campo', video: '▶ Video' },
@@ -571,7 +574,7 @@ const translations: Record<Locale, Translations> = {
     exItems: { projetil: '抛体运动', projetil_drag: '带阻力的抛体', queda: '自由落体', queda_lua: '自由落体：地球 vs 月球', orbita: '开普勒定律', orbita3: '三体问题', solar: '行星系统', batimento: '波的干涉', pendulo: '简单摆', pendulo_duplo: '双摆', mola: '简谐振子', amortecido: '阻尼振子', onda: '强迫振子', mola2d: '二维弹簧', vanderpol: '范德波尔', rc: 'RC 电路', cargas: '电荷', campo_eletrico: '矢量场', campo_magnetico_terrestre: '地球磁场', lotka: '洛卡-沃尔泰拉', lorenz: '洛伦茨吸引子' },
     view: { grid: '⊞ 网格', axes: '↔ 坐标轴', clearTrails: '✕ 清除轨迹', centerView: '⊙ 中心视图' },
     help: { syntax: '方程语法', about: '关于' },
-    options: { precision: '精度', language: '语言' },
+    options: { precision: '精度', language: '语言', angleUnit: '角度单位', radians: '弧度 (rad)', degrees: '角度 (°)' },
     toolbar: { play: '▶ 播放', pause: '⏸  暂停', restart: '↺ 重新开始', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: '撤销 (Ctrl+Z)', redoTooltip: '重做 (Ctrl+Y)' },
     panels: { showObjects: '显示对象', showGraphs: '显示图表', objects: '对象', graphs: '图表', noObjects: '没有对象。', noObjectsDesc: '在下方添加 ↓', noProps: '单击一个对象', noPropsDesc: '查看属性', applyAndRestart: '✓ 应用并重新开始', clearAll: '全部清除', minimize: '最小化' },
     objectTypes: { particle: '● 粒子', pendulum: '℘ 摆', spring: '⇝ 弹簧', vector: '➡ 矢量', circle: '◯ 圆', rectangle: '▭ 矩形', text: 'T 文本', field: '⊞ 场', video: '▶ 视频' },

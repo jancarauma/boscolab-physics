@@ -37,6 +37,7 @@ type SavedUiState = {
   camera?: { ox?: number; oy?: number; scale?: number };
   trailMode?: string;
   varListHeight?: number;
+  angleUnit?: string;
 };
 
 type SavedSimState = {
@@ -220,6 +221,11 @@ function applyProject(
   if (ui.trailMode) {
     const trailSel = document.getElementById('sel-trail-mode') as HTMLSelectElement | null;
     if (trailSel) trailSel.value = ui.trailMode;
+    if (ui.angleUnit === 'deg' || ui.angleUnit === 'rad') {
+      const w2 = window as any;
+      w2.__angleUnit = ui.angleUnit;
+      window.dispatchEvent(new CustomEvent('boscolab:angle-unit-change', { detail: ui.angleUnit }));
+    }
   }
   if (typeof ui.varListHeight === 'number' && Number.isFinite(ui.varListHeight)) {
     const vl = document.getElementById('varlist') as HTMLElement | null;
@@ -426,6 +432,7 @@ export function saveFile(
       camera: { ox: anim.ox, oy: anim.oy, scale: anim.scale },
       trailMode: trailModeSel?.value,
       varListHeight: varListEl ? varListEl.offsetHeight : undefined,
+      angleUnit: (w.__angleUnit === 'deg' ? 'deg' : 'rad'),
     },
     sim: {
       t: sim.t,

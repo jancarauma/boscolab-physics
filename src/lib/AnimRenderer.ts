@@ -194,7 +194,7 @@ export class AnimRenderer {
       if (!o.visible) continue;
       const rx = o._rx || 0, ry = o._ry || 0;
       if (o.type === 'particle' || o.type === 'pendulum') {
-        const [opx, opy] = this.toPx(rx, ry); const r = (o.radius || 8) + 4;
+        const [opx, opy] = this.toPx(rx, ry); const r = (o._rrad || 8) + 4;
         if (Math.hypot(px - opx, py - opy) < r) return o;
       } else if (o.type === 'circle') {
         const [opx, opy] = this.toPx(rx, ry); const r = (o._rr || 1) * this.scale + 6;
@@ -269,8 +269,9 @@ export class AnimRenderer {
       if (o.type === 'particle') {
         const mx = g('x') + vox;
         const my = g('y') + voy;
-        const rotDeg = parseFloat(o.rotation) || 0;
-        this._sampleParticleTrail(o, mx, my, rotDeg);
+        const rotRaw = g('rotation') || 0;
+        const rotRad = (window as any).__angleUnit === 'deg' ? rotRaw * Math.PI / 180 : rotRaw;
+        this._sampleParticleTrail(o, mx, my, rotRad);
         return;
       }
 
@@ -457,14 +458,15 @@ export class AnimRenderer {
     const sel = o._selected;
     const hov = this._hoveredObj === o && !sel;
     const vox = o._vox || 0, voy = o._voy || 0;
-    const rotDeg = parseFloat(o.rotation) || 0;
-    const rot = rotDeg * Math.PI / 180;
+    const rotRaw = g('rotation') || 0;
+    const rot = (window as any).__angleUnit === 'deg' ? rotRaw * Math.PI / 180 : rotRaw;
 
     if (o.type === 'particle') {
       const mx = g('x') + vox, my = g('y') + voy;
       o._rx = mx; o._ry = my;
       const [px, py] = this.toPx(mx, my);
-      const r = o.radius || 8;
+      const r = g('radius') || 8;
+      o._rrad = r;
       const tmode = o.trailMode || 'persist';
       if (o.showTrail !== false && tmode !== 'none' && o._trail && o._trail.length > 0) {
           if (tmode === 'dots') {
@@ -473,7 +475,7 @@ export class AnimRenderer {
               const [gx, gy, grot] = o._trail[i];
               const [gpx, gpy] = this.toPx(gx, gy);
               const frac = i / ghostCount, alpha = 0.07 + frac * 0.25;
-              ctx.save(); ctx.globalAlpha = alpha; ctx.translate(gpx, gpy); ctx.rotate((grot || 0) * Math.PI / 180);
+              ctx.save(); ctx.globalAlpha = alpha; ctx.translate(gpx, gpy); ctx.rotate(grot || 0);
               if (o.useImage && o._imgEl && o._imgEl.complete && o._imgEl.naturalWidth > 0) {
                 const d = r * 2; ctx.drawImage(o._imgEl, -d / 2, -d / 2, d, d);
               } else { ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = o.color || color; ctx.fill(); }
@@ -540,9 +542,11 @@ export class AnimRenderer {
       ctx.strokeStyle = o.rodColor || '#94a3b8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ppx, ppy); ctx.lineTo(bpx, bpy); ctx.stroke();
       ctx.beginPath(); ctx.arc(ppx, ppy, 4, 0, Math.PI * 2); ctx.fillStyle = '#475569'; ctx.fill();
       ctx.save(); ctx.translate(bpx, bpy); ctx.rotate(rot);
-      ctx.beginPath(); ctx.arc(0, 0, o.radius || 10, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
+      const rPend = g('radius') || 10;
+      o._rrad = rPend;
+      ctx.beginPath(); ctx.arc(0, 0, rPend, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
       ctx.restore();
-      this._drawSelectionRing(ctx, bpx, bpy, o.radius || 10, sel, hov);
+      this._drawSelectionRing(ctx, bpx, bpy, rPend, sel, hov);
 
     } else if (o.type === 'spring') {
       const isVert = o.vertical === true || o.vertical === 'true';

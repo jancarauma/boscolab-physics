@@ -7,11 +7,13 @@ const LOCALE_FLAGS: Record<Locale, string> = { pt: '🇧🇷', en: '🇺🇸', e
 const LOCALE_LABELS: Record<Locale, string> = { pt: 'Português', en: 'English', es: 'Español', zh: '中文' };
 type SimMethod = 'euler' | 'rk4';
 type TrailMode = 'fade' | 'persist' | 'dots' | 'none';
+type AngleUnit = 'rad' | 'deg';
 
 export default function Menubar() {
   const [locale, setLocaleState] = useState<Locale>('pt');
   const [method, setMethod] = useState<SimMethod>('rk4');
   const [trailMode, setTrailMode] = useState<TrailMode>('persist');
+  const [angleUnit, setAngleUnit] = useState<AngleUnit>('rad');
 
   useEffect(() => {
     setLocaleState(loadLocale());
@@ -23,8 +25,10 @@ export default function Menubar() {
     const syncFromWindow = () => {
       const nextMethod = (window as any).getSimMethod?.();
       const nextTrailMode = (window as any).getGlobalTrailMode?.();
+      const nextAngleUnit = (window as any).getAngleUnit?.();
       if (nextMethod === 'euler' || nextMethod === 'rk4') setMethod(nextMethod);
       if (nextTrailMode === 'fade' || nextTrailMode === 'persist' || nextTrailMode === 'dots' || nextTrailMode === 'none') setTrailMode(nextTrailMode);
+      if (nextAngleUnit === 'rad' || nextAngleUnit === 'deg') setAngleUnit(nextAngleUnit);
     };
 
     const onMethodChange = (event: Event) => {
@@ -37,13 +41,20 @@ export default function Menubar() {
       if (nextTrailMode === 'fade' || nextTrailMode === 'persist' || nextTrailMode === 'dots' || nextTrailMode === 'none') setTrailMode(nextTrailMode);
     };
 
+    const onAngleUnitChange = (event: Event) => {
+      const nextUnit = (event as CustomEvent<AngleUnit>).detail;
+      if (nextUnit === 'rad' || nextUnit === 'deg') setAngleUnit(nextUnit);
+    };
+
     syncFromWindow();
     window.addEventListener('boscolab:method-change', onMethodChange as EventListener);
     window.addEventListener('boscolab:trail-mode-change', onTrailModeChange as EventListener);
+    window.addEventListener('boscolab:angle-unit-change', onAngleUnitChange as EventListener);
 
     return () => {
       window.removeEventListener('boscolab:method-change', onMethodChange as EventListener);
       window.removeEventListener('boscolab:trail-mode-change', onTrailModeChange as EventListener);
+      window.removeEventListener('boscolab:angle-unit-change', onAngleUnitChange as EventListener);
     };
   }, []);
 
@@ -62,6 +73,11 @@ export default function Menubar() {
   function changeTrailMode(nextTrailMode: TrailMode) {
     setTrailMode(nextTrailMode);
     (window as any).setGlobalTrailMode?.(nextTrailMode);
+  }
+
+  function changeAngleUnit(unit: AngleUnit) {
+    setAngleUnit(unit);
+    (window as any).setAngleUnit?.(unit);
   }
 
   return (
@@ -218,6 +234,21 @@ export default function Menubar() {
                   {l === locale && <span style={{ marginLeft: 6, fontSize: 10 }}>✓</span>}
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Unidade de ângulo */}
+          <div className="di has-sub">
+            {tr.options.angleUnit}
+            <div className="sub-drop" style={{ minWidth: 160 }}>
+              <div className="di" onClick={() => changeAngleUnit('rad')} style={angleUnit === 'rad' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.options.radians}
+                {angleUnit === 'rad' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+              <div className="di" onClick={() => changeAngleUnit('deg')} style={angleUnit === 'deg' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.options.degrees}
+                {angleUnit === 'deg' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
             </div>
           </div>
 

@@ -134,7 +134,8 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       ${mrowCV(tr.particle.positionY, 'mo-y', 0, varOptsBlank)}
       ${mrowCV(tr.vector.componentVx, 'mo-vx', 0, varOptsBlank)}
       ${mrowCV(tr.vector.componentVy, 'mo-vy', 0, varOptsBlank)}
-      <div class="modal-row"><span class="modal-label">${tr.particle.radius}</span><input class="modal-inp" id="mo-radius" type="number" value="8"></div>
+      ${mrowCV(tr.particle.radius, 'mo-radius', 8, varOptsBlank)}
+      ${mrowCV(tr.pendulum.rotation, 'mo-rotation', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" style="width:60px;padding:2px" value="#4f9eff"></div>
       <div class="modal-row"><span class="modal-label">${tr.particle.showVelocity}</span><input type="checkbox" class="prop-check" id="mo-showvec"></div>
       <div class="modal-row"><span class="modal-label">${tr.particle.projections}</span><input type="checkbox" class="prop-check" id="mo-showvecproj" checked></div>
@@ -160,7 +161,8 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
         <input class="modal-inp" id="mo-pivotY" type="number" value="0" style="flex:1">
         <select class="modal-sel" id="mo-pivotY-var" style="display:none;flex:1">${varOptsBlank}</select>
       </div>
-      <div class="modal-row"><span class="modal-label">${tr.pendulum.bobRadius}</span><input class="modal-inp" id="mo-radius" type="number" value="10"></div>
+      ${mrowCV(tr.pendulum.bobRadius, 'mo-radius', 10, varOptsBlank)}
+      ${mrowCV(tr.pendulum.rotation, 'mo-rotation', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#f97316"></div>
       <div class="modal-row"><span class="modal-label">${tr.particle.trail}</span><input type="checkbox" class="prop-check" id="mo-trail" checked></div>`,
     spring: `
@@ -186,6 +188,7 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       ${mrowCV(tr.vector.componentVx, 'mo-vx', 0, varOptsBlank)}
       ${mrowCV(tr.vector.componentVy, 'mo-vy', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.vector.scale}</span><input class="modal-inp" id="mo-scale" type="number" step="0.1" value="0.3"></div>
+      ${mrowCV(tr.pendulum.rotation, 'mo-rotation', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#34d399"></div>
       <div class="modal-row"><span class="modal-label">${tr.vector.projections}</span><input type="checkbox" class="prop-check" id="mo-showproj"></div>
       <div class="modal-row"><span class="modal-label">${tr.vector.projectionColor}</span><input class="modal-inp" type="color" id="mo-projcolor" value="#94a3b8"></div>
@@ -195,6 +198,7 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       ${mrowCV(tr.circle.centerX, 'mo-x', 0, varOptsBlank)}
       ${mrowCV(tr.circle.centerY, 'mo-y', 0, varOptsBlank)}
       ${mrowCV(tr.circle.radiusUnit, 'mo-r', 1, varOptsBlank)}
+      ${mrowCV(tr.pendulum.rotation, 'mo-rotation', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.circle.borderColor}</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
     rect: `
       <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.rectangle.defaultName, { id: _id })}"></div>
@@ -202,11 +206,13 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       ${mrowCV(tr.circle.centerY, 'mo-y', 0, varOptsBlank)}
       ${mrowCV(tr.rectangle.width, 'mo-w', 1, varOptsBlank)}
       ${mrowCV(tr.rectangle.height, 'mo-h', 1, varOptsBlank)}
+      ${mrowCV(tr.pendulum.rotation, 'mo-rotation', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
     label: `
       <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.textLabel.defaultName, { id: _id })}"></div>
-      <div class="modal-row"><span class="modal-label">${tr.textLabel.posX}</span><input class="modal-inp" id="mo-x" type="number" value="0"></div>
-      <div class="modal-row"><span class="modal-label">${tr.textLabel.posY}</span><input class="modal-inp" id="mo-y" type="number" value="3"></div>
+      ${mrowCV(tr.textLabel.posX, 'mo-x', 0, varOptsBlank)}
+      ${mrowCV(tr.textLabel.posY, 'mo-y', 3, varOptsBlank)}
+      ${mrowCV(tr.pendulum.rotation, 'mo-rotation', 0, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.textLabel.text}</span><input class="modal-inp" id="mo-text" value="${tr.textLabel.textPlaceholder}" style="width:100%"></div>
       <div class="modal-row"><span class="modal-label">${tr.textLabel.size}</span><input class="modal-inp" id="mo-fontSize" type="number" value="13"></div>
       <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#e2e8f0"></div>`,
@@ -295,13 +301,13 @@ export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
   const common = { name: v('mo-name') || undefined, color: v('mo-color') || undefined };
 
   const props: Record<string, any> = {
-    particle: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, vx: readPivotVal('mo-vx') || 0, vy: readPivotVal('mo-vy') || 0, radius: n('mo-radius') || 8, showVec: b('mo-showvec'), showVecProj: b('mo-showvecproj'), vecColor: v('mo-veccolor') || undefined, projColor: v('mo-projcolor') || undefined, showTrail: b('mo-trail'), label: v('mo-label') || '' },
-    pendulum: { ...common, theta: v('mo-theta') || 'theta', L: readPivotVal('mo-L') || 1.5, pivotX: readPivotVal('mo-pivotX'), pivotY: readPivotVal('mo-pivotY'), radius: n('mo-radius') || 10, showTrail: b('mo-trail') },
+    particle: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, vx: readPivotVal('mo-vx') || 0, vy: readPivotVal('mo-vy') || 0, radius: readPivotVal('mo-radius') || 8, rotation: readPivotVal('mo-rotation') || 0, showVec: b('mo-showvec'), showVecProj: b('mo-showvecproj'), vecColor: v('mo-veccolor') || undefined, projColor: v('mo-projcolor') || undefined, showTrail: b('mo-trail'), label: v('mo-label') || '' },
+    pendulum: { ...common, theta: v('mo-theta') || 'theta', L: readPivotVal('mo-L') || 1.5, pivotX: readPivotVal('mo-pivotX'), pivotY: readPivotVal('mo-pivotY'), radius: readPivotVal('mo-radius') || 10, rotation: readPivotVal('mo-rotation') || 0, showTrail: b('mo-trail') },
     spring: { ...common, x: readPivotVal('mo-x') || 0, y: 0, x1: readPivotVal('mo-pivotX'), y1: readPivotVal('mo-pivotY'), pivotX: readPivotVal('mo-pivotX'), pivotY: readPivotVal('mo-pivotY'), coils: n('mo-coils') || 10, vertical: v('mo-vertical') || 'true' },
-    vector: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, vx: readPivotVal('mo-vx') || 0, vy: readPivotVal('mo-vy') || 0, scale: n('mo-scale') || 0.3, showProj: b('mo-showproj'), projColor: v('mo-projcolor') || undefined, label: v('mo-label') || '' },
-    circle: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, r: String(readPivotVal('mo-r') || 1) },
-    rect: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, w: String(readPivotVal('mo-w') || 1), h: String(readPivotVal('mo-h') || 1) },
-    label: { ...common, x: n('mo-x'), y: n('mo-y'), text: v('mo-text') || 't = {t:2}', fontSize: n('mo-fontSize') || 13 },
+    vector: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, vx: readPivotVal('mo-vx') || 0, vy: readPivotVal('mo-vy') || 0, scale: n('mo-scale') || 0.3, rotation: readPivotVal('mo-rotation') || 0, showProj: b('mo-showproj'), projColor: v('mo-projcolor') || undefined, label: v('mo-label') || '' },
+    circle: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, r: String(readPivotVal('mo-r') || 1), rotation: readPivotVal('mo-rotation') || 0 },
+    rect: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, w: String(readPivotVal('mo-w') || 1), h: String(readPivotVal('mo-h') || 1), rotation: readPivotVal('mo-rotation') || 0 },
+    label: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 3, rotation: readPivotVal('mo-rotation') || 0, text: v('mo-text') || 't = {t:2}', fontSize: n('mo-fontSize') || 13 },
     vectorfield: { ...common, fxExpr: v('mo-fxExpr') || '-y', fyExpr: v('mo-fyExpr') || 'x', gridN: n('mo-gridN') || 14, gridRange: n('mo-gridRange') || 5, arrowScale: n('mo-arrowScale') || 0.6 },
     video: { ...common, url: v('mo-url') || '', x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, w: readPivotVal('mo-w') || 4, h: readPivotVal('mo-h') || 2.25, allowFullscreen: true },
   };
@@ -339,6 +345,8 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
 
   const vars: string[] = sim.getAllVarNames();
   const vOptsBl = '<option value="">—</option>' + vars.map(v => `<option value="${v}">${v}</option>`).join('');
+  const rotUnit = (window as any).__angleUnit === 'deg' ? '°' : 'rad';
+  const rotLabel = `${tr.pendulum.rotation.replace(/ [°rad]+$/, '')} (${rotUnit})`;
 
   function row(label: string, propKey: string, value: any, type = 'text'): string {
     const isVarSel = type === 'varsel';
@@ -385,8 +393,8 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
       <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
         ${row(tr.commonProps.name, 'name', obj.name)}
         ${row(tr.commonProps.color, 'color', obj.color, 'color')}
-        ${row(tr.particle.radius, 'radius', obj.radius, 'number')}
-        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        ${rowVarOrConst(tr.particle.radius, 'radius', obj.radius ?? 8, vars, obj.id)}
+        ${rowVarOrConst(rotLabel, 'rotation', obj.rotation ?? 0, vars, obj.id)}
       </div>
       <div class="prop-section"><div class="prop-title">${tr.particle.position}</div>
         ${rowVarOrConst('X ←→', 'x', obj.x, vars, obj.id)}
@@ -422,8 +430,8 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${row(tr.commonProps.name, 'name', obj.name)}
         ${row(tr.pendulum.bobColor, 'color', obj.color, 'color')}
         ${row(tr.pendulum.rodColor, 'rodColor', obj.rodColor, 'color')}
-        ${row(tr.pendulum.bobRadius, 'radius', obj.radius, 'number')}
-        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        ${rowVarOrConst(tr.pendulum.bobRadius, 'radius', obj.radius ?? 10, vars, obj.id)}
+        ${rowVarOrConst(rotLabel, 'rotation', obj.rotation ?? 0, vars, obj.id)}
       </div>
       <div class="prop-section"><div class="prop-title">${tr.commonProps.physics}</div>
         ${row(tr.pendulum.angle, 'theta', obj.theta, 'varsel')}
@@ -455,7 +463,7 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${row(tr.commonProps.name, 'name', obj.name)}
         ${row(tr.commonProps.color, 'color', obj.color, 'color')}
         ${row(tr.vector.thickness, 'lineWidth', obj.lineWidth, 'number')}
-        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        ${rowVarOrConst(rotLabel, 'rotation', obj.rotation ?? 0, vars, obj.id)}
         ${row(tr.vector.projections, 'showProj', obj.showProj, 'checkbox')}
         ${row(tr.vector.projectionColor, 'projColor', obj.projColor, 'color')}
         <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
@@ -479,7 +487,7 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${row(tr.commonProps.name, 'name', obj.name)}
         ${row(tr.circle.borderColor, 'color', obj.color, 'color')}
         ${row(tr.circle.fillColor, 'fillColor', obj.fillColor, 'color')}
-        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        ${rowVarOrConst(rotLabel, 'rotation', obj.rotation ?? 0, vars, obj.id)}
         <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
       <div class="prop-section"><div class="prop-title">${tr.commonProps.geometry}</div>
@@ -496,7 +504,7 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${row(tr.commonProps.name, 'name', obj.name)}
         ${row(tr.circle.borderColor, 'color', obj.color, 'color')}
         ${row(tr.circle.fillColor, 'fillColor', obj.fillColor, 'color')}
-        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        ${rowVarOrConst(rotLabel, 'rotation', obj.rotation ?? 0, vars, obj.id)}
         <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
       <div class="prop-section"><div class="prop-title">${tr.commonProps.geometry}</div>
@@ -514,13 +522,13 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${row(tr.commonProps.name, 'name', obj.name)}
         ${row(tr.commonProps.color, 'color', obj.color, 'color')}
         ${row(tr.textLabel.size, 'fontSize', obj.fontSize, 'number')}
-        ${row(tr.pendulum.rotation, 'rotation', obj.rotation || 0, 'number')}
+        ${rowVarOrConst(rotLabel, 'rotation', obj.rotation ?? 0, vars, obj.id)}
         <div class="prop-row"><span class="prop-label" style="font-size:10px;color:var(--txt3)">${tr.particle.visualOffset}</span><button class="pico" onclick="window.__resetObjOffset(${obj.id})" style="font-size:10px">↺ ${tr.commonProps.reset}</button></div>
       </div>
       <div class="prop-section"><div class="prop-title">${tr.commonProps.content}</div>
         ${row(tr.textLabel.text, 'text', obj.text)}
-        ${row(tr.textLabel.posX, 'x', obj.x, 'number')}
-        ${row(tr.textLabel.posY, 'y', obj.y, 'number')}
+        ${rowVarOrConst(tr.textLabel.posX, 'x', obj.x ?? 0, vars, obj.id)}
+        ${rowVarOrConst(tr.textLabel.posY, 'y', obj.y ?? 3, vars, obj.id)}
       </div>
       <div class="prop-section" style="font-size:10px;color:var(--txt3)">${tr.textLabel.interpolationHint}</div>`,
     vectorfield: `
@@ -601,8 +609,8 @@ export function updateObjProp(id: number, prop: string, value: any, anim: AnimRe
     return;
   }
 
-  const numProps = new Set(['radius', 'trailLen', 'vecScale', 'scale', 'lineWidth', 'fontSize', 'coils', 'rotation', 'fieldSeeds', 'fieldSteps', 'fieldDs']);
-  const varOrNumProps = new Set(['pivotX', 'pivotY', 'L', 'x1', 'y1', 'x', 'y', 'vx', 'vy', 'r', 'w', 'h']);
+  const numProps = new Set(['trailLen', 'vecScale', 'scale', 'lineWidth', 'fontSize', 'coils', 'fieldSeeds', 'fieldSteps', 'fieldDs']);
+  const varOrNumProps = new Set(['pivotX', 'pivotY', 'L', 'x1', 'y1', 'x', 'y', 'vx', 'vy', 'r', 'w', 'h', 'radius', 'rotation']);
   const boolProps = new Set(['showVec', 'showVecProj', 'showProj', 'showTrail', 'useImage', 'visible', 'allowFullscreen']);
   const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'projColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'fzExpr', 'text', 'label', 'vecLabel', 'projXLabel', 'projYLabel', 'magLabel', 'theta', 'vfMode', 'url', 'embedUrl']);
 
