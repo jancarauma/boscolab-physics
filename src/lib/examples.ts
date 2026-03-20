@@ -6,7 +6,7 @@ export const EXAMPLES: Record<string, any> = {
     g0: { xvar: 't', yvar: 'y' }, g1: { xvar: 't', yvar: 'vy' }, scale: 8, ox: .5, oy: .1
   },
   projetil: {
-    model: `// Lançamento de Projétil\ng = 9.8\n\nx1(t+dt) = x1(t) + vx1*dt\ny1(t+dt) = y1(t) + vy1*dt\nvx1(t+dt) = vx1(t)\nvy1(t+dt) = vy1(t) - g*dt\n\nx2(t+dt) = x2(t) + vx2*dt\ny2(t+dt) = y2(t) + vy2*dt\nvx2(t+dt) = vx2(t)\nvy2(t+dt) = vy2(t) - g*dt\n\nx3(t+dt) = x3(t) + vx3*dt\ny3(t+dt) = y3(t) + vy3*dt\nvx3(t+dt) = vx3(t)\nvy3(t+dt) = vy3(t) - g*dt\n\nv1 = sqrt(vx1^2 + vy1^2)\nv2 = sqrt(vx2^2 + vy2^2)\nv3 = sqrt(vx3^2 + vy3^2)\nx_apice = 10*15/g\ny_apice = 15^2/(2*g)\nt_subida = 15/g\nt_total = 2*15/g\ndTotal=sqrt(x1^2+y1^2)`,
+    model: `// Lançamento de Projétil\ng = 9.8\n\nx1(t+dt) = x1(t) + vx1*dt\ny1(t+dt) = y1(t) + vy1*dt\nvx1(t+dt) = vx1(t)\nvy1(t+dt) = vy1(t) - g*dt\n\nx2(t+dt) = x2(t) + vx2*dt\ny2(t+dt) = y2(t) + vy2*dt\nvx2(t+dt) = vx2(t)\nvy2(t+dt) = vy2(t) - g*dt\n\nx3(t+dt) = x3(t) + vx3*dt\ny3(t+dt) = y3(t) + vy3*dt\nvx3(t+dt) = vx3(t)\nvy3(t+dt) = vy3(t) - g*dt\n\nv1 = sqrt(vx1^2 + vy1^2)\nv2 = sqrt(vx2^2 + vy2^2)\nv3 = sqrt(vx3^2 + vy3^2)\nx_apice = 10*15/g\ny_apice = 15^2/(2*g)\nt_subida = 15/g\nt_total = 2*15/g\ndTotal=sqrt(x1^2+y1^2)\nangulo = 2*t`,
     ic: {
       x1: 0, y1: 0, vx1: 10, vy1: 15,
       x2: 0, y2: 0, vx2: 14, vy2: 10,
@@ -21,6 +21,8 @@ export const EXAMPLES: Record<string, any> = {
       { type: 'label', x: -20.2, y: 7, text: 'Altura máx. de A: ({x_apice:2}, {y_apice:2}) m', fontSize: 14, color: '#fc05e7' },
       { type: 'label', x: -20.2, y: 5, text: 'tempo de subida={t_subida:2} s,   tempo total={t_total:2} s', fontSize: 14, color: '#93c5fd' },
       { type: 'label', x: -20.2, y: 4, text: 'tempo atual={t:2} s', fontSize: 14, color: '#93c5fd' },
+
+      { type: 'video', url: 'https://www.youtube.com/watch?v=N1CQQLSJfwQ', embedUrl: 'https://www.youtube.com/embed/N1CQQLSJfwQ', x: -10.5, y: -7.5, w: 14, h: 10, allowFullscreen: true },
       
       { type: 'particle', x: 'x2', y: 'y2', color: '#38bdf8', trailColor: '#67e8f9', 
         showTrail: true, trailMode: 'persist', trailLen: 180, 
@@ -42,6 +44,7 @@ export const EXAMPLES: Record<string, any> = {
       { type: 'particle', x: 'x1', y: 'y1', color: '#fc0808', trailColor: '#b60000', 
         showTrail: true, trailMode: 'dots', trailLen: 800, 
         showVec: true, showVecProj: true, 
+        rotation: 'angulo',
         vx: 'vx1', vy: 'vy1', vecScale: 1, 
         vecColor: '#34d399', projColor: '#7dd3fc', vecLabel: 'vA', 
         projXLabel: 'vx1 = {vx1:1} m/s', projYLabel: 'vy1 = {vy1:1} m/s', 
