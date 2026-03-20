@@ -79,12 +79,14 @@ export class AnimRenderer {
       startDragAt(e.clientX, e.clientY);
     });
 
-    // Permite iniciar drag de objetos de vídeo clicando na camada HTML sobreposta.
+    // Permite iniciar drag de vídeo somente pelo handle, sem bloquear controles do player.
     window.addEventListener('mousedown', e => {
       if (e.button !== 0) return;
       const target = e.target as HTMLElement | null;
       if (!target) return;
-      const item = target.closest('.anim-video-item') as HTMLDivElement | null;
+      const handle = target.closest('.anim-video-handle') as HTMLDivElement | null;
+      if (!handle) return;
+      const item = handle.closest('.anim-video-item') as HTMLDivElement | null;
       if (!item) return;
       const id = Number(item.dataset.objId || NaN);
       if (!isFinite(id)) return;
