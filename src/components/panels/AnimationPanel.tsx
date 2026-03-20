@@ -23,6 +23,7 @@ export default function AnimationPanel() {
       rectangle: tr.objectTypes.rectangle,
       text: tr.objectTypes.text,
       field: tr.objectTypes.field,
+      video: tr.objectTypes.video,
       animation: tr.ui.animation,
       windows: tr.ui.windows,
       model: tr.ui.model,
@@ -69,6 +70,7 @@ export default function AnimationPanel() {
         rectangle: tr.objectTypes.rectangle,
         text: tr.objectTypes.text,
         field: tr.objectTypes.field,
+        video: tr.objectTypes.video,
         animation: tr.ui.animation,
         windows: tr.ui.windows,
         model: tr.ui.model,
@@ -123,6 +125,7 @@ export default function AnimationPanel() {
 
       <div id="anim-wrap" style={{ flex: 1, position: 'relative' }}>
         <canvas id="anim-canvas" />
+        <div id="anim-media-layer" />
         <div id="anim-overlay">
           <button className="ov-btn" onClick={() => (window as any).resetView?.()}>⊙</button>
           <button className="ov-btn" onClick={() => { if ((window as any).anim) (window as any).anim.scale *= 1.4; }}>＋</button>
@@ -183,6 +186,7 @@ export default function AnimationPanel() {
                 <button className="add-btn" onClick={() => (window as any).addObject?.('rect')} title={text.rectangle}>{text.rectangle}</button>
                 <button className="add-btn" onClick={() => (window as any).addObject?.('label')} title={text.text}>{text.text}</button>
                 <button className="add-btn" onClick={() => (window as any).addObject?.('vectorfield')} title={text.field}>{text.field}</button>
+                <button className="add-btn" onClick={() => (window as any).addObject?.('video')} title={text.video}>{text.video}</button>
               </div>
               <div id="obj-props"><div className="no-obj">{text.noProps}<br />{text.noPropsDesc}</div></div>
             </div>

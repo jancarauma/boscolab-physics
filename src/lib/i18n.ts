@@ -1,14 +1,14 @@
-// ── Tipos ──────────────────────────────────────────────────────────────────
+// --- Tipos --------------
 export type Locale = 'pt' | 'en' | 'es' | 'zh';
 
 export interface Translations {
-  // ── META ──────────────────────────────────────────────────────────────
+  // --- META -------
   meta: {
     appTitle: string;
     appDescription: string;
   };
   
-  // ── MENU PRINCIPAL ────────────────────────────────────────────────────
+  // --- MENU PRINCIPAL -------
   menu: {
     file: string;
     edit: string;
@@ -18,7 +18,7 @@ export interface Translations {
     help: string;
   };
   
-  // ── MENU ARQUIVO ──────────────────────────────────────────────────────
+  // --- MENU ARQUIVO -------
   file: {
     new: string;
     open: string;
@@ -28,7 +28,7 @@ export interface Translations {
     precision: string;
   };
   
-  // ── MENU EXEMPLOS — CATEGORIAS ────────────────────────────────────────
+  // --- MENU EXEMPLOS — CATEGORIAS -------
   exCategories: {
     mechanics: string;
     kinematics: string;
@@ -40,7 +40,7 @@ export interface Translations {
     complex: string;
   };
   
-  // ── MENU EXEMPLOS — ITENS ─────────────────────────────────────────────
+  // --- MENU EXEMPLOS — ITENS -------
   exItems: {
     projetil: string;
     projetil_drag: string;
@@ -65,7 +65,7 @@ export interface Translations {
     lorenz: string;
   };
   
-  // ── MENU VISUALIZAÇÃO ─────────────────────────────────────────────────
+  // --- MENU VISUALIZAÇÃO -------
   view: {
     grid: string;
     axes: string;
@@ -73,19 +73,19 @@ export interface Translations {
     centerView: string;
   };
   
-  // ── MENU AJUDA ────────────────────────────────────────────────────────
+  // --- MENU AJUDA -------
   help: {
     syntax: string;
     about: string;
   };
   
-  // ── MENU OPÇÕES ───────────────────────────────────────────────────────
+  // --- MENU OPÇÕES -------
   options: {
     precision: string;
     language: string;
   };
   
-  // ── TOOLBAR ───────────────────────────────────────────────────────────
+  // --- TOOLBAR -------
   toolbar: {
     play: string;
     pause: string;
@@ -98,7 +98,7 @@ export interface Translations {
     redoTooltip: string;
   };
   
-  // ── PAINÉIS ───────────────────────────────────────────────────────────
+  // --- PAINÉIS -------
   panels: {
     showObjects: string;
     showGraphs: string;
@@ -113,7 +113,7 @@ export interface Translations {
     minimize: string;
   };
   
-  // ── OBJETOS (TIPOS) ───────────────────────────────────────────────────
+  // --- OBJETOS (TIPOS) -------
   objectTypes: {
     particle: string;
     pendulum: string;
@@ -123,9 +123,10 @@ export interface Translations {
     rectangle: string;
     text: string;
     field: string;
+    video: string;
   };
   
-  // ── OBJETOS (PROPRIEDADES COMPARTILHADAS) ─────────────────────────────
+  // --- OBJETOS (PROPRIEDADES COMPARTILHADAS) -------
   commonProps: {
     name: string;
     color: string;
@@ -145,7 +146,7 @@ export interface Translations {
     configuration: string;
   };
   
-  // ── PARTÍCULA ─────────────────────────────────────────────────────────
+  // --- PARTÍCULA -------
   particle: {
     defaultName: string;
     positionX: string;
@@ -177,7 +178,7 @@ export interface Translations {
     imageLoaded: string;
   };
   
-  // ── PÊNDULO ───────────────────────────────────────────────────────────
+  // --- PÊNDULO -------
   pendulum: {
     defaultName: string;
     angle: string;
@@ -190,7 +191,7 @@ export interface Translations {
     rotation: string;
   };
   
-  // ── MOLA ──────────────────────────────────────────────────────────────
+  // --- MOLA -------
   spring: {
     defaultName: string;
     orientation: string;
@@ -204,7 +205,7 @@ export interface Translations {
     coils: string;
   };
   
-  // ── VETOR ─────────────────────────────────────────────────────────────
+  // --- VETOR -------
   vector: {
     defaultName: string;
     originX: string;
@@ -224,7 +225,7 @@ export interface Translations {
     interpolationHint: string;
   };
   
-  // ── CÍRCULO ───────────────────────────────────────────────────────────
+  // --- CÍRCULO -------
   circle: {
     defaultName: string;
     centerX: string;
@@ -235,14 +236,14 @@ export interface Translations {
     fillColor: string;
   };
   
-  // ── RETÂNGULO ─────────────────────────────────────────────────────────
+  // --- RETÂNGULO -------
   rectangle: {
     defaultName: string;
     width: string;
     height: string;
   };
   
-  // ── TEXTO/LABEL ───────────────────────────────────────────────────────
+  // --- TEXTO/LABEL -------
   textLabel: {
     defaultName: string;
     posX: string;
@@ -253,7 +254,7 @@ export interface Translations {
     interpolationHint: string;
   };
   
-  // ── CAMPO VETORIAL ────────────────────────────────────────────────────
+  // --- CAMPO VETORIAL -------
   field: {
     defaultName: string;
     fieldType: string;
@@ -273,8 +274,20 @@ export interface Translations {
     stepSize: string;
     lineThickness: string;
   };
+
+  // --- VÍDEO -------
+  video: {
+    defaultName: string;
+    url: string;
+    originX: string;
+    originY: string;
+    width: string;
+    height: string;
+    allowFullscreen: string;
+    embedHint: string;
+  };
   
-  // ── MODAIS ────────────────────────────────────────────────────────────
+  // --- MODAIS -------
   modals: {
     newProject: string;
     newObject: string;
@@ -286,7 +299,7 @@ export interface Translations {
     ok: string;
   };
   
-  // ── DIÁLOGOS ──────────────────────────────────────────────────────────
+  // --- DIÁLOGOS -------
   dialogs: {
     confirmation: string;
     warning: string;
@@ -297,7 +310,7 @@ export interface Translations {
     createNew: string;
   };
   
-  // ── MENSAGENS ─────────────────────────────────────────────────────────
+  // --- MENSAGENS -------
   messages: {
     modelOk: string;
     modelError: string;
@@ -326,9 +339,10 @@ export interface Translations {
     visualOffsetReset: string;
     newProjectCreated: string;
     runSimulationOrChange: string;
+    invalidVideoUrl: string;
   };
   
-  // ── HELP MODAL ────────────────────────────────────────────────────────
+  // --- HELP MODAL -------
   helpContent: {
     shortcutsTitle: string;
     statementsTitle: string;
@@ -356,7 +370,7 @@ export interface Translations {
     power: string;
   };
   
-  // ── ABOUT MODAL ───────────────────────────────────────────────────────
+  // --- ABOUT MODAL -------
   about: {
     subtitle: string;
     versionLabel: string;
@@ -383,7 +397,7 @@ export interface Translations {
     engineering: string;
   };
   
-  // ── GRÁFICOS ──────────────────────────────────────────────────────────
+  // --- GRÁFICOS -------
   graphs: {
     graph1: string;
     graph2: string;
@@ -392,7 +406,7 @@ export interface Translations {
     simulationStopped: string;
   };
   
-  // ── SETTINGS/CONFIGURAÇÃO ─────────────────────────────────────────────
+  // --- SETTINGS/CONFIGURAÇÃO -------
   settings: {
     method: string;
     euler: string;
@@ -405,7 +419,7 @@ export interface Translations {
     steps: string;
   };
   
-  // ── INTERFACE GERAL ───────────────────────────────────────────────────
+  // --- INTERFACE GERAL -------
   ui: {
     animation: string;
     model: string;
@@ -434,7 +448,7 @@ export interface Translations {
     timeline: string;
   };
   
-  // ── MODO DE RASTRO ────────────────────────────────────────────────────
+  // --- MODO DE RASTRO -------
   trailMode: {
     temporary: string;
     persistent: string;
@@ -445,7 +459,7 @@ export interface Translations {
 
 
 
-// ── Dicionários ────────────────────────────────────────────────────────────
+// --- Dicionários -------
 const translations: Record<Locale, Translations> = {
   pt: {
     meta: { appTitle: 'Boscolab', appDescription: 'Simulador de equações diferenciais' },
@@ -458,7 +472,7 @@ const translations: Record<Locale, Translations> = {
     options: { precision: 'Precisão', language: 'Idioma' },
     toolbar: { play: '▶ Iniciar', pause: '⏸  Parar', restart: '↺ Reiniciar', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Desfazer (Ctrl+Z)', redoTooltip: 'Refazer (Ctrl+Y)' },
     panels: { showObjects: 'Mostrar Objetos', showGraphs: 'Mostrar Gráficos', objects: 'Objetos', graphs: 'Gráficos', noObjects: 'Sem objetos.', noObjectsDesc: 'Adicione abaixo ↓', noProps: 'Clique num objeto', noPropsDesc: 'para ver propriedades', applyAndRestart: '✓ Aplicar e Reiniciar', clearAll: 'Limpar tudo', minimize: 'Minimizar' },
-    objectTypes: { particle: '● Partícula', pendulum: '℘ Pêndulo', spring: '⇝ Mola', vector: '➡ Vetor', circle: '◯ Círculo', rectangle: '▭ Retângulo', text: 'T Texto', field: '⊞ Campo' },
+    objectTypes: { particle: '● Partícula', pendulum: '℘ Pêndulo', spring: '⇝ Mola', vector: '➡ Vetor', circle: '◯ Círculo', rectangle: '▭ Retângulo', text: 'T Texto', field: '⊞ Campo', video: '▶ Vídeo' },
     commonProps: { name: 'Nome', color: 'Cor', show: 'Mostrar', hide: 'Ocultar', mode: 'Modo', moveUp: 'Mover para cima (frente)', moveDown: 'Mover para baixo (atrás)', type: 'Tipo', reset: 'Resetar', remove: 'Remover', identity: 'Identidade', physics: 'Física', geometry: 'Geometria', visualization: 'Visualização', content: 'Conteúdo', configuration: 'Configuração' },
     particle: { defaultName: 'Particula{id}', positionX: 'Posição X', positionY: 'Posição Y', velX: 'Vel. X', velY: 'Vel. Y', radius: 'Raio (px)', showVelocity: 'Mostrar vetor', trail: 'Rastro', label: 'Rótulo', namePlaceholder: 'ex: bola', position: 'Posição', visualOffset: 'Offset visual', velocityVector: 'Vetor', projections: 'Projeções', scale: 'Escala', vectorColor: 'Cor do vetor', projectionColor: 'Cor da projeção', vectorLabel: 'Rótulo do vetor', projectionXLabel: 'Rótulo proj. X', projectionYLabel: 'Rótulo proj. Y', magnitudeLabel: 'Rótulo do módulo', interpolationHint: 'Use {varname}, {varname:2}, {vx}, {vy}, {mag} ou {mod}', vectorLength: 'Comprimento', image: 'Imagem', useImage: 'Usar imagem', imageFormat: 'PNG/JPG', loadImage: 'Carregar', imageLoaded: '✓ Imagem carregada — salva no projeto .modx' },
     pendulum: { defaultName: 'Pêndulo{id}', angle: 'Ângulo θ', length: 'Comprimento L', pivotX: 'Pivot X', pivotY: 'Pivot Y', bobRadius: 'Raio bob', bobColor: 'Cor bob', rodColor: 'Cor haste', rotation: 'Rotação °' },
@@ -468,15 +482,16 @@ const translations: Record<Locale, Translations> = {
     rectangle: { defaultName: 'Rect{id}', width: 'Largura', height: 'Altura' },
     textLabel: { defaultName: 'Texto{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Texto', textPlaceholder: 't = {t:2}s', size: 'Tamanho', interpolationHint: 'Use {varname} ou {varname:2} para interpolar valores' },
     field: { defaultName: 'Campo{id}', fieldType: 'Campo Vetorial', range: 'Alcance', zAxisColor: 'Eixo Z -> Cor', zExprHint: 'Se definido, a cor de cada ponto mapeia Fz:', zScaleHint: 'negativo -> zero -> positivo', zExample: 'Ex: z, x*y, sin(x)', baseColor: 'Cor base', viewMode: 'Modo de Visualização', vectorsMode: 'Vetores', fieldLinesMode: 'Linhas de Campo', gridN: 'Grade N', arrowScale: 'Escala seta', seeds: 'No sementes', steps: 'Passos', stepSize: 'Tamanho passo', lineThickness: 'Espessura linha' },
+    video: { defaultName: 'Video{id}', url: 'URL', originX: 'Origem X', originY: 'Origem Y', width: 'Largura', height: 'Altura', allowFullscreen: 'Permitir tela cheia', embedHint: 'Use URL válida (YouTube, Vimeo, etc).' },
     modals: { newProject: 'Novo Projeto', newObject: 'Novo Objeto', cancel: 'Cancelar', add: 'Adicionar', apply: 'Aplicar', close: 'Fechar', confirm: 'Confirmar', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Aviso', info: 'ℹ️', error: 'Erro', newProjectMsg: 'Deseja criar um novo projeto?', unsavedData: '⚠️ Dados não salvos serão perdidos.', createNew: 'Criar Novo' },
-    messages: { modelOk: '✓ Modelo Correto — {count} variáveis', modelError: 'Modelo com erros.', emptyModel: 'Escreva um modelo antes de simular.', noUndoAction: 'Nada para desfazer', noRedoAction: 'Nada para refazer', undoDone: '↩ Desfeito', redoDone: '↪ Refeito', graphNotFound: 'Gráfico não encontrado', selectYVar: 'Selecione uma variável Y no gráfico primeiro', runSimulationFirst: 'Execute a simulação primeiro', csvExported: '✓ CSV Gráfico {idx}: {count} pontos', csvDataExported: '✓ CSV: {count} pontos', fileSaved: '✓ Arquivo salvo', fileLoaded: '✓ Arquivo carregado', invalidFile: '❌ Arquivo inválido', fileError: '❌ Erro: {message}', numericError: 'Erro numérico: {message}', imageLoaded: '✓ Imagem carregada — salva no projeto .modx', objectAdded: '✓ {name} adicionado', icApplied: '✓ Condições iniciais aplicadas', precisionApplied: '✓ Precisão aplicada', pngExported: '✓ PNG exportado', hdPngExported: '✓ PNG HD exportado ({width}x{height}px)', noData: 'Sem dados', visualOffsetReset: '↺ Offset visual resetado', newProjectCreated: '✓ Novo projeto', runSimulationOrChange: 'Execute a simulação primeiro (ou mude a variável Y)' },
+    messages: { modelOk: '✓ Modelo Correto — {count} variáveis', modelError: 'Modelo com erros.', emptyModel: 'Escreva um modelo antes de simular.', noUndoAction: 'Nada para desfazer', noRedoAction: 'Nada para refazer', undoDone: '↩ Desfeito', redoDone: '↪ Refeito', graphNotFound: 'Gráfico não encontrado', selectYVar: 'Selecione uma variável Y no gráfico primeiro', runSimulationFirst: 'Execute a simulação primeiro', csvExported: '✓ CSV Gráfico {idx}: {count} pontos', csvDataExported: '✓ CSV: {count} pontos', fileSaved: '✓ Arquivo salvo', fileLoaded: '✓ Arquivo carregado', invalidFile: '❌ Arquivo inválido', fileError: '❌ Erro: {message}', numericError: 'Erro numérico: {message}', imageLoaded: '✓ Imagem carregada — salva no projeto .modx', objectAdded: '✓ {name} adicionado', icApplied: '✓ Condições iniciais aplicadas', precisionApplied: '✓ Precisão aplicada', pngExported: '✓ PNG exportado', hdPngExported: '✓ PNG HD exportado ({width}x{height}px)', noData: 'Sem dados', visualOffsetReset: '↺ Offset visual resetado', newProjectCreated: '✓ Novo projeto', runSimulationOrChange: 'Execute a simulação primeiro (ou mude a variável Y)', invalidVideoUrl: '❌ URL de vídeo inválida. Use um link http/https.' },
     helpContent: { shortcutsTitle: 'Atalhos de Teclado', statementsTitle: 'Instruções', newProjectKey: 'Novo projeto', saveKey: 'Salvar arquivo .modx', playKey: 'Iniciar / Parar simulação', restartKey: 'Reiniciar simulação a partir do início', stepForwardKey: 'Executar passo para frente', stepBackKey: 'Executar passo para trás', deleteKey: 'Remover objeto selecionado', constantDesc: 'Constante — valor numérico fixo', expressionDesc: 'Expressão — recalculada a cada passo', availableFunctions: 'Funções Disponíveis', conditional: 'Condicional', iterativeExample: 'Iterativo — exemplo de definição com tempo (t)', differentialExample: 'Diferencial — integrado pelos métodos Euler ou RK4', conditionalExample: 'Exemplo:', usageTips: 'Dicas de Uso', dragTip: 'Arraste objetos na área de animação para reposicioná-los visualmente.', shiftDragTip: 'Shift+arraste modifica as condições iniciais em tempo real.', scrollTip: 'Use scroll do mouse para zoom na animação.', saveTip: 'Salve sua simulação: .modx (arquivo do tipo XML).', rk4Tip: 'O método RK4 é mais preciso para sistemas físicos contínuos.', constants: 'Constantes:', power: 'Potência:' },
     about: { subtitle: 'Simulador Interativo de Física Computacional', versionLabel: 'Versão', authorLabel: 'Autor', websiteLabel: 'Site', websiteValue: 'Saiba mais em', copyrightLabel: 'Copyright', copyrightValue: '© Todos os direitos reservados', mathParserLabel: 'Parser Matemático', mathParserValue: 'Substituição recursiva', integratorsLabel: 'Integradores', integratorsValue: 'Euler · RK4 (Runge-Kutta de 4ª ordem)', graphs: 'Gráficos', equations: 'Equações' },
     precision: { format: 'Formato', decimals: 'Casas decimais', preview: 'Prévia', fixed: 'Decimal fixo', scientific: 'Notação científica', automatic: 'Automática', engineering: 'Engenharia (x10e3)' },
     graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulação parada' },
     settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro', resizeDrag: 'Arraste para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linha do tempo' },
+    ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '-------', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro', resizeDrag: 'Arraste para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linha do tempo' },
     trailMode: { temporary: 'Temporário', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sem rastro' },
   },
 
@@ -491,7 +506,7 @@ const translations: Record<Locale, Translations> = {
     options: { precision: 'Precision', language: 'Language' },
     toolbar: { play: '▶ Play', pause: '⏸  Pause', restart: '↺ Restart', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Undo (Ctrl+Z)', redoTooltip: 'Redo (Ctrl+Y)' },
     panels: { showObjects: 'Show Objects', showGraphs: 'Show Graphs', objects: 'Objects', graphs: 'Graphs', noObjects: 'No objects.', noObjectsDesc: 'Add below ↓', noProps: 'Click on an object', noPropsDesc: 'to see properties', applyAndRestart: '✓ Apply and Restart', clearAll: 'Clear all', minimize: 'Minimize' },
-    objectTypes: { particle: '● Particle', pendulum: '℘ Pendulum', spring: '⇝ Spring', vector: '➡ Vector', circle: '◯ Circle', rectangle: '▭ Rectangle', text: 'T Text', field: '⊞ Field' },
+    objectTypes: { particle: '● Particle', pendulum: '℘ Pendulum', spring: '⇝ Spring', vector: '➡ Vector', circle: '◯ Circle', rectangle: '▭ Rectangle', text: 'T Text', field: '⊞ Field', video: '▶ Video' },
     commonProps: { name: 'Name', color: 'Color', show: 'Show', hide: 'Hide', mode: 'Mode', moveUp: 'Move up (front)', moveDown: 'Move down (back)', type: 'Type', reset: 'Reset', remove: 'Remove', identity: 'Identity', physics: 'Physics', geometry: 'Geometry', visualization: 'Visualization', content: 'Content', configuration: 'Configuration' },
     particle: { defaultName: 'Particle{id}', positionX: 'Position X', positionY: 'Position Y', velX: 'Vel. X', velY: 'Vel. Y', radius: 'Radius (px)', showVelocity: 'Show vector', trail: 'Trail', label: 'Label', namePlaceholder: 'e.g. ball', position: 'Position', visualOffset: 'Visual offset', velocityVector: 'Vector', projections: 'Projections', scale: 'Scale', vectorColor: 'Vector color', projectionColor: 'Projection color', vectorLabel: 'Vector label', projectionXLabel: 'X projection label', projectionYLabel: 'Y projection label', magnitudeLabel: 'Magnitude label', interpolationHint: 'Use {varname}, {varname:2}, {vx}, {vy}, {mag}, or {mod}', vectorLength: 'Length', image: 'Image', useImage: 'Use image', imageFormat: 'PNG/JPG', loadImage: 'Load', imageLoaded: '✓ Image loaded — saved in .modx project' },
     pendulum: { defaultName: 'Pendulum{id}', angle: 'Angle θ', length: 'Length L', pivotX: 'Pivot X', pivotY: 'Pivot Y', bobRadius: 'Bob radius', bobColor: 'Bob color', rodColor: 'Rod color', rotation: 'Rotation °' },
@@ -501,15 +516,16 @@ const translations: Record<Locale, Translations> = {
     rectangle: { defaultName: 'Rect{id}', width: 'Width', height: 'Height' },
     textLabel: { defaultName: 'Text{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Text', textPlaceholder: 't = {t:2}s', size: 'Size', interpolationHint: 'Use {varname} or {varname:2} to interpolate values' },
     field: { defaultName: 'Field{id}', fieldType: 'Vector Field', range: 'Range', zAxisColor: 'Z Axis -> Color', zExprHint: 'If defined, each point color maps Fz:', zScaleHint: 'negative -> zero -> positive', zExample: 'Ex: z, x*y, sin(x)', baseColor: 'Base color', viewMode: 'View Mode', vectorsMode: 'Vectors', fieldLinesMode: 'Field Lines', gridN: 'Grid N', arrowScale: 'Arrow scale', seeds: 'Seed count', steps: 'Steps', stepSize: 'Step size', lineThickness: 'Line thickness' },
+    video: { defaultName: 'Video{id}', url: 'URL', originX: 'Origin X', originY: 'Origin Y', width: 'Width', height: 'Height', allowFullscreen: 'Allow fullscreen', embedHint: 'Use a valid URL (YouTube, Vimeo, etc).' },
     modals: { newProject: 'New Project', newObject: 'New Object', cancel: 'Cancel', add: 'Add', apply: 'Apply', close: 'Close', confirm: 'Confirm', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Warning', info: 'ℹ️', error: 'Error', newProjectMsg: 'Do you want to create a new project?', unsavedData: '⚠️ Unsaved data will be lost.', createNew: 'Create New' },
-    messages: { modelOk: '✓ Model OK — {count} variables', modelError: 'Model with errors.', emptyModel: 'Write a model before running the simulation.', noUndoAction: 'Nothing to undo', noRedoAction: 'Nothing to redo', undoDone: '↩ Undone', redoDone: '↪ Redone', graphNotFound: 'Graph not found', selectYVar: 'Select a Y variable in the graph first', runSimulationFirst: 'Run the simulation first', csvExported: '✓ CSV Graph {idx}: {count} points', csvDataExported: '✓ CSV: {count} points', fileSaved: '✓ File saved', fileLoaded: '✓ File loaded', invalidFile: '❌ Invalid file', fileError: '❌ Error: {message}', numericError: 'Numeric error: {message}', imageLoaded: '✓ Image loaded — saved in .modx project', objectAdded: '✓ {name} added', icApplied: '✓ Initial conditions applied', precisionApplied: '✓ Precision applied', pngExported: '✓ PNG exported', hdPngExported: '✓ HD PNG exported ({width}x{height}px)', noData: 'No data', visualOffsetReset: '↺ Visual offset reset', newProjectCreated: '✓ New project', runSimulationOrChange: 'Run the simulation first (or change the Y variable)' },
+    messages: { modelOk: '✓ Model OK — {count} variables', modelError: 'Model with errors.', emptyModel: 'Write a model before running the simulation.', noUndoAction: 'Nothing to undo', noRedoAction: 'Nothing to redo', undoDone: '↩ Undone', redoDone: '↪ Redone', graphNotFound: 'Graph not found', selectYVar: 'Select a Y variable in the graph first', runSimulationFirst: 'Run the simulation first', csvExported: '✓ CSV Graph {idx}: {count} points', csvDataExported: '✓ CSV: {count} points', fileSaved: '✓ File saved', fileLoaded: '✓ File loaded', invalidFile: '❌ Invalid file', fileError: '❌ Error: {message}', numericError: 'Numeric error: {message}', imageLoaded: '✓ Image loaded — saved in .modx project', objectAdded: '✓ {name} added', icApplied: '✓ Initial conditions applied', precisionApplied: '✓ Precision applied', pngExported: '✓ PNG exported', hdPngExported: '✓ HD PNG exported ({width}x{height}px)', noData: 'No data', visualOffsetReset: '↺ Visual offset reset', newProjectCreated: '✓ New project', runSimulationOrChange: 'Run the simulation first (or change the Y variable)', invalidVideoUrl: '❌ Invalid video URL. Use an http/https link.' },
     helpContent: { shortcutsTitle: 'Keyboard Shortcuts', statementsTitle: 'Statements', newProjectKey: 'New project', saveKey: 'Save .modx file', playKey: 'Play / Pause simulation', restartKey: 'Restart simulation from the beginning', stepForwardKey: 'Step forward', stepBackKey: 'Step backward', deleteKey: 'Remove selected object', constantDesc: 'Constant — fixed numeric value', expressionDesc: 'Expression — recalculated each step', availableFunctions: 'Available Functions', conditional: 'Conditional', iterativeExample: 'Iterative — example of definition with time (t)', differentialExample: 'Differential — integrated through Euler or RK4 method', conditionalExample: 'Example:', usageTips: 'Usage Tips', dragTip: 'Drag objects in the animation area to reposition them visually.', shiftDragTip: 'Shift+drag modifies initial conditions in real time.', scrollTip: 'Use mouse scroll to zoom in the animation.', saveTip: 'Save your simulation: .modx (XML file format).', rk4Tip: 'The RK4 method is more accurate for continuous physical systems.', constants: 'Constants:', power: 'Power:' },
     about: { subtitle: 'Interactive Computational Physics Simulator', versionLabel: 'Version', authorLabel: 'Author', websiteLabel: 'Website', websiteValue: 'Learn more at', copyrightLabel: 'Copyright', copyrightValue: '© All rights reserved', mathParserLabel: 'Math Parser', mathParserValue: 'Recursive substitution', integratorsLabel: 'Integrators', integratorsValue: 'Euler · RK4 (Runge-Kutta 4th order)', graphs: 'Graphs', equations: 'Equations' },
     precision: { format: 'Format', decimals: 'Decimal places', preview: 'Preview', fixed: 'Fixed decimal', scientific: 'Scientific notation', automatic: 'Automatic', engineering: 'Engineering (x10e3)' },
     graphs: { graph1: 'Graph 1', graph2: 'Graph 2', graph3: 'Graph 3', graph4: 'Graph 4', simulationStopped: 'simulation stopped' },
     settings: { method: 'Method', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't max', speed: 'speed', indVar: 'ind var', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '─', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Drag to resize', toggleTheme: 'Toggle theme', globalTrailMode: 'Global trail mode', timeline: 'timeline' },
+    ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '-------', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Drag to resize', toggleTheme: 'Toggle theme', globalTrailMode: 'Global trail mode', timeline: 'timeline' },
     trailMode: { temporary: 'Temporary', persistent: 'Persistent', ghosts: 'Ghosts', none: 'No Trail' },
   },
 
@@ -524,7 +540,7 @@ const translations: Record<Locale, Translations> = {
     options: { precision: 'Precisión', language: 'Idioma' },
     toolbar: { play: '▶ Iniciar', pause: '⏸  Pausar', restart: '↺ Reiniciar', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Deshacer (Ctrl+Z)', redoTooltip: 'Rehacer (Ctrl+Y)' },
     panels: { showObjects: 'Mostrar Objetos', showGraphs: 'Mostrar Gráficos', objects: 'Objetos', graphs: 'Gráficos', noObjects: 'Sin objetos.', noObjectsDesc: 'Agregue abajo ↓', noProps: 'Haga clic en un objeto', noPropsDesc: 'para ver propiedades', applyAndRestart: '✓ Aplicar e Reiniciar', clearAll: 'Limpiar todo', minimize: 'Minimizar' },
-    objectTypes: { particle: '● Partícula', pendulum: '℘ Péndulo', spring: '⇝ Resorte', vector: '➡ Vector', circle: '◯ Círculo', rectangle: '▭ Rectángulo', text: 'T Texto', field: '⊞ Campo' },
+    objectTypes: { particle: '● Partícula', pendulum: '℘ Péndulo', spring: '⇝ Resorte', vector: '➡ Vector', circle: '◯ Círculo', rectangle: '▭ Rectángulo', text: 'T Texto', field: '⊞ Campo', video: '▶ Video' },
     commonProps: { name: 'Nombre', color: 'Color', show: 'Mostrar', hide: 'Ocultar', mode: 'Modo', moveUp: 'Mover arriba (frente)', moveDown: 'Mover abajo (fondo)', type: 'Tipo', reset: 'Restablecer', remove: 'Eliminar', identity: 'Identidad', physics: 'Física', geometry: 'Geometría', visualization: 'Visualización', content: 'Contenido', configuration: 'Configuración' },
     particle: { defaultName: 'Particula{id}', positionX: 'Posición X', positionY: 'Posición Y', velX: 'Vel. X', velY: 'Vel. Y', radius: 'Radio (px)', showVelocity: 'Mostrar vector', trail: 'Rastro', label: 'Etiqueta', namePlaceholder: 'p.ej: bola', position: 'Posición', visualOffset: 'Desplazamiento visual', velocityVector: 'Vector', projections: 'Proyecciones', scale: 'Escala', vectorColor: 'Color del vector', projectionColor: 'Color de la proyección', vectorLabel: 'Etiqueta del vector', projectionXLabel: 'Etiqueta proy. X', projectionYLabel: 'Etiqueta proy. Y', magnitudeLabel: 'Etiqueta del módulo', interpolationHint: 'Use {varname}, {varname:2}, {vx}, {vy}, {mag} o {mod}', vectorLength: 'Longitud', image: 'Imagen', useImage: 'Usar imagen', imageFormat: 'PNG/JPG', loadImage: 'Cargar', imageLoaded: '✓ Imagen cargada — guardada en proyecto .modx' },
     pendulum: { defaultName: 'Péndulo{id}', angle: 'Ángulo θ', length: 'Longitud L', pivotX: 'Pivot X', pivotY: 'Pivot Y', bobRadius: 'Radio bob', bobColor: 'Color bob', rodColor: 'Color varilla', rotation: 'Rotación °' },
@@ -534,15 +550,16 @@ const translations: Record<Locale, Translations> = {
     rectangle: { defaultName: 'Rect{id}', width: 'Ancho', height: 'Altura' },
     textLabel: { defaultName: 'Texto{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Texto', textPlaceholder: 't = {t:2}s', size: 'Tamaño', interpolationHint: 'Use {varname} o {varname:2} para interpolar valores' },
     field: { defaultName: 'Campo{id}', fieldType: 'Campo Vectorial', range: 'Alcance', zAxisColor: 'Eje Z -> Color', zExprHint: 'Si se define, el color de cada punto mapea Fz:', zScaleHint: 'negativo -> cero -> positivo', zExample: 'Ej: z, x*y, sin(x)', baseColor: 'Color base', viewMode: 'Modo de Visualización', vectorsMode: 'Vectores', fieldLinesMode: 'Líneas de Campo', gridN: 'Malla N', arrowScale: 'Escala flecha', seeds: 'Nº semillas', steps: 'Pasos', stepSize: 'Tamaño de paso', lineThickness: 'Grosor de línea' },
+    video: { defaultName: 'Video{id}', url: 'URL', originX: 'Origen X', originY: 'Origen Y', width: 'Ancho', height: 'Alto', allowFullscreen: 'Permitir pantalla completa', embedHint: 'Use una URL válida (YouTube, Vimeo, etc.).' },
     modals: { newProject: 'Nuevo Proyecto', newObject: 'Nuevo Objeto', cancel: 'Cancelar', add: 'Agregar', apply: 'Aplicar', close: 'Cerrar', confirm: 'Confirmar', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Advertencia', info: 'ℹ️', error: 'Error', newProjectMsg: '¿Desea crear un nuevo proyecto?', unsavedData: '⚠️ Los datos no guardados se perderán.', createNew: 'Crear Nuevo' },
-    messages: { modelOk: '✓ Modelo OK — {count} variables', modelError: 'Modelo con errores.', emptyModel: 'Escriba un modelo antes de ejecutar la simulación.', noUndoAction: 'Nada para deshacer', noRedoAction: 'Nada para rehacer', undoDone: '↩ Deshecho', redoDone: '↪ Rehecho', graphNotFound: 'Gráfico no encontrado', selectYVar: 'Seleccione primero una variable Y en el gráfico', runSimulationFirst: 'Ejecute la simulación primero', csvExported: '✓ CSV Gráfico {idx}: {count} puntos', csvDataExported: '✓ CSV: {count} puntos', fileSaved: '✓ Archivo guardado', fileLoaded: '✓ Archivo cargado', invalidFile: '❌ Archivo inválido', fileError: '❌ Error: {message}', numericError: 'Error numérico: {message}', imageLoaded: '✓ Imagen cargada — guardada en proyecto .modx', objectAdded: '✓ {name} agregado', icApplied: '✓ Condiciones iniciales aplicadas', precisionApplied: '✓ Precisión aplicada', pngExported: '✓ PNG exportado', hdPngExported: '✓ PNG HD exportado ({width}x{height}px)', noData: 'Sin datos', visualOffsetReset: '↺ Desplazamiento visual restablecido', newProjectCreated: '✓ Nuevo proyecto', runSimulationOrChange: 'Ejecute la simulación primero (o cambie la variable Y)' },
+    messages: { modelOk: '✓ Modelo OK — {count} variables', modelError: 'Modelo con errores.', emptyModel: 'Escriba un modelo antes de ejecutar la simulación.', noUndoAction: 'Nada para deshacer', noRedoAction: 'Nada para rehacer', undoDone: '↩ Deshecho', redoDone: '↪ Rehecho', graphNotFound: 'Gráfico no encontrado', selectYVar: 'Seleccione primero una variable Y en el gráfico', runSimulationFirst: 'Ejecute la simulación primero', csvExported: '✓ CSV Gráfico {idx}: {count} puntos', csvDataExported: '✓ CSV: {count} puntos', fileSaved: '✓ Archivo guardado', fileLoaded: '✓ Archivo cargado', invalidFile: '❌ Archivo inválido', fileError: '❌ Error: {message}', numericError: 'Error numérico: {message}', imageLoaded: '✓ Imagen cargada — guardada en proyecto .modx', objectAdded: '✓ {name} agregado', icApplied: '✓ Condiciones iniciales aplicadas', precisionApplied: '✓ Precisión aplicada', pngExported: '✓ PNG exportado', hdPngExported: '✓ PNG HD exportado ({width}x{height}px)', noData: 'Sin datos', visualOffsetReset: '↺ Desplazamiento visual restablecido', newProjectCreated: '✓ Nuevo proyecto', runSimulationOrChange: 'Ejecute la simulación primero (o cambie la variable Y)', invalidVideoUrl: '❌ URL de video inválida. Use un enlace http/https.' },
     helpContent: { shortcutsTitle: 'Atajos de Teclado', statementsTitle: 'Instrucciones', newProjectKey: 'Nuevo proyecto', saveKey: 'Guardar archivo .modx', playKey: 'Reproducir / Pausar simulación', restartKey: 'Reiniciar simulación desde el principio', stepForwardKey: 'Paso adelante', stepBackKey: 'Paso atrás', deleteKey: 'Eliminar objeto seleccionado', constantDesc: 'Constante — valor numérico fijo', expressionDesc: 'Expresión — recalculada en cada paso', availableFunctions: 'Funciones Disponibles', conditional: 'Condicional', iterativeExample: 'Iterativo — ejemplo de definición con tiempo (t)', differentialExample: 'Diferencial — integrado por los métodos Euler o RK4', conditionalExample: 'Ejemplo:', usageTips: 'Consejos de Uso', dragTip: 'Arrastre objetos en el área de animación para reposicionarlos visualmente.', shiftDragTip: 'Shift+arrastrar modifica las condiciones iniciales en tiempo real.', scrollTip: 'Use la rueda del mouse para hacer zoom en la animación.', saveTip: 'Guarde su simulación: .modx (formato de archivo XML).', rk4Tip: 'El método RK4 es más preciso para sistemas físicos continuos.', constants: 'Constantes:', power: 'Potencia:' },
     about: { subtitle: 'Simulador Interactivo de Física Computacional', versionLabel: 'Versión', authorLabel: 'Autor', websiteLabel: 'Sitio web', websiteValue: 'Más información en', copyrightLabel: 'Copyright', copyrightValue: '© Todos los derechos reservados', mathParserLabel: 'Parser Matemático', mathParserValue: 'Sustitución recursiva', integratorsLabel: 'Integradores', integratorsValue: 'Euler · RK4 (Runge-Kutta de 4º orden)', graphs: 'Gráficos', equations: 'Ecuaciones' },
     precision: { format: 'Formato', decimals: 'Decimales', preview: 'Vista previa', fixed: 'Decimal fijo', scientific: 'Notación científica', automatic: 'Automática', engineering: 'Ingeniería (x10e3)' },
     graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulación detenida' },
     settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '─', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Arrastre para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linea de tiempo' },
+    ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '-------', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Arrastre para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linea de tiempo' },
     trailMode: { temporary: 'Temporal', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sin Rastro' },
   },
 
@@ -557,7 +574,7 @@ const translations: Record<Locale, Translations> = {
     options: { precision: '精度', language: '语言' },
     toolbar: { play: '▶ 播放', pause: '⏸  暂停', restart: '↺ 重新开始', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: '撤销 (Ctrl+Z)', redoTooltip: '重做 (Ctrl+Y)' },
     panels: { showObjects: '显示对象', showGraphs: '显示图表', objects: '对象', graphs: '图表', noObjects: '没有对象。', noObjectsDesc: '在下方添加 ↓', noProps: '单击一个对象', noPropsDesc: '查看属性', applyAndRestart: '✓ 应用并重新开始', clearAll: '全部清除', minimize: '最小化' },
-    objectTypes: { particle: '● 粒子', pendulum: '℘ 摆', spring: '⇝ 弹簧', vector: '➡ 矢量', circle: '◯ 圆', rectangle: '▭ 矩形', text: 'T 文本', field: '⊞ 场' },
+    objectTypes: { particle: '● 粒子', pendulum: '℘ 摆', spring: '⇝ 弹簧', vector: '➡ 矢量', circle: '◯ 圆', rectangle: '▭ 矩形', text: 'T 文本', field: '⊞ 场', video: '▶ 视频' },
     commonProps: { name: '名称', color: '颜色', show: '显示', hide: '隐藏', mode: '模式', moveUp: '上移（前景）', moveDown: '下移（后景）', type: '类型', reset: '重置', remove: '删除', identity: '身份', physics: '物理', geometry: '几何', visualization: '可视化', content: '内容', configuration: '配置' },
     particle: { defaultName: '粒子{id}', positionX: '位置 X', positionY: '位置 Y', velX: '速度 X', velY: '速度 Y', radius: '半径 (px)', showVelocity: '显示矢量', trail: '轨迹', label: '标签', namePlaceholder: '例如：球', position: '位置', visualOffset: '视觉偏移', velocityVector: '矢量', projections: '投影', scale: '缩放', vectorColor: '矢量颜色', projectionColor: '投影颜色', vectorLabel: '矢量标签', projectionXLabel: 'X 投影标签', projectionYLabel: 'Y 投影标签', magnitudeLabel: '模长标签', interpolationHint: '可使用 {varname}、{varname:2}、{vx}、{vy}、{mag} 或 {mod}', vectorLength: '长度', image: '图像', useImage: '使用图像', imageFormat: 'PNG/JPG', loadImage: '加载', imageLoaded: '✓ 图像已加载 — 已保存到 .modx 项目' },
     pendulum: { defaultName: '摆{id}', angle: '角度 θ', length: '长度 L', pivotX: '轴心 X', pivotY: '轴心 Y', bobRadius: '球半径', bobColor: '球颜色', rodColor: '杆颜色', rotation: '旋转 °' },
@@ -567,21 +584,22 @@ const translations: Record<Locale, Translations> = {
     rectangle: { defaultName: '矩形{id}', width: '宽度', height: '高度' },
     textLabel: { defaultName: '文本{id}', posX: '位置 X', posY: '位置 Y', text: '文本', textPlaceholder: 't = {t:2}s', size: '大小', interpolationHint: '使用 {varname} 或 {varname:2} 来插值' },
     field: { defaultName: '场{id}', fieldType: '矢量场', range: '范围', zAxisColor: 'Z 轴 -> 颜色', zExprHint: '定义后，每个点的颜色将映射 Fz：', zScaleHint: '负值 -> 零 -> 正值', zExample: '例如: z, x*y, sin(x)', baseColor: '基础颜色', viewMode: '显示模式', vectorsMode: '矢量', fieldLinesMode: '场线', gridN: '网格 N', arrowScale: '箭头缩放', seeds: '种子数', steps: '步数', stepSize: '步长', lineThickness: '线宽' },
+    video: { defaultName: '视频{id}', url: 'URL', originX: '起点 X', originY: '起点 Y', width: '宽度', height: '高度', allowFullscreen: '允许全屏', embedHint: '请使用有效链接（YouTube、Vimeo 等）。' },
     modals: { newProject: '新项目', newObject: '新对象', cancel: '取消', add: '添加', apply: '应用', close: '关闭', confirm: '确认', ok: '确定' },
     dialogs: { confirmation: '⚠️', warning: '警告', info: 'ℹ️', error: '错误', newProjectMsg: '是否要创建新项目？', unsavedData: '⚠️ 未保存的数据将丢失。', createNew: '创建新项目' },
-    messages: { modelOk: '✓ 模型正常 — {count} 个变量', modelError: '模型有错误。', emptyModel: '请先编写模型再运行模拟。', noUndoAction: '没有可撤销的操作', noRedoAction: '没有可重做的操作', undoDone: '↩ 已撤销', redoDone: '↪ 已重做', graphNotFound: '未找到图表', selectYVar: '请先在图表中选择 Y 变量', runSimulationFirst: '请先运行模拟', csvExported: '✓ CSV 图表 {idx}：{count} 个点', csvDataExported: '✓ CSV：{count} 个点', fileSaved: '✓ 文件已保存', fileLoaded: '✓ 文件已加载', invalidFile: '❌ 无效文件', fileError: '❌ 错误：{message}', numericError: '数值错误：{message}', imageLoaded: '✓ 图像已加载 — 已保存到 .modx 项目', objectAdded: '✓ 已添加 {name}', icApplied: '✓ 初始条件已应用', precisionApplied: '✓ 精度已应用', pngExported: '✓ PNG 已导出', hdPngExported: '✓ 高清 PNG 已导出（{width}x{height}px）', noData: '无数据', visualOffsetReset: '↺ 视觉偏移已重置', newProjectCreated: '✓ 新项目', runSimulationOrChange: '请先运行模拟（或更改 Y 变量）' },
+    messages: { modelOk: '✓ 模型正常 — {count} 个变量', modelError: '模型有错误。', emptyModel: '请先编写模型再运行模拟。', noUndoAction: '没有可撤销的操作', noRedoAction: '没有可重做的操作', undoDone: '↩ 已撤销', redoDone: '↪ 已重做', graphNotFound: '未找到图表', selectYVar: '请先在图表中选择 Y 变量', runSimulationFirst: '请先运行模拟', csvExported: '✓ CSV 图表 {idx}：{count} 个点', csvDataExported: '✓ CSV：{count} 个点', fileSaved: '✓ 文件已保存', fileLoaded: '✓ 文件已加载', invalidFile: '❌ 无效文件', fileError: '❌ 错误：{message}', numericError: '数值错误：{message}', imageLoaded: '✓ 图像已加载 — 已保存到 .modx 项目', objectAdded: '✓ 已添加 {name}', icApplied: '✓ 初始条件已应用', precisionApplied: '✓ 精度已应用', pngExported: '✓ PNG 已导出', hdPngExported: '✓ 高清 PNG 已导出（{width}x{height}px）', noData: '无数据', visualOffsetReset: '↺ 视觉偏移已重置', newProjectCreated: '✓ 新项目', runSimulationOrChange: '请先运行模拟（或更改 Y 变量）', invalidVideoUrl: '❌ 视频 URL 无效。请使用 http/https 链接。' },
     helpContent: { shortcutsTitle: '键盘快捷键', statementsTitle: '语句', newProjectKey: '新项目', saveKey: '保存 .modx 文件', playKey: '播放 / 暂停模拟', restartKey: '从头开始重新启动模拟', stepForwardKey: '向前步进', stepBackKey: '向后步进', deleteKey: '删除选定的对象', constantDesc: '常数 — 固定数值', expressionDesc: '表达式 — 每步重新计算', availableFunctions: '可用函数', conditional: '条件语句', iterativeExample: '迭代式 — 带时间 (t) 的定义示例', differentialExample: '微分式 — 通过 Euler 或 RK4 方法积分', conditionalExample: '示例：', usageTips: '使用技巧', dragTip: '在动画区域中拖动对象以直观地重新定位它们。', shiftDragTip: 'Shift + 拖动可实时修改初始条件。', scrollTip: '使用鼠标滚轮在动画中进行缩放。', saveTip: '保存您的模拟：.modx（XML 文件格式）。', rk4Tip: 'RK4 方法对连续物理系统更加精确。', constants: '常数：', power: '幂：' },
     about: { subtitle: '交互式计算物理模拟器', versionLabel: '版本', authorLabel: '作者', websiteLabel: '网站', websiteValue: '了解更多', copyrightLabel: '版权', copyrightValue: '© 版权所有', mathParserLabel: '数学解析器', mathParserValue: '递归替换', integratorsLabel: '积分器', integratorsValue: 'Euler · RK4（四阶 Runge-Kutta）', graphs: '图表', equations: '方程' },
     precision: { format: '格式', decimals: '小数位', preview: '预览', fixed: '定点小数', scientific: '科学计数法', automatic: '自动', engineering: '工程记数法 (x10e3)' },
     graphs: { graph1: '图表 1', graph2: '图表 2', graph3: '图表 3', graph4: '图表 4', simulationStopped: '模拟已停止' },
     settings: { method: '方法', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't 最大值', speed: '速度', indVar: '独立变量', time: 't =', steps: 'n =' },
-    ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '─', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', fps: 'FPS', points: '点', objectsCount: '对象', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误', resizeDrag: '拖动以调整大小', toggleTheme: '切换主题', globalTrailMode: '全局轨迹模式', timeline: '时间轴' },
+    ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '-------', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', fps: 'FPS', points: '点', objectsCount: '对象', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误', resizeDrag: '拖动以调整大小', toggleTheme: '切换主题', globalTrailMode: '全局轨迹模式', timeline: '时间轴' },
     trailMode: { temporary: '临时', persistent: '持久', ghosts: '幻影', none: '无轨迹' },
   },
 };
 
 
-// ── Estado global do idioma ────────────────────────────────────────────────
+// --- Estado global do idioma -------
 const STORAGE_KEY = 'boscolab-locale';
 let _currentLocale: Locale = 'pt';
 const _listeners: Array<(locale: Locale) => void> = [];
@@ -607,7 +625,7 @@ export function onLocaleChange(fn: (locale: Locale) => void): () => void {
   return () => { const i = _listeners.indexOf(fn); if (i >= 0) _listeners.splice(i, 1); };
 }
 
-// ── Função para interpolar valores em strings ──────────────────────────────
+// --- Função para interpolar valores em strings -------
 export function interpolate(text: string, values: Record<string, string | number>): string {
   return text.replace(/\{(\w+)(?::(\d+))?\}/g, (match, key, precision) => {
     const value = values[key];

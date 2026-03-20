@@ -161,7 +161,7 @@ export default function Home() {
 
     setInterval(() => { const m = getEditorText(); if (m.trim()) localStorage.setItem('mw_v2', m); }, 30000);
 
-    // ── Internal helpers ────────────────────────────────────────────────────
+    // --- Internal helpers -------
     function doSimReset() { simReset({ sim, anim, graphs }); }
 
     function doRenderAfterUndo() {
@@ -255,7 +255,7 @@ export default function Home() {
       });
     }
 
-    // ── Render loop ─────────────────────────────────────────────────────────
+    // --- Render loop -------
     anim.resize();
     window.addEventListener('resize', () => { anim.resize(); graphs[activeTab].render(); });
 
@@ -287,13 +287,25 @@ export default function Home() {
     };
     sim.onStatus = (s: string) => updateStatusUI(s, sim);
 
-    // ── Anim callbacks ───────────────────────────────────────────────────────
+    // --- Anim callbacks -------
     anim.onSelect = (obj: any) => {
       if (selectedObj) selectedObj._selected = false;
       selectedObj = obj; if (obj) obj._selected = true;
       renderObjList(anim); renderObjProps(obj, sim, anim);
     };
     anim.onDragObj = (obj: any, wx: number, wy: number, shiftKey: boolean) => {
+      if (obj.type === 'video' && !shiftKey) {
+        const grabDx = isFinite(obj._dragGrabDx) ? obj._dragGrabDx : 0;
+        const grabDy = isFinite(obj._dragGrabDy) ? obj._dragGrabDy : 0;
+        obj.x = +(wx - grabDx).toFixed(4);
+        obj.y = +(wy - grabDy).toFixed(4);
+        obj._vox = 0;
+        obj._voy = 0;
+        obj._dragLastX = wx;
+        obj._dragLastY = wy;
+        return;
+      }
+
       if (obj.type === 'vectorfield' || (shiftKey && sim.parsed)) {
         // Para vectorfield ou quando shift está pressionado
         const xvar = typeof obj.x === 'string' ? obj.x.toLowerCase() : null;
@@ -331,10 +343,19 @@ export default function Home() {
       }
       obj._dragLastX = wx; obj._dragLastY = wy;
     };
-    anim.onDragStart = (obj: any, wx: number, wy: number) => { obj._dragLastX = wx; obj._dragLastY = wy; };
+    anim.onDragStart = (obj: any, wx: number, wy: number) => {
+      obj._dragLastX = wx;
+      obj._dragLastY = wy;
+      if (obj.type === 'video') {
+        const rx = isFinite(obj._rx) ? obj._rx : (typeof obj.x === 'number' ? obj.x : 0);
+        const ry = isFinite(obj._ry) ? obj._ry : (typeof obj.y === 'number' ? obj.y : 0);
+        obj._dragGrabDx = wx - rx;
+        obj._dragGrabDy = wy - ry;
+      }
+    };
     anim.onDragEnd = () => { undoPush(anim); };
 
-    // ── Varlist resize ───────────────────────────────────────────────────────
+    // --- Varlist resize -------
     const vlHandle = document.getElementById('varlist-resize');
     const vlEl     = document.getElementById('varlist');
     if (vlHandle && vlEl) {
@@ -344,7 +365,7 @@ export default function Home() {
       window.addEventListener('mouseup', () => { if (drag) { drag = false; vlHandle.classList.remove('drag'); } });
     }
 
-    // ── Keyboard shortcuts ───────────────────────────────────────────────────
+    // --- Keyboard shortcuts -------
     document.addEventListener('keydown', e => {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'MATH-FIELD') {
@@ -369,7 +390,7 @@ export default function Home() {
         ['blab-dlg-overlay', 'help-modal-overlay', 'about-modal-overlay', 'precision-modal-overlay'].forEach(id => document.getElementById(id)?.classList.remove('show'));
     }, true);
 
-    // ── Toolbar wiring ───────────────────────────────────────────────────────
+    // --- Toolbar wiring -------
     (document.getElementById('sel-speed') as HTMLSelectElement | null)?.addEventListener('change', function () { sim.speedFactor = parseFloat(this.value) || 1; sim._frameAcc = 0; });
     (document.getElementById('inp-dt')   as HTMLInputElement | null)?.addEventListener('change', function () { sim.dt   = parseFloat(this.value) || 0.01; sim._frameAcc = 0; });
     (document.getElementById('inp-tmax') as HTMLInputElement | null)?.addEventListener('change', function () { sim.tMax = parseFloat(this.value) || 10; });
@@ -390,7 +411,7 @@ export default function Home() {
       if (this.value === 'euler' || this.value === 'rk4') w.setSimMethod(this.value);
     });
 
-    // ── Timeline seekbar ─────────────────────────────────────────────────────
+    // --- Timeline seekbar -------
     const getMaxSeekStep = () => Math.max(0, Math.floor(sim.tMax / Math.max(sim.dt, 1e-9)));
     const syncTimelineUI = () => {
       const slider = document.getElementById('timeline-slider') as HTMLInputElement | null;
@@ -458,7 +479,7 @@ export default function Home() {
       });
     });
 
-    // ── Sub-menu positioning ─────────────────────────────────────────────────
+    // --- Sub-menu positioning -------
     document.querySelectorAll<HTMLElement>('.di.has-sub').forEach(item => {
       const sub = item.querySelector<HTMLElement>('.sub-drop');
       if (!sub) return;
@@ -471,7 +492,7 @@ export default function Home() {
       item.addEventListener('mouseleave', () => { sub.style.display = 'none'; });
     });
 
-    // ── Dialog overlay close ─────────────────────────────────────────────────
+    // --- Dialog overlay close -------
     document.getElementById('blab-dlg-overlay')?.addEventListener('click', e => {
       if (e.target === document.getElementById('blab-dlg-overlay')) document.getElementById('blab-dlg-overlay')!.classList.remove('show');
     });
@@ -480,7 +501,7 @@ export default function Home() {
       if (el) el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); });
     });
 
-    // ── Init ─────────────────────────────────────────────────────────────────
+    // --- Init --------------
     updateStatusUI('idle', sim);
     syncTimelineUI();
     const ss = document.getElementById('sel-speed') as HTMLSelectElement | null;

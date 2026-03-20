@@ -1,4 +1,4 @@
-// ── GRAPH RENDERER ────────────────────────────────────
+// --- GRAPH RENDERER -------
 export class GraphRenderer {
   cv: HTMLCanvasElement;
   idx: number;

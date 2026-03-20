@@ -1,4 +1,6 @@
-// ── ANIMATION RENDERER ───────────────────────────────
+import { toEmbedVideoUrl } from './videoEmbed';
+
+// --- ANIMATION RENDERER -------
 export class AnimRenderer {
   cv: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -14,6 +16,8 @@ export class AnimRenderer {
   onDragEnd: (() => void) | null;
   _dragObj: any;
   _hoveredObj: any | null;
+  _mediaLayer: HTMLDivElement | null;
+  _videoNodes: Map<number, HTMLDivElement>;
 
   constructor(canvas: HTMLCanvasElement) {
     this.cv = canvas; this.ctx = canvas.getContext('2d')!;
@@ -26,6 +30,8 @@ export class AnimRenderer {
     this.onSelect = null; this.onDragObj = null; this.onDragStart = null; this.onDragEnd = null;
     this._hoveredObj = null;
     this._dragObj = null;
+    this._mediaLayer = null;
+    this._videoNodes = new Map();
     this._setupEvents();
   }
 
@@ -44,6 +50,21 @@ export class AnimRenderer {
   }
 
   _setupEvents() {
+    const startDragAt = (clientX: number, clientY: number, forcedObj?: any) => {
+      this._drag = true;
+      this._lm = [clientX, clientY];
+      const rect = this.cv.getBoundingClientRect();
+      const px = clientX - rect.left;
+      const py = clientY - rect.top;
+      const hit = forcedObj || this._hitTest(px, py);
+      if (this.onSelect) this.onSelect(hit);
+      this._dragObj = hit || null;
+      if (hit && this.onDragStart) {
+        const [wx, wy] = this.toMx(px, py);
+        this.onDragStart(hit, wx, wy);
+      }
+    };
+
     this.cv.addEventListener('wheel', e => {
       e.preventDefault();
       const f = e.deltaY < 0 ? 1.12 : 0.88;
@@ -55,17 +76,25 @@ export class AnimRenderer {
 
     this.cv.addEventListener('mousedown', e => {
       if (e.button !== 0) return;
-      this._drag = true; this._lm = [e.clientX, e.clientY];
-      const rect = this.cv.getBoundingClientRect();
-      const px = e.clientX - rect.left, py = e.clientY - rect.top;
-      const hit = this._hitTest(px, py);
-      if (this.onSelect) this.onSelect(hit);
-      this._dragObj = hit || null;
-      if (hit && this.onDragStart) {
-        const [wx, wy] = this.toMx(px, py);
-        this.onDragStart(hit, wx, wy);
-      }
+      startDragAt(e.clientX, e.clientY);
     });
+
+    // Permite iniciar drag de objetos de vídeo clicando na camada HTML sobreposta.
+    window.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const item = target.closest('.anim-video-item') as HTMLDivElement | null;
+      if (!item) return;
+      const id = Number(item.dataset.objId || NaN);
+      if (!isFinite(id)) return;
+      const obj = this.objects.find((o: any) => o && o.id === id);
+      if (!obj || obj.type !== 'video') return;
+      e.preventDefault();
+      e.stopPropagation();
+      startDragAt(e.clientX, e.clientY, obj);
+    });
+
     this.cv.addEventListener('mousemove', e => {
       const rect = this.cv.getBoundingClientRect();
       const px = e.clientX - rect.left, py = e.clientY - rect.top;
@@ -99,6 +128,64 @@ export class AnimRenderer {
   toPx(mx: number, my: number): [number, number] { return [this.ox + mx * this.scale, this.oy - my * this.scale]; }
   toMx(px: number, py: number): [number, number] { return [(px - this.ox) / this.scale, (this.oy - py) / this.scale]; }
 
+  _getMediaLayer(): HTMLDivElement | null {
+    if (this._mediaLayer && this._mediaLayer.isConnected) return this._mediaLayer;
+    const layer = document.getElementById('anim-media-layer') as HTMLDivElement | null;
+    this._mediaLayer = layer;
+    return layer;
+  }
+
+  _syncVideoNode(o: any, left: number, top: number, width: number, height: number, sel: boolean, hov: boolean) {
+    const layer = this._getMediaLayer();
+    if (!layer) return;
+
+    let node = this._videoNodes.get(o.id);
+    if (!node) {
+      node = document.createElement('div');
+      node.className = 'anim-video-item';
+      node.dataset.objId = String(o.id);
+      const iframe = document.createElement('iframe');
+      iframe.className = 'anim-video-frame';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.setAttribute('allowfullscreen', 'true');
+      node.appendChild(iframe);
+      layer.appendChild(node);
+      this._videoNodes.set(o.id, node);
+        const handle = document.createElement('div');
+        handle.className = 'anim-video-handle';
+        handle.innerHTML = '<span class="anim-video-handle-icon">⋮⋮</span>';
+        node.appendChild(handle);
+      }
+
+    const src = (o.embedUrl && typeof o.embedUrl === 'string') ? o.embedUrl : toEmbedVideoUrl(String(o.url || ''));
+    if (src) o.embedUrl = src;
+
+    const iframe = node.querySelector('iframe') as HTMLIFrameElement | null;
+    if (iframe) {
+      iframe.title = o.name || `video-${o.id}`;
+      if (src && iframe.src !== src) iframe.src = src;
+      if (o.allowFullscreen === false) iframe.removeAttribute('allowfullscreen');
+      else iframe.setAttribute('allowfullscreen', 'true');
+    }
+
+    node.style.left = `${left.toFixed(2)}px`;
+    node.style.top = `${top.toFixed(2)}px`;
+    node.style.width = `${Math.max(8, width).toFixed(2)}px`;
+    node.style.height = `${Math.max(8, height).toFixed(2)}px`;
+    node.classList.toggle('selected', !!sel);
+    node.classList.toggle('hovered', !!hov);
+  }
+
+  _cleanupVideoNodes(keep: Set<number>) {
+    this._videoNodes.forEach((node, id) => {
+      if (keep.has(id)) return;
+      node.remove();
+      this._videoNodes.delete(id);
+    });
+  }
+
   _hitTest(px: number, py: number) {
     for (let i = this.objects.length - 1; i >= 0; i--) {
       const o = this.objects[i];
@@ -119,6 +206,11 @@ export class AnimRenderer {
       } else if (o.type === 'vectorfield') {
         const [opx, opy] = this.toPx(rx, ry);
         const pw = (o._rw || 10) * this.scale / 2, ph = (o._rh || 10) * this.scale / 2;
+        if (px >= opx - pw && px <= opx + pw && py >= opy - ph && py <= opy + ph) return o;
+      } else if (o.type === 'video') {
+        const [opx, opy] = this.toPx(rx, ry);
+        const pw = Math.max(0.2, o._rw || 4) * this.scale / 2;
+        const ph = Math.max(0.2, o._rh || 2.25) * this.scale / 2;
         if (px >= opx - pw && px <= opx + pw && py >= opy - ph && py <= opy + ph) return o;
       }
     }
@@ -200,7 +292,13 @@ export class AnimRenderer {
     ctx.fillStyle = canvasBg; ctx.fillRect(0, 0, w, h);
     if (this.showGrid) this._drawGrid(ctx, w, h);
     if (this.showAxes) this._drawAxes(ctx, w, h);
-    this.objects.forEach(o => { if (o.visible !== false) this._drawObj(ctx, o, state); });
+    const visibleVideoIds = new Set<number>();
+    this.objects.forEach(o => {
+      if (o.visible === false) return;
+      this._drawObj(ctx, o, state);
+      if (o.type === 'video') visibleVideoIds.add(o.id);
+    });
+    this._cleanupVideoNodes(visibleVideoIds);
   }
 
   _drawGrid(ctx: CanvasRenderingContext2D, w: number, h: number) {
@@ -236,7 +334,7 @@ export class AnimRenderer {
     }
   }
 
-  // ── Draw selection/hover ring + drag handle ────────────────────────────
+  // --- Draw selection/hover ring + drag handle -------
   _drawSelectionRing(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, sel: boolean, hov: boolean) {
     if (!sel && !hov) return;
     ctx.save();
@@ -543,7 +641,7 @@ export class AnimRenderer {
       const T = state.t || 0;
       const vfMode = o.vfMode || 'arrows'; // 'arrows' | 'fieldlines'
 
-      // ── Mapa de cor Fz: azul(neg) → branco(zero) → vermelho(pos) ────────
+      // --- Mapa de cor Fz: azul(neg) → branco(zero) → vermelho(pos) -------
       // Coleta min/max de Fz numa grade grosseira para normalizar
       let fzMin = 0, fzMax = 0;
       if (fzFn) {
@@ -587,7 +685,7 @@ export class AnimRenderer {
       };
 
       if (vfMode === 'fieldlines') {
-        // ── Linhas de campo: grade uniforme + integração RK4 bidirecional ──
+        // --- Linhas de campo: grade uniforme + integração RK4 bidirecional -------
         const numSeeds  = o.fieldSeeds || 16;
         const steps     = o.fieldSteps || 300;
         const ds        = o.fieldDs    || 0.04;
@@ -627,7 +725,7 @@ export class AnimRenderer {
           return pts;
         };
 
-        // ── Grade uniforme de sementes sobre [-R, R]² ────────────────────
+        // --- Grade uniforme de sementes sobre [-R, R]² -------
         // Mesma abordagem do modo setas: cobre todo o domínio linearmente.
         // numSeeds é interpretado como n×n (ex: 16 → 4×4, 25 → 5×5).
         const n = Math.max(2, Math.round(Math.sqrt(numSeeds)));
@@ -677,7 +775,7 @@ export class AnimRenderer {
         }
 
       } else {
-        // ── Vetores (modo padrão) ─────────────────────────────────────────
+        // --- Vetores (modo padrão) -------
         const N = o.gridN || 14;
         const arrowScale = o.arrowScale || 0.6;
         const step = R * 2 / (N - 1);
@@ -724,6 +822,19 @@ export class AnimRenderer {
       const [vfpx, vfpy] = this.toPx(vfx, vfy);
       const vfpw = vfw * this.scale, vfph = vfh * this.scale;
       this._drawSelectionBox(ctx, vfpx, vfpy, vfpw, vfph, sel, hov);
+    } else if (o.type === 'video') {
+      const vx = (g('x') || 0) + vox;
+      const vy = (g('y') || 0) + voy;
+      const vw = Math.max(0.2, Math.abs(g('w') || 4));
+      const vh = Math.max(0.2, Math.abs(g('h') || 2.25));
+      const [vpx, vpy] = this.toPx(vx, vy);
+      const pw = vw * this.scale;
+      const ph = vh * this.scale;
+      o._rx = vx;
+      o._ry = vy;
+      o._rw = vw;
+      o._rh = vh;
+      this._syncVideoNode(o, vpx - pw / 2, vpy - ph / 2, pw, ph, sel, hov);
     }
     if (sel && (o.type === 'vector' || o.type === 'label')) {
       const [spx2, spy2] = this.toPx((g('x') || 0) + vox, (g('y') || 0) + voy);

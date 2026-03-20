@@ -1,4 +1,4 @@
-// ── MODEL PARSER ──────────────────────────────────────
+// --- MODEL PARSER -------
 export function normalizeIdentifier(name?: string | null): string {
   return (name ?? '').trim().toLowerCase() || 't';
 }

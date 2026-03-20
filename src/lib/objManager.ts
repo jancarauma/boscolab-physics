@@ -3,11 +3,12 @@ import type { AnimRenderer } from './AnimRenderer';
 import { makeObj, OBJECT_ICONS } from './objects';
 import { toast, closeModal } from './uiHelpers';
 import { t as getTranslations, interpolate } from './i18n';
+import { toEmbedVideoUrl } from './videoEmbed';
 
 let _pendingObjType: string | null = null;
 export let selectedObj: any = null;
 
-// ── Object list ─────────────────────────────────────────────────────────────
+// --- Object list -------
 export function renderObjList(anim: AnimRenderer): void {
   const el = document.getElementById('obj-list');
   if (!el) return;
@@ -99,12 +100,12 @@ export function resetObjOffset(id: number, anim: AnimRenderer): void {
   toast(getTranslations().messages.visualOffsetReset);
 }
 
-// ── Add Object Modal ─────────────────────────────────────────────────────────
+// --- Add Object Modal -------
 export function addObject(type: string, sim: SimEngine, getObjId: () => number): void {
   _pendingObjType = type;
   const tr = getTranslations();
-  const icons: Record<string, string> = { particle: '●', pendulum: '🔴', spring: '🌀', vector: '➡', circle: '◯', rect: '▭', label: 'T', vectorfield: '⊞' };
-  const labels: Record<string, string> = { particle: tr.objectTypes.particle, pendulum: tr.objectTypes.pendulum, spring: tr.objectTypes.spring, vector: tr.objectTypes.vector, circle: tr.objectTypes.circle, rect: tr.objectTypes.rectangle, label: tr.objectTypes.text, vectorfield: tr.objectTypes.field };
+  const icons: Record<string, string> = { particle: '●', pendulum: '🔴', spring: '🌀', vector: '➡', circle: '◯', rect: '▭', label: 'T', vectorfield: '⊞', video: '▶' };
+  const labels: Record<string, string> = { particle: tr.objectTypes.particle, pendulum: tr.objectTypes.pendulum, spring: tr.objectTypes.spring, vector: tr.objectTypes.vector, circle: tr.objectTypes.circle, rect: tr.objectTypes.rectangle, label: tr.objectTypes.text, vectorfield: tr.objectTypes.field, video: tr.objectTypes.video };
 
   const iconEl = document.getElementById('modal-icon');
   const labelEl = document.getElementById('modal-type-label');
@@ -217,6 +218,14 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       <div class="modal-row"><span class="modal-label">${tr.field.range}</span><input class="modal-inp" id="mo-gridRange" type="number" value="5"></div>
       <div class="modal-row"><span class="modal-label">${tr.field.arrowScale}</span><input class="modal-inp" id="mo-arrowScale" type="number" step="0.05" value="0.6"></div>
       <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
+    video: `
+      <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.video.defaultName, { id: _id })}"></div>
+      <div class="modal-row"><span class="modal-label">${tr.video.url}</span><input class="modal-inp" id="mo-url" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" style="width:100%"></div>
+      ${mrowCV(tr.video.originX, 'mo-x', 0, varOptsBlank)}
+      ${mrowCV(tr.video.originY, 'mo-y', 0, varOptsBlank)}
+      ${mrowCV(tr.video.width, 'mo-w', 4, varOptsBlank)}
+      ${mrowCV(tr.video.height, 'mo-h', 2.25, varOptsBlank)}
+      <div class="modal-row"><span class="modal-label">${tr.video.embedHint}</span><span style="font-size:10px;color:var(--txt3)">YouTube, Vimeo, etc.</span></div>`,
   };
 
   const body = document.getElementById('modal-body');
@@ -278,6 +287,7 @@ function readPivotVal(base: string): string | number {
 
 export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
   const t = _pendingObjType; if (!t) return;
+  const tr = getTranslations();
   const v = (id: string) => { const el = document.getElementById(id) as HTMLInputElement | null; return el ? el.value : undefined; };
   const n = (id: string) => { const el = document.getElementById(id) as HTMLInputElement | null; return el ? parseFloat(el.value) || 0 : 0; };
   const b = (id: string) => { const el = document.getElementById(id) as HTMLInputElement | null; return el ? el.checked : false; };
@@ -293,7 +303,18 @@ export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
     rect: { ...common, x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, w: String(readPivotVal('mo-w') || 1), h: String(readPivotVal('mo-h') || 1) },
     label: { ...common, x: n('mo-x'), y: n('mo-y'), text: v('mo-text') || 't = {t:2}', fontSize: n('mo-fontSize') || 13 },
     vectorfield: { ...common, fxExpr: v('mo-fxExpr') || '-y', fyExpr: v('mo-fyExpr') || 'x', gridN: n('mo-gridN') || 14, gridRange: n('mo-gridRange') || 5, arrowScale: n('mo-arrowScale') || 0.6 },
+    video: { ...common, url: v('mo-url') || '', x: readPivotVal('mo-x') || 0, y: readPivotVal('mo-y') || 0, w: readPivotVal('mo-w') || 4, h: readPivotVal('mo-h') || 2.25, allowFullscreen: true },
   };
+
+  if (t === 'video') {
+    const embedUrl = toEmbedVideoUrl(String(props.video.url || ''));
+    if (!embedUrl) {
+      toast(tr.messages.invalidVideoUrl);
+      return;
+    }
+    props.video.embedUrl = embedUrl;
+    props.video.url = String(props.video.url).trim();
+  }
 
   const obj = makeObj(t, props[t] || common);
   anim.objects.push(obj);
@@ -303,11 +324,10 @@ export function confirmAddObject(anim: AnimRenderer, sim: SimEngine): void {
   selectedObj = obj; obj._selected = true;
   renderObjList(anim);
   renderObjProps(obj, sim, anim);
-  const tr = getTranslations();
   toast(interpolate(tr.messages.objectAdded, { name: obj.name }));
 }
 
-// ── Object Properties Panel ──────────────────────────────────────────────────
+// --- Object Properties Panel -------
 export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): void {
   const el = document.getElementById('obj-props');
   if (!el) return;
@@ -540,20 +560,51 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${row(tr.field.lineThickness, 'lineWidth', obj.lineWidth || 1.2, 'number')}
         `}
       </div>`,
+    video: `
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
+        ${row(tr.commonProps.name, 'name', obj.name)}
+        ${row(tr.video.url, 'url', obj.url || obj.embedUrl || '')}
+        ${row(tr.video.allowFullscreen, 'allowFullscreen', obj.allowFullscreen !== false, 'checkbox')}
+      </div>
+      <div class="prop-section"><div class="prop-title">${tr.commonProps.geometry}</div>
+        ${rowVarOrConst(tr.video.originX, 'x', obj.x, vars, obj.id)}
+        ${rowVarOrConst(tr.video.originY, 'y', obj.y, vars, obj.id)}
+        ${rowVarOrConst(tr.video.width, 'w', obj.w, vars, obj.id)}
+        ${rowVarOrConst(tr.video.height, 'h', obj.h, vars, obj.id)}
+      </div>
+      <div class="prop-section" style="font-size:10px;color:var(--txt3)">${tr.video.embedHint}</div>`,
   };
 
   el.innerHTML = PROPS[obj.type] || `<div class="no-obj">${tr.commonProps.type}: ${obj.type}</div>`;
 }
 
-// ── Update property ──────────────────────────────────────────────────────────
+// --- Update property -------
 export function updateObjProp(id: number, prop: string, value: any, anim: AnimRenderer): void {
   const o = anim.objects.find((o: any) => o.id === id);
   if (!o) return;
+  const tr = getTranslations();
+
+  if (o.type === 'video' && prop === 'url') {
+    const normalized = toEmbedVideoUrl(String(value || ''));
+    if (!normalized) {
+      toast(tr.messages.invalidVideoUrl);
+      const sim2 = (window as any).__sim;
+      const anim2 = (window as any).anim;
+      if (sim2 && anim2) renderObjProps(o, sim2, anim2);
+      return;
+    }
+    o.url = String(value).trim();
+    o.embedUrl = normalized;
+    const sim2 = (window as any).__sim;
+    const anim2 = (window as any).anim;
+    if (sim2 && anim2) renderObjProps(o, sim2, anim2);
+    return;
+  }
 
   const numProps = new Set(['radius', 'trailLen', 'vecScale', 'scale', 'lineWidth', 'fontSize', 'coils', 'rotation', 'fieldSeeds', 'fieldSteps', 'fieldDs']);
   const varOrNumProps = new Set(['pivotX', 'pivotY', 'L', 'x1', 'y1', 'x', 'y', 'vx', 'vy', 'r', 'w', 'h']);
-  const boolProps = new Set(['showVec', 'showVecProj', 'showProj', 'showTrail', 'useImage', 'visible']);
-  const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'projColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'fzExpr', 'text', 'label', 'vecLabel', 'projXLabel', 'projYLabel', 'magLabel', 'theta', 'vfMode']);
+  const boolProps = new Set(['showVec', 'showVecProj', 'showProj', 'showTrail', 'useImage', 'visible', 'allowFullscreen']);
+  const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'projColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'fzExpr', 'text', 'label', 'vecLabel', 'projXLabel', 'projYLabel', 'magLabel', 'theta', 'vfMode', 'url', 'embedUrl']);
 
   if (numProps.has(prop)) {
     o[prop] = parseFloat(value) || 0;

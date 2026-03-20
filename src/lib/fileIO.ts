@@ -347,7 +347,7 @@ function parseLegacyProject(doc: Document): SavedProject | null {
   };
 }
 
-// ── Save ────────────────────────────────────────────────────────────────────
+// --- Save -------
 export function saveFile(
   sim: SimEngine,
   anim: AnimRenderer,
@@ -447,7 +447,7 @@ export function saveFile(
   toast(t().messages.fileSaved);
 }
 
-// ── Open ────────────────────────────────────────────────────────────────────
+// --- Open -------
 export function openFile(): void {
   closeMenus();
   document.getElementById('file-input')?.click();
@@ -490,7 +490,7 @@ export function onFileLoad(
   input.value = '';
 }
 
-// ── Export CSV ───────────────────────────────────────────────────────────────
+// --- Export CSV -------
 export function exportCSV(sim: SimEngine): void {
   closeMenus();
   if (sim.history.length < 2) { toast(t().messages.runSimulationFirst); return; }
@@ -503,7 +503,7 @@ export function exportCSV(sim: SimEngine): void {
   toast(interpolate(t().messages.csvDataExported, { count: sim.history.length }));
 }
 
-// ── Export PNG ───────────────────────────────────────────────────────────────
+// --- Export PNG -------
 export function exportPNG(): void {
   closeMenus();
   const canvas = document.getElementById('anim-canvas') as HTMLCanvasElement | null;

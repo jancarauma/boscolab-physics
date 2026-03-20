@@ -1,4 +1,4 @@
-// ── Toast ──────────────────────────────────────────────────
+// --- Toast -------
 let _toastTimer: ReturnType<typeof setTimeout> | null = null;
 
 export function toast(m: string): void {
@@ -10,7 +10,7 @@ export function toast(m: string): void {
   _toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
 }
 
-// ── Error bar ──────────────────────────────────────────────
+// --- Error bar -------
 export function setErr(m: string): void {
   const el = document.getElementById('errmsg');
   if (el) el.textContent = m;
@@ -21,7 +21,7 @@ export function clearErr(): void {
   if (el) el.textContent = '';
 }
 
-// ── Menus ──────────────────────────────────────────────────
+// --- Menus -------
 export function toggleMenu(el: HTMLElement): void {
   const wasOpen = el.classList.contains('open');
   closeMenus();
@@ -32,13 +32,13 @@ export function closeMenus(): void {
   document.querySelectorAll('.mitem').forEach(m => m.classList.remove('open'));
 }
 
-// ── Modals ─────────────────────────────────────────────────
+// --- Modals -------
 export function closeModal(id: string): void {
   const el = document.getElementById(id);
   if (el) el.classList.remove('show');
 }
 
-// ── Custom Dialog ──────────────────────────────────────────
+// --- Custom Dialog -------
 interface BlabConfirmOptions {
   icon?: string;
   title?: string;
@@ -107,7 +107,7 @@ export function blabAlert({
   setTimeout(() => okBtn.focus(), 80);
 }
 
-// ── Resize handles ─────────────────────────────────────────
+// --- Resize handles -------
 export function setupRH(id: string, panelId: string, side: 'left' | 'right', onResize?: () => void): void {
   const h = document.getElementById(id);
   const p = document.getElementById(panelId);
@@ -128,7 +128,7 @@ export function setupRH(id: string, panelId: string, side: 'left' | 'right', onR
   window.addEventListener('mouseup', () => { if (drag) { drag = false; h.classList.remove('drag'); } });
 }
 
-// ── Help / About ───────────────────────────────────────────
+// --- Help / About -------
 export function showHelp(): void {
   closeMenus();
   document.getElementById('help-modal-overlay')?.classList.add('show');

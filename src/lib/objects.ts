@@ -1,6 +1,6 @@
 export const OBJECT_ICONS: Record<string, string> = {
   particle: '●', pendulum: '🔴', spring: '🌀', vector: '➡',
-  circle: '◯', rect: '▭', label: 'T', vectorfield: '⊞',
+  circle: '◯', rect: '▭', label: 'T', vectorfield: '⊞', video: '▶',
 };
 
 export const OBJECT_COLORS = ['#4f9eff', '#f97316', '#34d399', '#a78bfa', '#fb7185', '#fbbf24', '#06b6d4', '#ec4899'];
@@ -27,6 +27,7 @@ export function makeObj(type: string, props: Record<string, any> = {}) {
     rect: { x: 'x', y: 'y', w: 1, h: 1, fillColor: 'rgba(79,158,255,.12)', lineWidth: 1.5 },
     label: { x: 0, y: 3, text: 't = {t:2}', fontSize: 13 },
     vectorfield: { fxExpr: '-y', fyExpr: 'x', gridN: 14, gridRange: 5, arrowScale: 0.6, color: '#4f9eff' },
+    video: { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', x: 0, y: 0, w: 4, h: 2.25, allowFullscreen: true },
   };
   const obj = { ...base, ...(defaults[type] || {}), ...props };
   if (type === 'vector' && props.vecLabel === undefined && props.label !== undefined) obj.vecLabel = props.label;

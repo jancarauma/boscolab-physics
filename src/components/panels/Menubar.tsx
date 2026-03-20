@@ -68,7 +68,7 @@ export default function Menubar() {
     <div id="menubar">
       <span className="logo">BOSCO<a style={{ color: 'orange' }}>LAB</a></span>
 
-      {/* ── Arquivo ─────────────────────────────────────────────────────── */}
+      {/* --- Arquivo ---------- */}
       <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>
         {tr.menu.file}
         <div className="drop">
@@ -82,7 +82,7 @@ export default function Menubar() {
         </div>
       </div>
 
-      {/* ── Editar ──────────────────────────────────────────────────────── */}
+      {/* --- Editar ---------- */}
       <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>
         {tr.menu.edit}
         <div className="drop">
@@ -91,7 +91,7 @@ export default function Menubar() {
         </div>
       </div>
 
-      {/* ── Exibir ──────────────────────────────────────────────────────── */}
+      {/* --- Exibir ---------- */}
       <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>
         {tr.menu.view}
         <div className="drop">
@@ -125,7 +125,7 @@ export default function Menubar() {
         </div>
       </div>
 
-      {/* ── Exemplos ────────────────────────────────────────────────────── */}
+      {/* --- Exemplos ---------- */}
       <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>
         {tr.menu.examples}
         <div className="drop" style={{ minWidth: 210 }}>
@@ -181,7 +181,7 @@ export default function Menubar() {
         </div>
       </div>
 
-      {/* ── Opções ──────────────────────────────────────────────────────── */}
+      {/* --- Opções ---------- */}
       <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>
         {tr.menu.options}
         <div className="drop" style={{ minWidth: 180 }}>
@@ -224,7 +224,7 @@ export default function Menubar() {
         </div>
       </div>
 
-      {/* ── Ajuda ───────────────────────────────────────────────────────── */}
+      {/* --- Ajuda ---------- */}
       <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>
         {tr.menu.help}
         <div className="drop">

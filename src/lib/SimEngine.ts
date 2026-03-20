@@ -1,6 +1,6 @@
 import { ModelParser, normalizeIdentifier } from './ModelParser';
 
-// ── SIMULATION ENGINE ─────────────────────────────────
+// --- SIMULATION ENGINE -------
 export class SimEngine {
   parser: ModelParser;
   parsed: any;
