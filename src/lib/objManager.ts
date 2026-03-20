@@ -220,11 +220,11 @@ export function addObject(type: string, sim: SimEngine, getObjId: () => number):
       <div class="modal-row"><span class="modal-label">${tr.commonProps.color}</span><input class="modal-inp" type="color" id="mo-color" value="#4f9eff"></div>`,
     video: `
       <div class="modal-row"><span class="modal-label">${tr.commonProps.name}</span><input class="modal-inp" id="mo-name" value="${interpolate(tr.video.defaultName, { id: _id })}"></div>
-      <div class="modal-row"><span class="modal-label">${tr.video.url}</span><input class="modal-inp" id="mo-url" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" style="width:100%"></div>
+      <div class="modal-row"><span class="modal-label">${tr.video.url}</span><input class="modal-inp" id="mo-url" value="https://www.youtube.com/watch?v=sRzezc45xvk" style="width:100%"></div>
       ${mrowCV(tr.video.originX, 'mo-x', 0, varOptsBlank)}
       ${mrowCV(tr.video.originY, 'mo-y', 0, varOptsBlank)}
-      ${mrowCV(tr.video.width, 'mo-w', 4, varOptsBlank)}
-      ${mrowCV(tr.video.height, 'mo-h', 2.25, varOptsBlank)}
+      ${mrowCV(tr.video.width, 'mo-w', 7, varOptsBlank)}
+      ${mrowCV(tr.video.height, 'mo-h', 4, varOptsBlank)}
       <div class="modal-row"><span class="modal-label">${tr.video.embedHint}</span><span style="font-size:10px;color:var(--txt3)">YouTube, Vimeo, etc.</span></div>`,
   };
 
