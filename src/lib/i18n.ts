@@ -491,7 +491,7 @@ const translations: Record<Locale, Translations> = {
     precision: { format: 'Formato', decimals: 'Casas decimais', preview: 'Prévia', fixed: 'Decimal fixo', scientific: 'Notação científica', automatic: 'Automática', engineering: 'Engenharia (x10e3)' },
     graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulação parada' },
     settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '-------', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro', resizeDrag: 'Arraste para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linha do tempo' },
+    ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '-', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro', resizeDrag: 'Arraste para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linha do tempo' },
     trailMode: { temporary: 'Temporário', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sem rastro' },
   },
 
@@ -525,7 +525,7 @@ const translations: Record<Locale, Translations> = {
     precision: { format: 'Format', decimals: 'Decimal places', preview: 'Preview', fixed: 'Fixed decimal', scientific: 'Scientific notation', automatic: 'Automatic', engineering: 'Engineering (x10e3)' },
     graphs: { graph1: 'Graph 1', graph2: 'Graph 2', graph3: 'Graph 3', graph4: 'Graph 4', simulationStopped: 'simulation stopped' },
     settings: { method: 'Method', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't max', speed: 'speed', indVar: 'ind var', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '-------', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Drag to resize', toggleTheme: 'Toggle theme', globalTrailMode: 'Global trail mode', timeline: 'timeline' },
+    ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '-', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Drag to resize', toggleTheme: 'Toggle theme', globalTrailMode: 'Global trail mode', timeline: 'timeline' },
     trailMode: { temporary: 'Temporary', persistent: 'Persistent', ghosts: 'Ghosts', none: 'No Trail' },
   },
 
@@ -559,7 +559,7 @@ const translations: Record<Locale, Translations> = {
     precision: { format: 'Formato', decimals: 'Decimales', preview: 'Vista previa', fixed: 'Decimal fijo', scientific: 'Notación científica', automatic: 'Automática', engineering: 'Ingeniería (x10e3)' },
     graphs: { graph1: 'Gráfico 1', graph2: 'Gráfico 2', graph3: 'Gráfico 3', graph4: 'Gráfico 4', simulationStopped: 'simulación detenida' },
     settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
-    ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '-------', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Arrastre para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linea de tiempo' },
+    ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '-', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Arrastre para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linea de tiempo' },
     trailMode: { temporary: 'Temporal', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sin Rastro' },
   },
 
@@ -593,7 +593,7 @@ const translations: Record<Locale, Translations> = {
     precision: { format: '格式', decimals: '小数位', preview: '预览', fixed: '定点小数', scientific: '科学计数法', automatic: '自动', engineering: '工程记数法 (x10e3)' },
     graphs: { graph1: '图表 1', graph2: '图表 2', graph3: '图表 3', graph4: '图表 4', simulationStopped: '模拟已停止' },
     settings: { method: '方法', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't 最大值', speed: '速度', indVar: '独立变量', time: 't =', steps: 'n =' },
-    ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '-------', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', fps: 'FPS', points: '点', objectsCount: '对象', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误', resizeDrag: '拖动以调整大小', toggleTheme: '切换主题', globalTrailMode: '全局轨迹模式', timeline: '时间轴' },
+    ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '-', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', fps: 'FPS', points: '点', objectsCount: '对象', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误', resizeDrag: '拖动以调整大小', toggleTheme: '切换主题', globalTrailMode: '全局轨迹模式', timeline: '时间轴' },
     trailMode: { temporary: '临时', persistent: '持久', ghosts: '幻影', none: '无轨迹' },
   },
 };
