@@ -131,7 +131,10 @@ export default function Home() {
     return unsub;
   }, []);
 
-  const handleLang = (l: Locale) => setLocale(l);
+  const handleLang = (l: Locale) => {
+    setLocale(l);
+    handleClickLang();
+  }
 
   const tr = t().lp;
 
@@ -155,9 +158,19 @@ export default function Home() {
     volume: 0.5,
   });
 
+  const langClickSound = new Howl({
+    src: ["/songs/pop-down.mp3"],
+    rate: 0.75,
+    volume: 0.5,
+  });
+
   const handleClick = () => {
     setPlaybackRate((rate) => rate + 0.1);
     heartClickSound.play();
+  }
+
+  const handleClickLang = () => {
+    langClickSound.play();
   }
 
   return (
