@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import { initTheme } from '@/lib/theme';
 import { BabyIcon, BookHeartIcon, TelescopeIcon } from 'lucide-react';
 import { t, loadLocale, setLocale, onLocaleChange, type Locale } from '@/lib/i18n';
+import { Howl } from 'howler';
 
 type Slide = { src: string; alt: string; caption: string };
 
@@ -121,6 +122,7 @@ function Carousel({ title, slides, interval = 5000 }: { title: string; slides: S
 
 export default function Home() {
   const [locale, setLocaleState] = useState<Locale>('pt');
+  const [playbackRate, setPlaybackRate] = useState(0.75);
 
   useEffect(() => {
     initTheme();
@@ -146,6 +148,17 @@ export default function Home() {
     { src: '/photos/sim03.webp', alt: tr.sim3, caption: tr.sim3 },
     { src: '/photos/sim04.webp', alt: tr.sim4, caption: tr.sim4 },
   ], [locale]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const heartClickSound = new Howl({
+    src: ["/songs/glug-a.mp3"],
+    rate: playbackRate,
+    volume: 0.5,
+  });
+
+  const handleClick = () => {
+    setPlaybackRate((rate) => rate + 0.1);
+    heartClickSound.play();
+  }
 
   return (
     <main className="lp-root">
@@ -175,7 +188,7 @@ export default function Home() {
         </div>
 
         <div className="lp-hero-anim" aria-hidden="true">
-          <div className="lp-solar">
+          <div className="lp-solar" onClick={ handleClick }>
             <div className="lp-sun-glow" />
             <div className="lp-sun" />
             <div className="lp-ring lp-ring-1"><div className="lp-dot lp-dot-1" /></div>

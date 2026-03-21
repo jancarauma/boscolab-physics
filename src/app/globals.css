@@ -548,7 +548,7 @@ button,select,input{font-family:var(--ui)}
 }
 
 .lp-hero-text{
-  flex:1 1 420px;
+  flex:1 1 320px;
   max-width:580px;
 }
 
@@ -570,7 +570,7 @@ button,select,input{font-family:var(--ui)}
   display:flex;
   align-items:center;
   gap:10px;
-  flex-wrap:wrap;
+  flex-wrap:wrap;  
 }
 
 .lp-lang{
