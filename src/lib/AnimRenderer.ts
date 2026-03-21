@@ -127,6 +127,74 @@ export class AnimRenderer {
       if (cd) cd.textContent = `x: ${wx.toFixed(2)}  y: ${wy.toFixed(2)}  ${this._drag && this._dragObj ? '[arrastar obj]' : this._drag ? '[mover câmera]' : '| drag=mover | ⇧drag=IC'}`;
     });
     window.addEventListener('mouseup', () => { this._drag = false; this._dragObj = null; this.cv.style.cursor = this._hoveredObj ? 'grab' : 'default'; });
+
+    // --- TOUCH SUPPORT ---
+    let _pinchLastDist = 0;
+    let _pinchLastMid = [0, 0];
+    let _touchPinching = false;
+
+    this.cv.addEventListener('touchstart', e => {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        _touchPinching = false;
+        startDragAt(e.touches[0].clientX, e.touches[0].clientY);
+      } else if (e.touches.length >= 2) {
+        _touchPinching = true;
+        this._drag = false; this._dragObj = null;
+        const t0 = e.touches[0], t1 = e.touches[1];
+        _pinchLastDist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
+        _pinchLastMid = [(t0.clientX + t1.clientX) / 2, (t0.clientY + t1.clientY) / 2];
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchmove', e => {
+      if (e.touches.length === 1 && !_touchPinching && this._drag) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        if (this._dragObj && this.onDragObj) {
+          const rect = this.cv.getBoundingClientRect();
+          const px = touch.clientX - rect.left, py = touch.clientY - rect.top;
+          const [wx, wy] = this.toMx(px, py);
+          this.onDragObj(this._dragObj, wx, wy, false);
+        } else {
+          this.ox += touch.clientX - this._lm[0];
+          this.oy += touch.clientY - this._lm[1];
+        }
+        this._lm = [touch.clientX, touch.clientY];
+        const rect = this.cv.getBoundingClientRect();
+        const mx = touch.clientX - rect.left, my = touch.clientY - rect.top;
+        const wx2 = (mx - this.ox) / this.scale, wy2 = (this.oy - my) / this.scale;
+        const cd = document.getElementById('coord-disp');
+        if (cd) cd.textContent = `x: ${wx2.toFixed(2)}  y: ${wy2.toFixed(2)}  ${this._dragObj ? '[arrastar obj]' : '[mover câmera]'}`;
+      } else if (e.touches.length >= 2) {
+        e.preventDefault();
+        _touchPinching = true;
+        if (this._drag) { this._drag = false; this._dragObj = null; }
+        const t0 = e.touches[0], t1 = e.touches[1];
+        const dist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
+        const mid = [(t0.clientX + t1.clientX) / 2, (t0.clientY + t1.clientY) / 2];
+        if (_pinchLastDist > 0) {
+          const f = dist / _pinchLastDist;
+          const rect = this.cv.getBoundingClientRect();
+          const mx = mid[0] - rect.left, my = mid[1] - rect.top;
+          this.ox = mx + (this.ox - mx) * f;
+          this.oy = my + (this.oy - my) * f;
+          this.scale = Math.max(2, Math.min(5000, this.scale * f));
+        }
+        this.ox += mid[0] - _pinchLastMid[0];
+        this.oy += mid[1] - _pinchLastMid[1];
+        _pinchLastDist = dist;
+        _pinchLastMid = mid;
+      }
+    }, { passive: false });
+
+    const endTouch = () => {
+      this._drag = false; this._dragObj = null;
+      _touchPinching = false; _pinchLastDist = 0;
+      if (this.onDragEnd) this.onDragEnd();
+    };
+    window.addEventListener('touchend', endTouch);
+    window.addEventListener('touchcancel', endTouch);
   }
 
   toPx(mx: number, my: number): [number, number] { return [this.ox + mx * this.scale, this.oy - my * this.scale]; }

@@ -217,7 +217,7 @@ button,select,input{font-family:var(--ui)}
 /* ---------- ANIMATION CANVAS ---------- */
 #panel-anim{flex:1;min-width:200px;position:relative}
 #anim-wrap{flex:1;position:relative;overflow:hidden;background:var(--canvas-bg);min-height:0}
-#anim-canvas{position:absolute;top:0;left:0;cursor:default;display:block}
+#anim-canvas{position:absolute;top:0;left:0;cursor:default;display:block;touch-action:none}
 #anim-canvas.crosshair{cursor:crosshair}
 #anim-media-layer{position:absolute;inset:0;z-index:3;pointer-events:none}
 .anim-video-item{position:absolute;overflow:hidden;border:1px solid rgba(148,163,184,.6);border-radius:6px;background:#000;box-shadow:0 6px 16px rgba(15,23,42,.35);pointer-events:auto}
