@@ -251,8 +251,8 @@ export default function Home() {
             <p className="lp-badge">{tr.badge}</p>
             <LangSelector locale={locale} onChange={handleLang} />
           </div>
-          <h1 className="lp-main-title">
-            <em>Bosco</em>Lab
+          <h1 className="lp-main-title" style={{ color: 'orange'}}>
+            <em>Bosco</em>Lab®
           </h1>
           <h3 className="lp-subtitle">
             <WaveText text={tr.subtitle} />
