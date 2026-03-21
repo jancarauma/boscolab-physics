@@ -8,6 +8,7 @@
 /out/
 /build
 dist
+yarn.lock
 
 # Debug
 npm-debug.log*
