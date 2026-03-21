@@ -915,7 +915,7 @@ export class AnimRenderer {
       const T = state.t || 0;
       const vfMode = o.vfMode || 'arrows'; // 'arrows' | 'fieldlines'
 
-      // --- Mapa de cor Fz: azul(neg) → branco(zero) → vermelho(pos) -------
+      // --- Mapa de cor Fz (divergente): azul(neg) → slate(zero) → laranja(pos) -------
       // Coleta min/max de Fz numa grade grosseira para normalizar
       let fzMin = 0, fzMax = 0;
       if (fzFn) {
@@ -936,20 +936,19 @@ export class AnimRenderer {
         if (fzFn) {
           let fz = 0;
           try { fz = fzFn(x, y, T, state); } catch (_) {}
+          const isLight = document.documentElement.classList.contains('light');
           // t ∈ [-1, 1]
           const t2 = Math.max(-1, Math.min(1, fz / (fzMax || 1)));
-          let r2: number, g2: number, b2: number;
-          if (t2 >= 0) {
-            // zero→branco→vermelho
-            r2 = 255;
-            g2 = Math.round(255 * (1 - t2));
-            b2 = Math.round(255 * (1 - t2));
-          } else {
-            // zero→branco→azul
-            r2 = Math.round(255 * (1 + t2));
-            g2 = Math.round(255 * (1 + t2));
-            b2 = 255;
-          }
+          const neg = isLight ? [48, 102, 190] : [95, 156, 255];
+          const mid = isLight ? [91, 110, 134] : [150, 167, 189];
+          const pos = isLight ? [197, 79, 40] : [255, 143, 88];
+          const mix = (a: number, b: number, u: number) => Math.round(a + (b - a) * u);
+          const u = Math.abs(t2);
+          const from = t2 < 0 ? mid : mid;
+          const to = t2 < 0 ? neg : pos;
+          const r2 = mix(from[0], to[0], u);
+          const g2 = mix(from[1], to[1], u);
+          const b2 = mix(from[2], to[2], u);
           return `rgba(${r2},${g2},${b2},${(alpha * 0.9).toFixed(2)})`;
         }
         const br = Math.round(cr + (255 - cr) * norm * 0.35);
