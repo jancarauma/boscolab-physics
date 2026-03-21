@@ -203,11 +203,13 @@ percent_charge = 100*(vc/Vs)`,
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'r1' }, scale: 60, ox: .5, oy: .5
   },
   campo_eletrico: {
-    model: `// Campo Vetorial Puro\nomega = 1.0\nphi = omega*t`,
+    model: `// Campo Vetorial\nomega = 1.0\nphi = omega*t`,
     ic: { omega: 1 }, dt: 0.1, tmax: 100,
     objects: [
-      { type: 'vectorfield', fxExpr: 'sin(y)*cos(x*0.5)', fyExpr: 'cos(x)*sin(y*0.5)', gridN: 18, gridRange: 6, arrowScale: 0.45, color: '#a78bfa' },
-      { type: 'label', x: -5.5, y: 5.5, text: 'Campo: F = (sin y·cos x/2, cos x·sin y/2)', fontSize: 11, color: '#94a3b8' },
+      { type: 'vectorfield', fxExpr: '(x/(sqrt(x*x + y*y) + 0.001)) * sin(2.6*sqrt(x*x + y*y) - 4.0*t) * exp(-0.10*sqrt(x*x + y*y))', 
+        fyExpr: '(y/(sqrt(x*x + y*y) + 0.001)) * sin(2.6*sqrt(x*x + y*y) - 4.0*t) * exp(-0.10*sqrt(x*x + y*y))',         
+        gridN: 77, gridRange: 10, arrowScale: 1.00, color: '#a78bfa',
+        fzExpr: '(sin(2.6*sqrt(x*x + y*y) - 4.0*t) * exp(-0.10*sqrt(x*x + y*y)))/10'},
     ],
     g0: { xvar: 't', yvar: 't' }, g1: { xvar: 't', yvar: 't' }, scale: 50, ox: .5, oy: .5
   },
