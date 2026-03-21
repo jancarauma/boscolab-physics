@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'BoscoLab',
-    description: 'Simulador interativo de equações diferenciais',
+    description: 'Simulador de física interativo',
     url: 'https://boscolab-physics.vercel.app',
     siteName: 'BoscoLab',
     locale: 'pt_BR',

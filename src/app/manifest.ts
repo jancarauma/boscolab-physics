@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'BoscoLab',
     short_name: 'BoscoLab',
-    description: 'Simulador interativo de equacoes diferenciais',
+    description: 'Simulador de física interativo',
     start_url: '/',
     scope: '/',
     display: 'standalone',
