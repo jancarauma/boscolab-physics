@@ -309,7 +309,7 @@ export class AnimRenderer {
     if (tmode === 'none') return;
     if (tmode === 'dots') {
       const last = o._trail[o._trail.length - 1];
-      const ghostSpacingPx = Math.max((o.radius || 8) * 0.9, 5);
+      const ghostSpacingPx = Math.max(((o.radius || (8 / 30)) * this.scale) * 0.9, 5);
       if (!last || Math.hypot(mx - last[0], my - last[1]) * this.scale >= ghostSpacingPx) o._trail.push([mx, my, rotDeg]);
       const maxLen = o.trailLen || 300;
       if (o._trail.length > maxLen) o._trail.shift();
@@ -491,7 +491,7 @@ export class AnimRenderer {
   }
 
   _zoomFactor() {
-    return Math.max(0.05, this.scale / 30);
+    return this.scale / 30;
   }
 
   _getVectorLabelAnchors(x1: number, y1: number, x2: number, y2: number, zoom: number) {
@@ -520,9 +520,9 @@ export class AnimRenderer {
   _drawVectorText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, align: CanvasTextAlign, state: Record<string, number>, extra: Record<string, number | string>) {
     if (!text) return;
     const rendered = this._renderTemplate(text, state, extra);
-    const zoom = this._zoomFactor();
+    const worldFont = 10 / 30;
     ctx.fillStyle = color;
-    ctx.font = `${Math.max(6, 10 * zoom)}px DM Sans,sans-serif`;
+    ctx.font = `${Math.max(1, worldFont * this.scale)}px DM Sans,sans-serif`;
     ctx.textAlign = align;
     ctx.fillText(rendered, x, y);
   }
@@ -572,7 +572,8 @@ export class AnimRenderer {
       const mx = g('x') + vox, my = g('y') + voy;
       o._rx = mx; o._ry = my;
       const [px, py] = this.toPx(mx, my);
-      const r = Math.max(0.5, (g('radius') || 8) * zoom);
+      const rWorld = g('radius') || (8 / 30);
+      const r = Math.max(0.5, rWorld * this.scale);
       o._rrad = r;
       const tmode = o.trailMode || 'persist';
       if (o.showTrail !== false && tmode !== 'none' && o._trail && o._trail.length > 0) {
@@ -628,7 +629,8 @@ export class AnimRenderer {
       if (o.label) {
         const isLight = document.documentElement.classList.contains('light');
         ctx.fillStyle = isLight ? 'rgba(26,34,54,.9)' : 'rgba(226,232,240,.85)';
-        ctx.font = `${Math.max(6, 11 * zoom)}px DM Sans,sans-serif`;
+        const labelFontWorld = 11 / 30;
+        ctx.font = `${Math.max(1, labelFontWorld * this.scale)}px DM Sans,sans-serif`;
         ctx.textAlign = 'left';
         ctx.fillText(this._renderTemplate(o.label, state), px + r + 4 * zoom, py - 4 * zoom);
       }
@@ -651,7 +653,8 @@ export class AnimRenderer {
       ctx.strokeStyle = o.rodColor || '#94a3b8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ppx, ppy); ctx.lineTo(bpx, bpy); ctx.stroke();
       ctx.beginPath(); ctx.arc(ppx, ppy, 4, 0, Math.PI * 2); ctx.fillStyle = '#475569'; ctx.fill();
       ctx.save(); ctx.translate(bpx, bpy); ctx.rotate(rot);
-      const rPend = Math.max(0.5, (g('radius') || 10) * zoom);
+      const rPendWorld = g('radius') || (10 / 30);
+      const rPend = Math.max(0.5, rPendWorld * this.scale);
       o._rrad = rPend;
       ctx.beginPath(); ctx.arc(0, 0, rPend, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
       ctx.restore();
@@ -734,7 +737,8 @@ export class AnimRenderer {
       const text = o.text || o.label || 'Texto';
       const rendered = this._renderTemplate(text, state);
       ctx.save(); ctx.translate(lpx, lpy); ctx.rotate(rot);
-      ctx.fillStyle = color; ctx.font = `${Math.max(6, (o.fontSize || 13) * zoom)}px DM Sans,sans-serif`;
+      const fontWorld = (o.fontSize || (13 / 30));
+      ctx.fillStyle = color; ctx.font = `${Math.max(1, fontWorld * this.scale)}px DM Sans,sans-serif`;
       ctx.textAlign = 'left'; ctx.fillText(rendered, 0, 0);
       ctx.restore();
       o._rx = lx; o._ry = ly;
