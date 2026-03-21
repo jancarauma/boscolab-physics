@@ -1,6 +1,12 @@
 export function initTheme(): void {
-  const saved = localStorage.getItem('boscolab-theme') || 'dark';
-  if (saved === 'light') document.documentElement.classList.add('light');
+  const saved = localStorage.getItem('boscolab-theme');
+  if (saved) {
+    if (saved === 'light') document.documentElement.classList.add('light');
+    return;
+  }
+  // No saved preference: auto-detect, default to light if browser has no preference
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+  if (!prefersDark) document.documentElement.classList.add('light');
 }
 
 export function toggleTheme(): void {

@@ -460,6 +460,26 @@ export interface Translations {
     ghosts: string;
     none: string;
   };
+
+  // --- LANDING PAGE -------
+  lp: {
+    badge: string;
+    subtitle: string;
+    tagline: string;
+    btnOpen: string;
+    btnGitHub: string;
+    feat1Title: string; feat1Desc: string;
+    feat2Title: string; feat2Desc: string;
+    feat3Title: string; feat3Desc: string;
+    gallerySim: string; galleryLab: string;
+    forTitle: string;
+    for1Title: string; for1Desc: string;
+    for2Title: string; for2Desc: string;
+    for3Title: string; for3Desc: string;
+    footerProject: string;
+    lab1: string; lab2: string; lab3: string; lab4: string;
+    sim1: string; sim2: string; sim3: string; sim4: string;
+  };
 }
 
 
@@ -498,6 +518,7 @@ const translations: Record<Locale, Translations> = {
     settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
     ui: { animation: 'Animação', model: 'Modelo', windows: 'Janelas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '-', initialConditions: 'Condições Iniciais', dragObject: 'arraste obj.', shiftDrag: 'shift+arraste=CI', ready: 'Pronto', clear: '✕ Limpar', auto: '⊙ Auto', image: 'Imagem', data: 'Dados', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Erro', resizeDrag: 'Arraste para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linha do tempo' },
     trailMode: { temporary: 'Temporário', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sem rastro' },
+    lp: { badge: 'Ferramenta Gratuita', lab1: 'Radiação de corpo-negro', lab2: 'Viagem espacial com planetário', lab3: 'Onda estacionária em uma corda', lab4: 'Milikan e a carga do elétron', sim1: 'Teoria do caos', sim2: 'Lançamento de projéteis', sim3: 'Pêndulo amortecido', sim4: 'Campo magnético terrestre', subtitle: 'Física em movimento', tagline: 'Jogue uma bola de futebol, brinque com pêndulos, assista planetas ao redor do Sol. Divirta-se e descubra como as leis da física funcionam.', btnOpen: 'Descobrir Agora', btnGitHub: 'Código no GitHub', feat1Title: 'Muitos Exemplos', feat1Desc: 'Conheça experimentos prontos de ciências e modifique como achar melhor.', feat2Title: 'Experimente', feat2Desc: 'Altere gravidade, massa e velocidade — descubra o que acontece depois.', feat3Title: 'Analise', feat3Desc: 'Exporte dados e gráficos, salve seus experimentos e encontre padrões.', gallerySim: 'BoscoLAB — Simulador de Física Interativo', galleryLab: 'LaFeX — Laboratórios de Física da UFRR', forTitle: 'Feito para todo mundo explorar', for1Title: 'Estudantes', for1Desc: 'Veja a Física do seu livro ganhando vida, animada, interativa e sem complicação.', for2Title: 'Professores', for2Desc: 'Atividades prontas ou personalizadas para tornar qualquer aula mais envolvente.', for3Title: 'Pesquisadores', for3Desc: 'Resolva modelos numéricos com precisão, exporte dados e use como quiser.', footerProject: 'Um Projeto Educacional Gratuito' },
   },
 
   en: {
@@ -532,6 +553,7 @@ const translations: Record<Locale, Translations> = {
     settings: { method: 'Method', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't max', speed: 'speed', indVar: 'ind var', time: 't =', steps: 'n =' },
     ui: { animation: 'Animation', model: 'Model', windows: 'Windows:', showModel: 'Show Model', verify: '✓ Verify', minimize: '-', initialConditions: 'Initial Conditions', dragObject: 'drag obj.', shiftDrag: 'shift+drag=IC', ready: 'Ready', clear: '✕ Clear', auto: '⊙ Auto', image: 'Image', data: 'Data', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Drag to resize', toggleTheme: 'Toggle theme', globalTrailMode: 'Global trail mode', timeline: 'timeline' },
     trailMode: { temporary: 'Temporary', persistent: 'Persistent', ghosts: 'Ghosts', none: 'No Trail' },
+    lp: { badge: 'Free Tool', lab1: 'Blackbody radiation', lab2: 'Space travel with planetarium', lab3: 'Standing wave in a string', lab4: 'Millikan and the electron charge', sim1: 'Chaos theory', sim2: 'Projectile launch', sim3: 'Damped pendulum', sim4: 'Earth magnetic field', subtitle: 'Physics in motion', tagline: 'Kick a football, play with pendulums, watch planets orbit the Sun. Have fun and discover how the laws of physics work.', btnOpen: 'Explore Now', btnGitHub: 'Code on GitHub', feat1Title: 'Many Examples', feat1Desc: 'Explore ready-made science experiments and modify them however you like.', feat2Title: 'Experiment', feat2Desc: 'Change gravity, mass and velocity — discover what happens next.', feat3Title: 'Analyse', feat3Desc: 'Export data and charts, save your experiments, and find patterns.', gallerySim: 'BoscoLAB — Interactive Physics Simulator', galleryLab: 'LaFeX — Physics Laboratories at UFRR', forTitle: 'Made for everyone to explore', for1Title: 'Students', for1Desc: 'Watch the Physics from your textbook come to life — animated, interactive and effortless.', for2Title: 'Teachers', for2Desc: 'Ready-made or customised activities to make any lesson more engaging.', for3Title: 'Researchers', for3Desc: 'Solve numerical models with precision, export data and use them as you wish.', footerProject: 'A Free Educational Project' },
   },
 
   es: {
@@ -566,6 +588,7 @@ const translations: Record<Locale, Translations> = {
     settings: { method: 'Método', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't máx', speed: 'vel', indVar: 'var ind', time: 't =', steps: 'n =' },
     ui: { animation: 'Animación', model: 'Modelo', windows: 'Ventanas:', showModel: 'Mostrar Modelo', verify: '✓ Verificar', minimize: '-', initialConditions: 'Condiciones Iniciales', dragObject: 'arrastra obj.', shiftDrag: 'shift+arrastra=CI', ready: 'Listo', clear: '✕ Limpiar', auto: '⊙ Auto', image: 'Imagen', data: 'Datos', fps: 'FPS', points: 'pts', objectsCount: 'obj', x: 'X', y1: 'Y1', y2: 'Y2', error: 'Error', resizeDrag: 'Arrastre para redimensionar', toggleTheme: 'Alternar tema', globalTrailMode: 'Modo global de rastro', timeline: 'linea de tiempo' },
     trailMode: { temporary: 'Temporal', persistent: 'Persistente', ghosts: 'Fantasmas', none: 'Sin Rastro' },
+    lp: { badge: 'Herramienta Gratuita', lab1: 'Radiación de cuerpo negro', lab2: 'Viaje espacial con planetario', lab3: 'Onda estacionaria en una cuerda', lab4: 'Millikan y la carga del electrón', sim1: 'Teoría del caos', sim2: 'Lanzamiento de proyectiles', sim3: 'Péndulo amortiguado', sim4: 'Campo magnético terrestre', subtitle: 'Física en movimiento', tagline: 'Lanza una pelota, juega con péndulos, observa planetas alrededor del Sol. Diviértete y descubre cómo funcionan las leyes de la física.', btnOpen: 'Explorar Ahora', btnGitHub: 'Código en GitHub', feat1Title: 'Muchos Ejemplos', feat1Desc: 'Explora experimentos científicos listos para usar y modifícalos como quieras.', feat2Title: 'Experimenta', feat2Desc: 'Cambia la gravedad, la masa y la velocidad — descubre qué pasa después.', feat3Title: 'Analiza', feat3Desc: 'Exporta datos y gráficos, guarda tus experimentos y encuentra patrones.', gallerySim: 'BoscoLAB — Simulador Interactivo de Física', galleryLab: 'LaFeX — Laboratorios de Física de la UFRR', forTitle: 'Hecho para que todos exploren', for1Title: 'Estudiantes', for1Desc: 'Mira la Física de tu libro cobrar vida — animada, interactiva y sin complicaciones.', for2Title: 'Profesores', for2Desc: 'Actividades listas o personalizadas para hacer cualquier clase más atractiva.', for3Title: 'Investigadores', for3Desc: 'Resuelve modelos numéricos con precisión, exporta datos y úsalos como quieras.', footerProject: 'Un Proyecto Educativo Gratuito' },
   },
 
   zh: {
@@ -598,6 +621,7 @@ const translations: Record<Locale, Translations> = {
     precision: { format: '格式', decimals: '小数位', preview: '预览', fixed: '定点小数', scientific: '科学计数法', automatic: '自动', engineering: '工程记数法 (x10e3)' },
     graphs: { graph1: '图表 1', graph2: '图表 2', graph3: '图表 3', graph4: '图表 4', simulationStopped: '模拟已停止' },
     settings: { method: '方法', euler: 'Euler', rk4: 'RK4', timeStep: 'dt', maxTime: 't 最大值', speed: '速度', indVar: '独立变量', time: 't =', steps: 'n =' },
+    lp: { badge: '免费工具', lab1: '黑体辐射', lab2: '天文馆太空旅行', lab3: '弦中驻波', lab4: '密立根实验与电荷', sim1: '混沌理论', sim2: '抛体运动', sim3: '阱尼摘', sim4: '地球磁场', subtitle: '运动中的物理', tagline: '踢一脚足球，玩玩摆钟，观看行星绕太阳运转。在娱乐中探索物理规律。', btnOpen: '立即探索', btnGitHub: 'GitHub 代码', feat1Title: '丰富示例', feat1Desc: '浏览现成的科学实验，随意修改，探索无限可能。', feat2Title: '亲自实验', feat2Desc: '改变重力、质量和速度，看看接下来会发生什么。', feat3Title: '分析结果', feat3Desc: '导出数据和图表，保存您的实验，发现规律。', gallerySim: 'BoscoLAB — 互动物理模拟器', galleryLab: 'LaFeX — UFRR 物理实验室', forTitle: '为所有人探索而生', for1Title: '学生', for1Desc: '看课本里的物理知识栩栩如生——动画、互动、简单易懂。', for2Title: '教师', for2Desc: '现成或定制的活动，让每堂课都更生动有趣。', for3Title: '研究人员', for3Desc: '精确求解数值模型，导出数据，按需使用。', footerProject: '免费教育项目' },
     ui: { animation: '动画', model: '模型', windows: '窗口：', showModel: '显示模型', verify: '✓ 验证', minimize: '-', initialConditions: '初始条件', dragObject: '拖动对象', shiftDrag: 'shift+拖动=IC', ready: '准备好', clear: '✕ 清除', auto: '⊙ 自动', image: '图像', data: '数据', fps: 'FPS', points: '点', objectsCount: '对象', x: 'X', y1: 'Y1', y2: 'Y2', error: '错误', resizeDrag: '拖动以调整大小', toggleTheme: '切换主题', globalTrailMode: '全局轨迹模式', timeline: '时间轴' },
     trailMode: { temporary: '临时', persistent: '持久', ghosts: '幻影', none: '无轨迹' },
   },

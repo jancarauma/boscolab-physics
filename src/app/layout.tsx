@@ -4,11 +4,11 @@ import './globals.css';
 
 export const metadata: Metadata = {
   applicationName: 'BoscoLab',
-  title: 'BoscoLab — Simulador de Equações Diferenciais',
-  description: 'Simule e visualize equações diferenciais em tempo real. Pêndulos, órbitas, circuitos, atratores e muito mais.',
+  title: 'BoscoLab — Simulador de Física Interativo',
+  description: 'Simule e visualize experimentos de física em tempo real. Bolas, pêndulos, órbitas planetárias, campos vetoriais e muito mais.',
   manifest: '/manifest.webmanifest',
-  keywords: ['simulação', 'equações diferenciais', 'física', 'modelagem', 'ODE'],
-  authors: [{ name: 'Seu Nome' }],
+  keywords: ['modellus', 'física', 'simulação', 'equações diferenciais', 'caraumã', 'modelagem', 'ODE'],
+  authors: [{ name: 'J. Caraumã' }],
   icons: {
     icon: [
       { url: '/favicon.ico' },
