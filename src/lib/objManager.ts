@@ -83,6 +83,13 @@ export function loadObjImage(id: number, anim: AnimRenderer, sim: SimEngine): vo
     const reader = new FileReader();
     reader.onload = ev => {
       o.imageData = (ev.target as FileReader).result as string;
+      o._gifSync = false;
+      o._gifFrames = null;
+      o._gifDurationsMs = null;
+      o._gifFrameIdx = 0;
+      o._gifClockMs = 0;
+      o._gifDecodePending = false;
+      o._gifDecodeFailed = false;
       const img = new Image(); img.src = o.imageData; o._imgEl = img;
       o.useImage = true;
       renderObjProps(o, sim, anim);
@@ -647,7 +654,8 @@ export function updateObjProp(id: number, prop: string, value: any, anim: AnimRe
     o[prop] = value;
   }
 
-  if (prop === 'x' || prop === 'y' || prop === 'theta') o._trail = [];
+  if (prop === 'x' || prop === 'y' || prop === 'theta' || prop === 'showTrail' || prop === 'trailMode') o._trail = [];
+  if (prop === 'trailMode' && value !== 'none') o.showTrail = true;
   // Ao trocar modo do campo vetorial, re-renderiza painel para mostrar props corretas
   if (prop === 'vfMode' || prop === 'fzExpr') {
     const sim = (window as any).__sim;

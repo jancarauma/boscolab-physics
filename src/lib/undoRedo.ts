@@ -27,6 +27,13 @@ function restore(anim: AnimRenderer, snap: string): void {
     if (prev) {
       // Reusa caches internos (imagens, rastros)
       if (prev._imgEl) obj._imgEl = prev._imgEl;
+      if (prev._gifFrames) obj._gifFrames = prev._gifFrames;
+      if (prev._gifSync) obj._gifSync = prev._gifSync;
+      if (prev._gifDurationsMs) obj._gifDurationsMs = prev._gifDurationsMs;
+      if (isFinite(prev._gifFrameIdx)) obj._gifFrameIdx = prev._gifFrameIdx;
+      if (isFinite(prev._gifClockMs)) obj._gifClockMs = prev._gifClockMs;
+      if (prev._gifDecodePending) obj._gifDecodePending = prev._gifDecodePending;
+      if (prev._gifDecodeFailed) obj._gifDecodeFailed = prev._gifDecodeFailed;
       if (prev._trail) obj._trail = [];  // limpa rastro ao desfazer
     }
     return obj;

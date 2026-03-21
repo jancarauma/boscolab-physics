@@ -153,7 +153,12 @@ export default function Home() {
     w.newProject = () => doNewProject();
     w.setGlobalTrailMode = (mode: 'fade' | 'persist' | 'dots' | 'none') => {
       w.__globalTrailMode = mode;
-      anim.objects.forEach((o: any) => { if (o.type === 'particle' || o.type === 'pendulum') { o.trailMode = mode; o._trail = []; } });
+      anim.objects.forEach((o: any) => {
+        if (o.type === 'particle' || o.type === 'pendulum') {
+          o.trailMode = mode;
+          o._trail = [];
+        }
+      });
       window.dispatchEvent(new CustomEvent('boscolab:trail-mode-change', { detail: mode }));
     };
     w.getGlobalTrailMode = () => (w.__globalTrailMode || 'persist');
@@ -276,7 +281,7 @@ export default function Home() {
     window.addEventListener('resize', () => { anim.resize(); graphs[activeTab].render(); });
 
     function renderLoop() {
-      anim.render(sim.state);
+      anim.render(sim.state, sim.n, sim.running);
       updateVarValues(sim);
       const el = (id: string) => document.getElementById(id);
       const dispT = el('disp-t'); if (dispT) dispT.textContent = formatVal(sim.t);

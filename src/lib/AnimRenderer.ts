@@ -19,6 +19,13 @@ export class AnimRenderer {
   _mediaLayer: HTMLDivElement | null;
   _videoNodes: Map<number, HTMLDivElement>;
   simEvalAt: ((varName: string, overrides: Record<string, number>) => number) | null;
+  _simStep: number;
+  _simRunning: boolean;
+  _simStepDelta: number;
+  _hasLastSimStep: boolean;
+  _lastSimStep: number;
+  _lastRenderTs: number;
+  _renderDeltaMs: number;
 
   constructor(canvas: HTMLCanvasElement) {
     this.cv = canvas; this.ctx = canvas.getContext('2d')!;
@@ -34,6 +41,13 @@ export class AnimRenderer {
     this._mediaLayer = null;
     this._videoNodes = new Map();
     this.simEvalAt = null;
+    this._simStep = 0;
+    this._simRunning = false;
+    this._simStepDelta = 0;
+    this._hasLastSimStep = false;
+    this._lastSimStep = 0;
+    this._lastRenderTs = 0;
+    this._renderDeltaMs = 0;
     this._setupEvents();
   }
 
@@ -305,6 +319,7 @@ export class AnimRenderer {
 
   _sampleParticleTrail(o: any, mx: number, my: number, rotDeg: number) {
     if (!o._trail) o._trail = [];
+    if (o.showTrail === false) return;
     const tmode = o.trailMode || 'persist';
     if (tmode === 'none') return;
     if (tmode === 'dots') {
@@ -322,6 +337,7 @@ export class AnimRenderer {
 
   _samplePendulumTrail(o: any, bobX: number, bobY: number) {
     if (!o._trail) o._trail = [];
+    if (o.showTrail === false) return;
     const tmode = o.trailMode || 'persist';
     if (tmode === 'none') return;
     o._trail.push([bobX, bobY]);
@@ -357,9 +373,22 @@ export class AnimRenderer {
     });
   }
 
-  render(state: Record<string, number>) {
+  render(state: Record<string, number>, simStep = 0, simRunning = false) {
     const ctx = this.ctx; const w = this._w; const h = this._h;
     if (w <= 0 || h <= 0) return;
+    this._simStep = Math.max(0, Math.floor(simStep || 0));
+    this._simRunning = !!simRunning;
+    if (!this._hasLastSimStep) {
+      this._lastSimStep = this._simStep;
+      this._hasLastSimStep = true;
+      this._simStepDelta = 0;
+    } else {
+      this._simStepDelta = this._simStep - this._lastSimStep;
+      this._lastSimStep = this._simStep;
+    }
+    const now = performance.now();
+    this._renderDeltaMs = this._lastRenderTs > 0 ? Math.max(0, Math.min(250, now - this._lastRenderTs)) : 0;
+    this._lastRenderTs = now;
     ctx.clearRect(0, 0, w, h);
     const canvasBg = getComputedStyle(document.documentElement).getPropertyValue('--canvas-bg').trim() || '#080c13';
     ctx.fillStyle = canvasBg; ctx.fillRect(0, 0, w, h);
@@ -517,6 +546,128 @@ export class AnimRenderer {
     });
   }
 
+  _isGifDataUrl(data: string): boolean {
+    return /^data:image\/gif(?:;base64)?,/i.test(String(data || ''));
+  }
+
+  _base64DataUrlToBytes(dataUrl: string): Uint8Array | null {
+    const parts = String(dataUrl || '').split(',');
+    if (parts.length < 2) return null;
+    try {
+      const bin = atob(parts[1]);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return bytes;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  _prepareImageObject(o: any) {
+    if (!o || !o.useImage || !o.imageData) return;
+    if (!o._imgEl) {
+      const img = new Image();
+      img.src = o.imageData;
+      o._imgEl = img;
+    }
+    if (!this._isGifDataUrl(o.imageData)) {
+      o._gifSync = false;
+      o._gifFrames = null;
+      o._gifDurationsMs = null;
+      o._gifFrameIdx = 0;
+      o._gifClockMs = 0;
+      o._gifDecodePending = false;
+      o._gifDecodeFailed = false;
+      return;
+    }
+    if (o._gifSync || o._gifDecodePending || o._gifDecodeFailed) return;
+
+    const DecoderCtor = (window as any).ImageDecoder;
+    if (!DecoderCtor) {
+      o._gifDecodeFailed = true;
+      return;
+    }
+
+    const bytes = this._base64DataUrlToBytes(o.imageData);
+    if (!bytes) {
+      o._gifDecodeFailed = true;
+      return;
+    }
+
+    o._gifDecodePending = true;
+    (async () => {
+      const frames: ImageBitmap[] = [];
+      const durationsMs: number[] = [];
+      let decoder: any = null;
+      try {
+        decoder = new DecoderCtor({ data: bytes, type: 'image/gif' });
+        if (decoder?.tracks?.ready) await decoder.tracks.ready;
+        const frameCount = Math.max(1, Number(decoder?.tracks?.selectedTrack?.frameCount || 1));
+        for (let i = 0; i < frameCount; i++) {
+          const decoded = await decoder.decode({ frameIndex: i });
+          if (decoded?.image) {
+            frames.push(decoded.image as ImageBitmap);
+            const rawDurationUs = Number((decoded.image as any)?.duration);
+            const durationMs = Number.isFinite(rawDurationUs) && rawDurationUs > 0 ? Math.max(10, rawDurationUs / 1000) : 100;
+            durationsMs.push(durationMs);
+          }
+        }
+        if (frames.length > 0) {
+          o._gifFrames = frames;
+          o._gifDurationsMs = durationsMs;
+          o._gifFrameIdx = 0;
+          o._gifClockMs = 0;
+          o._gifSync = true;
+          o._gifDecodeFailed = false;
+        } else {
+          o._gifDecodeFailed = true;
+        }
+      } catch (_) {
+        o._gifDecodeFailed = true;
+      } finally {
+        o._gifDecodePending = false;
+        try { decoder?.close?.(); } catch (_) {}
+      }
+    })();
+  }
+
+  _drawObjectImage(ctx: CanvasRenderingContext2D, o: any, x: number, y: number, w: number, h: number) {
+    if (o._gifSync && Array.isArray(o._gifFrames) && o._gifFrames.length > 0) {
+      const len = o._gifFrames.length;
+      const durations: number[] = Array.isArray(o._gifDurationsMs) ? o._gifDurationsMs : [];
+      let idx = Number.isFinite(o._gifFrameIdx) ? Math.floor(o._gifFrameIdx) : 0;
+      idx = ((idx % len) + len) % len;
+      let clockMs = Number.isFinite(o._gifClockMs) ? o._gifClockMs : 0;
+
+      if (this._simRunning && this._renderDeltaMs > 0) {
+        clockMs += this._renderDeltaMs;
+        let guard = 0;
+        while (guard < (len * 3)) {
+          const frameDur = Math.max(10, Number(durations[idx] || 100));
+          if (clockMs < frameDur) break;
+          clockMs -= frameDur;
+          idx = (idx + 1) % len;
+          guard++;
+        }
+      } else if (!this._simRunning && this._simStepDelta !== 0) {
+        const shift = this._simStepDelta % len;
+        idx = ((idx + shift) % len + len) % len;
+        clockMs = 0;
+      }
+
+      o._gifFrameIdx = idx;
+      o._gifClockMs = clockMs;
+      const frame = o._gifFrames[idx];
+      if (frame) {
+        ctx.drawImage(frame, x, y, w, h);
+        return;
+      }
+    }
+    if (o._imgEl && o._imgEl.complete && o._imgEl.naturalWidth > 0) {
+      ctx.drawImage(o._imgEl, x, y, w, h);
+    }
+  }
+
   _drawVectorText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, align: CanvasTextAlign, state: Record<string, number>, extra: Record<string, number | string>) {
     if (!text) return;
     const rendered = this._renderTemplate(text, state, extra);
@@ -559,6 +710,7 @@ export class AnimRenderer {
   }
 
   _drawObj(ctx: CanvasRenderingContext2D, o: any, state: Record<string, number>) {
+    this._prepareImageObject(o);
     const g = (k: string) => this._evalProp(o[k], state);
     const color = o.color || '#4f9eff';
     const sel = o._selected;
@@ -622,7 +774,7 @@ export class AnimRenderer {
       }
       ctx.save(); ctx.translate(px, py); ctx.rotate(rot);
       if (o.useImage && o._imgEl && o._imgEl.complete && o._imgEl.naturalWidth > 0) {
-        ctx.drawImage(o._imgEl, -r, -r, r * 2, r * 2);
+        this._drawObjectImage(ctx, o, -r, -r, r * 2, r * 2);
       } else { ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill(); }
       ctx.restore();
       this._drawSelectionRing(ctx, px, py, r, sel, hov);
@@ -706,7 +858,7 @@ export class AnimRenderer {
       const rpx = rr * this.scale;
       ctx.save(); ctx.translate(cpx, cpy); ctx.rotate(rot);
       if (o.useImage && o._imgEl && o._imgEl.complete && o._imgEl.naturalWidth > 0) {
-        ctx.drawImage(o._imgEl, -rpx, -rpx, rpx * 2, rpx * 2);
+        this._drawObjectImage(ctx, o, -rpx, -rpx, rpx * 2, rpx * 2);
       } else {
         ctx.beginPath(); ctx.arc(0, 0, rpx, 0, Math.PI * 2);
         ctx.fillStyle = o.fillColor || 'rgba(79,158,255,.15)'; ctx.fill();
@@ -722,7 +874,7 @@ export class AnimRenderer {
       const pw2 = rw * this.scale, ph2 = rh2 * this.scale;
       ctx.save(); ctx.translate(px2, py2); ctx.rotate(rot);
       if (o.useImage && o._imgEl && o._imgEl.complete && o._imgEl.naturalWidth > 0) {
-        ctx.drawImage(o._imgEl, -pw2 / 2, -ph2 / 2, pw2, ph2);
+        this._drawObjectImage(ctx, o, -pw2 / 2, -ph2 / 2, pw2, ph2);
       } else {
         ctx.fillStyle = o.fillColor || 'rgba(79,158,255,.12)'; ctx.fillRect(-pw2 / 2, -ph2 / 2, pw2, ph2);
         ctx.strokeStyle = color; ctx.lineWidth = o.lineWidth || 1.5; ctx.strokeRect(-pw2 / 2, -ph2 / 2, pw2, ph2);
