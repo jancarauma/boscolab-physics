@@ -770,11 +770,18 @@ button,select,input{font-family:var(--ui)}
 }
 
 @keyframes lp-sun-pulse-exploded{
-  0%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 22px rgba(249,115,22,.75),0 0 55px rgba(249,115,22,.35),0 0 100px rgba(249,115,22,.15)}
-  25%{transform:translate(-50%,-50%) scale(1.15);box-shadow:0 0 35px rgba(249,115,22,1),0 0 80px rgba(249,115,22,.6),0 0 150px rgba(249,115,22,.3)}
-  50%{transform:translate(-50%,-50%) scale(1.25);box-shadow:0 0 50px rgba(249,115,22,1),0 0 100px rgba(249,115,22,.8),0 0 180px rgba(249,115,22,.5)}
-  75%{transform:translate(-50%,-50%) scale(1.15);box-shadow:0 0 35px rgba(249,115,22,1),0 0 80px rgba(249,115,22,.6),0 0 150px rgba(249,115,22,.3)}
-  100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 22px rgba(249,115,22,.75),0 0 55px rgba(249,115,22,.35),0 0 100px rgba(249,115,22,.15)}
+  0%,100%{transform:translate(-50%,-50%) scale(1) rotate(0deg);filter:brightness(1.02) saturate(1.05);border-radius:48% 52% 50% 50% / 52% 48% 52% 48%}
+  50%{transform:translate(-50%,-50%) scale(1.09) rotate(.7deg);filter:brightness(1.13) saturate(1.12);border-radius:52% 48% 46% 54% / 48% 52% 46% 54%}
+}
+
+@keyframes lp-sun-glow-pulse-exploded{
+  0%,100%{transform:translate(-50%,-50%) scale(1.1);opacity:.5;filter:blur(1.2px)}
+  50%{transform:translate(-50%,-50%) scale(1.38);opacity:.82;filter:blur(1.8px)}
+}
+
+@keyframes lp-eggwhite-pulse-exploded{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.82}
+  50%{transform:translate(-50%,-50%) scale(1.08);opacity:.96}
 }
 
 .lp-solar.exploded .lp-ring,
@@ -784,11 +791,29 @@ button,select,input{font-family:var(--ui)}
 }
 
 .lp-solar.exploded .lp-sun{
-  animation:lp-sun-pulse-exploded 1.5s ease-in-out infinite;
+  animation:lp-sun-pulse-exploded 2.2s ease-in-out infinite;
+  background:radial-gradient(circle at 44% 42%, #fff4b3 0 26%, #facc15 38%, #fb923c 68%, #ea580c 100%);
+  box-shadow:0 0 22px rgba(250,204,21,.72),0 0 58px rgba(249,115,22,.42),0 0 108px rgba(234,88,12,.24);
+  will-change:transform,filter;
+}
+
+.lp-solar.exploded .lp-sun::after{
+  content:'';
+  position:absolute;
+  top:50%;left:50%;
+  width:68px;height:68px;
+  transform:translate(-50%,-50%);
+  border-radius:56% 44% 52% 48% / 48% 52% 46% 54%;
+  border:2px solid rgba(255,255,255,.92);
+  box-shadow:0 0 0 4px rgba(255,255,255,.22),0 0 18px rgba(255,255,255,.24);
+  animation:lp-eggwhite-pulse-exploded 2.2s ease-in-out infinite;
+  pointer-events:none;
 }
 
 .lp-solar.exploded .lp-sun-glow{
-  animation:lp-sun-pulse-exploded 1.5s ease-in-out infinite;
+  animation:lp-sun-glow-pulse-exploded 2.2s ease-in-out infinite;
+  background:radial-gradient(circle, rgba(255,245,157,.28), rgba(251,146,60,.22) 45%, transparent 72%);
+  will-change:transform,opacity;
 }
 
 /* --- FEATURES ------- */

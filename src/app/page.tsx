@@ -124,6 +124,8 @@ export default function Home() {
   const [locale, setLocaleState] = useState<Locale>('pt');
   const [playbackRate, setPlaybackRate] = useState(0.75);
   const [clickCount, setClickCount] = useState(0);
+  const [isExploded, setIsExploded] = useState(false);
+  const [explodedRate, setExplodedRate] = useState<number | null>(null);
   const solarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -154,11 +156,15 @@ export default function Home() {
     { src: '/photos/sim04.webp', alt: tr.sim4, caption: tr.sim4 },
   ], [locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const heartClickSound = new Howl({
+  const heartClickSound = useMemo(() => new Howl({
     src: ["/songs/glug-a.mp3"],
-    rate: playbackRate,
     volume: 0.5,
-  });
+  }), []);
+
+  const squishClickSound = useMemo(() => new Howl({
+    src: ["/songs/squish.mp3"],
+    volume: 0.5,
+  }), []);
 
   const langClickSound = new Howl({
     src: ["/songs/pop-down.mp3"],
@@ -166,26 +172,44 @@ export default function Home() {
     volume: 0.5,
   });
 
+  useEffect(() => {
+    return () => {
+      heartClickSound.unload();
+      squishClickSound.unload();
+    };
+  }, [heartClickSound, squishClickSound]);
+
   const handleClick = () => {
-    setClickCount(prev => prev + 1);
-    setPlaybackRate((rate) => rate + 0.1);
+    const nextCount = clickCount + 1;
+    const willExplode = nextCount >= 10;
+
+    setClickCount(nextCount);
+
+    if (willExplode) {
+      const lockedRate = explodedRate ?? playbackRate;
+      if (!isExploded) {
+        setIsExploded(true);
+        setExplodedRate(lockedRate);
+      }
+      squishClickSound.rate(lockedRate);
+      squishClickSound.play();
+      return;
+    }
+
+    const nextRate = playbackRate + 0.1;
+    setPlaybackRate(nextRate);
+    heartClickSound.rate(nextRate);
     heartClickSound.play();
-    
-    // Trigger shake effect
-    if (solarRef.current && clickCount < 9) {
+
+    if (solarRef.current) {
+      solarRef.current.classList.remove('shaking');
+      void solarRef.current.offsetWidth;
       solarRef.current.classList.add('shaking');
       setTimeout(() => {
         solarRef.current?.classList.remove('shaking');
       }, 500);
     }
   }
-
-  // Apply exploded class when clickCount reaches 10
-  useEffect(() => {
-    if (clickCount >= 10 && solarRef.current) {
-      solarRef.current.classList.add('exploded');
-    }
-  }, [clickCount]);
 
   const handleClickLang = () => {
     langClickSound.play();
@@ -219,7 +243,7 @@ export default function Home() {
         </div>
 
         <div className="lp-hero-anim" aria-hidden="true">
-          <div className="lp-solar" onClick={ handleClick } ref={solarRef}>
+          <div className={`lp-solar${isExploded ? ' exploded' : ''}`} onClick={ handleClick } ref={solarRef}>
             <div className="lp-sun-glow" />
             <div className="lp-sun" />
             <div className="lp-ring lp-ring-1"><div className="lp-dot lp-dot-1" /></div>
