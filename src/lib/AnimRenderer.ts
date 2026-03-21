@@ -490,16 +490,20 @@ export class AnimRenderer {
     }
   }
 
-  _getVectorLabelAnchors(x1: number, y1: number, x2: number, y2: number) {
+  _zoomFactor() {
+    return Math.max(0.05, this.scale / 30);
+  }
+
+  _getVectorLabelAnchors(x1: number, y1: number, x2: number, y2: number, zoom: number) {
     const midX = (x1 + x2) / 2;
     const midY = (y1 + y2) / 2;
-    const yOffset = y2 >= y1 ? 14 : -8;
-    const xOffset = x2 >= x1 ? 6 : -6;
+    const yOffset = (y2 >= y1 ? 14 : -8) * zoom;
+    const xOffset = (x2 >= x1 ? 6 : -6) * zoom;
     return {
-      vector: { x: midX + 5, y: midY - 6, align: 'left' as CanvasTextAlign },
-      magnitude: { x: midX + 5, y: midY - 18, align: 'left' as CanvasTextAlign },
+      vector: { x: midX + 5 * zoom, y: midY - 6 * zoom, align: 'left' as CanvasTextAlign },
+      magnitude: { x: midX + 5 * zoom, y: midY - 18 * zoom, align: 'left' as CanvasTextAlign },
       projX: { x: midX, y: y1 + yOffset, align: 'center' as CanvasTextAlign },
-      projY: { x: x1 + xOffset, y: midY + 3, align: x2 >= x1 ? 'left' as CanvasTextAlign : 'right' as CanvasTextAlign },
+      projY: { x: x1 + xOffset, y: midY + 3 * zoom, align: x2 >= x1 ? 'left' as CanvasTextAlign : 'right' as CanvasTextAlign },
     };
   }
 
@@ -516,8 +520,9 @@ export class AnimRenderer {
   _drawVectorText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, align: CanvasTextAlign, state: Record<string, number>, extra: Record<string, number | string>) {
     if (!text) return;
     const rendered = this._renderTemplate(text, state, extra);
+    const zoom = this._zoomFactor();
     ctx.fillStyle = color;
-    ctx.font = '10px DM Sans,sans-serif';
+    ctx.font = `${Math.max(6, 10 * zoom)}px DM Sans,sans-serif`;
     ctx.textAlign = align;
     ctx.fillText(rendered, x, y);
   }
@@ -559,6 +564,7 @@ export class AnimRenderer {
     const sel = o._selected;
     const hov = this._hoveredObj === o && !sel;
     const vox = o._vox || 0, voy = o._voy || 0;
+    const zoom = this._zoomFactor();
     const rotRaw = g('rotation') || 0;
     const rot = (window as any).__angleUnit === 'deg' ? rotRaw * Math.PI / 180 : rotRaw;
 
@@ -566,7 +572,7 @@ export class AnimRenderer {
       const mx = g('x') + vox, my = g('y') + voy;
       o._rx = mx; o._ry = my;
       const [px, py] = this.toPx(mx, my);
-      const r = g('radius') || 8;
+      const r = Math.max(0.5, (g('radius') || 8) * zoom);
       o._rrad = r;
       const tmode = o.trailMode || 'persist';
       if (o.showTrail !== false && tmode !== 'none' && o._trail && o._trail.length > 0) {
@@ -603,7 +609,7 @@ export class AnimRenderer {
         const projColor = o.projColor || vecCol;
         const [ex, ey] = this.toPx(mx + vx * vs, my + vy * vs);
         const vectorTextVars = { vx, vy, mag: Math.hypot(vx, vy), mod: Math.hypot(vx, vy) };
-        const anchors = this._getVectorLabelAnchors(px, py, ex, ey);
+        const anchors = this._getVectorLabelAnchors(px, py, ex, ey, zoom);
         if (o.showVecProj !== false) {
           this._drawVectorProjections(ctx, px, py, ex, ey, projColor);
           this._drawVectorText(ctx, o.projXLabel || '', anchors.projX.x, anchors.projX.y, projColor, anchors.projX.align, state, vectorTextVars);
@@ -622,7 +628,9 @@ export class AnimRenderer {
       if (o.label) {
         const isLight = document.documentElement.classList.contains('light');
         ctx.fillStyle = isLight ? 'rgba(26,34,54,.9)' : 'rgba(226,232,240,.85)';
-        ctx.font = '11px DM Sans,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(this._renderTemplate(o.label, state), px + r + 4, py - 4);
+        ctx.font = `${Math.max(6, 11 * zoom)}px DM Sans,sans-serif`;
+        ctx.textAlign = 'left';
+        ctx.fillText(this._renderTemplate(o.label, state), px + r + 4 * zoom, py - 4 * zoom);
       }
 
     } else if (o.type === 'pendulum') {
@@ -643,7 +651,7 @@ export class AnimRenderer {
       ctx.strokeStyle = o.rodColor || '#94a3b8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ppx, ppy); ctx.lineTo(bpx, bpy); ctx.stroke();
       ctx.beginPath(); ctx.arc(ppx, ppy, 4, 0, Math.PI * 2); ctx.fillStyle = '#475569'; ctx.fill();
       ctx.save(); ctx.translate(bpx, bpy); ctx.rotate(rot);
-      const rPend = g('radius') || 10;
+      const rPend = Math.max(0.5, (g('radius') || 10) * zoom);
       o._rrad = rPend;
       ctx.beginPath(); ctx.arc(0, 0, rPend, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
       ctx.restore();
@@ -661,7 +669,7 @@ export class AnimRenderer {
       const [bpx2, bpy2] = this.toPx(bx, by);
       ctx.strokeStyle = '#475569'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ppx2, ppy2 - 12); ctx.lineTo(ppx2, ppy2); ctx.stroke();
       this._spring(ctx, ppx2, ppy2, bpx2, bpy2, color, o.coils || 10);
-      const bsize = 20;
+      const bsize = Math.max(4, 20 * zoom);
       ctx.fillStyle = 'rgba(79,158,255,.25)'; ctx.strokeStyle = color; ctx.lineWidth = 1.5;
       ctx.fillRect(bpx2 - bsize / 2, bpy2 - bsize / 2, bsize, bsize);
       ctx.strokeRect(bpx2 - bsize / 2, bpy2 - bsize / 2, bsize, bsize);
@@ -674,7 +682,7 @@ export class AnimRenderer {
       const [spx, spy] = this.toPx(sx, sy);
       const [epx, epy] = this.toPx(sx + vx2 * vs2, sy + vy2 * vs2);
       const vectorTextVars = { vx: vx2, vy: vy2, mag: Math.hypot(vx2, vy2), mod: Math.hypot(vx2, vy2) };
-      const anchors = this._getVectorLabelAnchors(spx, spy, epx, epy);
+      const anchors = this._getVectorLabelAnchors(spx, spy, epx, epy, zoom);
       if (o.showProj) {
         this._drawVectorProjections(ctx, spx, spy, epx, epy, o.projColor || color);
         this._drawVectorText(ctx, o.projXLabel || '', anchors.projX.x, anchors.projX.y, o.projColor || color, anchors.projX.align, state, vectorTextVars);
@@ -726,7 +734,7 @@ export class AnimRenderer {
       const text = o.text || o.label || 'Texto';
       const rendered = this._renderTemplate(text, state);
       ctx.save(); ctx.translate(lpx, lpy); ctx.rotate(rot);
-      ctx.fillStyle = color; ctx.font = `${o.fontSize || 13}px DM Sans,sans-serif`;
+      ctx.fillStyle = color; ctx.font = `${Math.max(6, (o.fontSize || 13) * zoom)}px DM Sans,sans-serif`;
       ctx.textAlign = 'left'; ctx.fillText(rendered, 0, 0);
       ctx.restore();
       o._rx = lx; o._ry = ly;
