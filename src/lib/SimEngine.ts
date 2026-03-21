@@ -213,4 +213,11 @@ export class SimEngine {
 
   getVars() { if (!this.parsed) return []; return Object.entries(this.parsed.variables).map(([n, i]: [string, any]) => ({ name: n, ...i })); }
   getAllVarNames() { return Array.from(new Set(['t', this.indVar, ...Object.keys(this.parsed?.variables || {})])); }
+
+  evalVarAt(varName: string, overrides: Record<string, number>): number {
+    if (!this._applyFn) return 0;
+    const s: Record<string, number> = { ...this.state, ...overrides };
+    try { this._applyFn(s, this.dt, s.t ?? this.t, this.n, (c: any, a: any, b: any) => c ? a : b); } catch (_) {}
+    return s[varName.toLowerCase()] ?? 0;
+  }
 }

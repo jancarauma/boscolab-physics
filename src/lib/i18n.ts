@@ -276,6 +276,8 @@ export interface Translations {
     steps: string;
     stepSize: string;
     lineThickness: string;
+    switchToExpr: string;
+    switchToVar: string;
   };
 
   // --- VÍDEO -------
@@ -484,7 +486,7 @@ const translations: Record<Locale, Translations> = {
     circle: { defaultName: 'Círculo{id}', centerX: 'Centro X', centerY: 'Centro Y', radiusUnit: 'Raio (unid.)', radiusPixel: 'Raio', borderColor: 'Cor borda', fillColor: 'Cor fill' },
     rectangle: { defaultName: 'Rect{id}', width: 'Largura', height: 'Altura' },
     textLabel: { defaultName: 'Texto{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Texto', textPlaceholder: 't = {t:2}s', size: 'Tamanho', interpolationHint: 'Use {varname} ou {varname:2} para interpolar valores' },
-    field: { defaultName: 'Campo{id}', fieldType: 'Campo Vetorial', range: 'Alcance', zAxisColor: 'Eixo Z -> Cor', zExprHint: 'Se definido, a cor de cada ponto mapeia Fz:', zScaleHint: 'negativo -> zero -> positivo', zExample: 'Ex: z, x*y, sin(x)', baseColor: 'Cor base', viewMode: 'Modo de Visualização', vectorsMode: 'Vetores', fieldLinesMode: 'Linhas de Campo', gridN: 'Grade N', arrowScale: 'Escala seta', seeds: 'No sementes', steps: 'Passos', stepSize: 'Tamanho passo', lineThickness: 'Espessura linha' },
+    field: { defaultName: 'Campo{id}', fieldType: 'Campo Vetorial', range: 'Alcance', zAxisColor: 'Eixo Z -> Cor', zExprHint: 'Se definido, a cor de cada ponto mapeia Fz:', zScaleHint: 'negativo -> zero -> positivo', zExample: 'Ex: z, x*y, sin(x)', baseColor: 'Cor base', viewMode: 'Modo de Visualização', vectorsMode: 'Vetores', fieldLinesMode: 'Linhas de Campo', gridN: 'Grade N', arrowScale: 'Escala seta', seeds: 'No sementes', steps: 'Passos', stepSize: 'Tamanho passo', lineThickness: 'Espessura linha', switchToExpr: 'Usar expressão manual', switchToVar: 'Usar variável do modelo' },
     video: { defaultName: 'Video{id}', url: 'URL', originX: 'Origem X', originY: 'Origem Y', width: 'Largura', height: 'Altura', allowFullscreen: 'Permitir tela cheia', embedHint: 'Use URL válida (YouTube, Vimeo, etc).' },
     modals: { newProject: 'Novo Projeto', newObject: 'Novo Objeto', cancel: 'Cancelar', add: 'Adicionar', apply: 'Aplicar', close: 'Fechar', confirm: 'Confirmar', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Aviso', info: 'ℹ️', error: 'Erro', newProjectMsg: 'Deseja criar um novo projeto?', unsavedData: '⚠️ Dados não salvos serão perdidos.', createNew: 'Criar Novo' },
@@ -518,7 +520,7 @@ const translations: Record<Locale, Translations> = {
     circle: { defaultName: 'Circle{id}', centerX: 'Center X', centerY: 'Center Y', radiusUnit: 'Radius (unit)', radiusPixel: 'Radius', borderColor: 'Border color', fillColor: 'Fill color' },
     rectangle: { defaultName: 'Rect{id}', width: 'Width', height: 'Height' },
     textLabel: { defaultName: 'Text{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Text', textPlaceholder: 't = {t:2}s', size: 'Size', interpolationHint: 'Use {varname} or {varname:2} to interpolate values' },
-    field: { defaultName: 'Field{id}', fieldType: 'Vector Field', range: 'Range', zAxisColor: 'Z Axis -> Color', zExprHint: 'If defined, each point color maps Fz:', zScaleHint: 'negative -> zero -> positive', zExample: 'Ex: z, x*y, sin(x)', baseColor: 'Base color', viewMode: 'View Mode', vectorsMode: 'Vectors', fieldLinesMode: 'Field Lines', gridN: 'Grid N', arrowScale: 'Arrow scale', seeds: 'Seed count', steps: 'Steps', stepSize: 'Step size', lineThickness: 'Line thickness' },
+    field: { defaultName: 'Field{id}', fieldType: 'Vector Field', range: 'Range', zAxisColor: 'Z Axis -> Color', zExprHint: 'If defined, each point color maps Fz:', zScaleHint: 'negative -> zero -> positive', zExample: 'Ex: z, x*y, sin(x)', baseColor: 'Base color', viewMode: 'View Mode', vectorsMode: 'Vectors', fieldLinesMode: 'Field Lines', gridN: 'Grid N', arrowScale: 'Arrow scale', seeds: 'Seed count', steps: 'Steps', stepSize: 'Step size', lineThickness: 'Line thickness', switchToExpr: 'Use manual expression', switchToVar: 'Use model variable' },
     video: { defaultName: 'Video{id}', url: 'URL', originX: 'Origin X', originY: 'Origin Y', width: 'Width', height: 'Height', allowFullscreen: 'Allow fullscreen', embedHint: 'Use a valid URL (YouTube, Vimeo, etc).' },
     modals: { newProject: 'New Project', newObject: 'New Object', cancel: 'Cancel', add: 'Add', apply: 'Apply', close: 'Close', confirm: 'Confirm', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Warning', info: 'ℹ️', error: 'Error', newProjectMsg: 'Do you want to create a new project?', unsavedData: '⚠️ Unsaved data will be lost.', createNew: 'Create New' },
@@ -552,7 +554,7 @@ const translations: Record<Locale, Translations> = {
     circle: { defaultName: 'Círculo{id}', centerX: 'Centro X', centerY: 'Centro Y', radiusUnit: 'Radio (unid.)', radiusPixel: 'Radio', borderColor: 'Color borde', fillColor: 'Color relleno' },
     rectangle: { defaultName: 'Rect{id}', width: 'Ancho', height: 'Altura' },
     textLabel: { defaultName: 'Texto{id}', posX: 'Pos X', posY: 'Pos Y', text: 'Texto', textPlaceholder: 't = {t:2}s', size: 'Tamaño', interpolationHint: 'Use {varname} o {varname:2} para interpolar valores' },
-    field: { defaultName: 'Campo{id}', fieldType: 'Campo Vectorial', range: 'Alcance', zAxisColor: 'Eje Z -> Color', zExprHint: 'Si se define, el color de cada punto mapea Fz:', zScaleHint: 'negativo -> cero -> positivo', zExample: 'Ej: z, x*y, sin(x)', baseColor: 'Color base', viewMode: 'Modo de Visualización', vectorsMode: 'Vectores', fieldLinesMode: 'Líneas de Campo', gridN: 'Malla N', arrowScale: 'Escala flecha', seeds: 'Nº semillas', steps: 'Pasos', stepSize: 'Tamaño de paso', lineThickness: 'Grosor de línea' },
+    field: { defaultName: 'Campo{id}', fieldType: 'Campo Vectorial', range: 'Alcance', zAxisColor: 'Eje Z -> Color', zExprHint: 'Si se define, el color de cada punto mapea Fz:', zScaleHint: 'negativo -> cero -> positivo', zExample: 'Ej: z, x*y, sin(x)', baseColor: 'Color base', viewMode: 'Modo de Visualización', vectorsMode: 'Vectores', fieldLinesMode: 'Líneas de Campo', gridN: 'Malla N', arrowScale: 'Escala flecha', seeds: 'Nº semillas', steps: 'Pasos', stepSize: 'Tamaño de paso', lineThickness: 'Grosor de línea', switchToExpr: 'Usar expresión manual', switchToVar: 'Usar variable del modelo' },
     video: { defaultName: 'Video{id}', url: 'URL', originX: 'Origen X', originY: 'Origen Y', width: 'Ancho', height: 'Alto', allowFullscreen: 'Permitir pantalla completa', embedHint: 'Use una URL válida (YouTube, Vimeo, etc.).' },
     modals: { newProject: 'Nuevo Proyecto', newObject: 'Nuevo Objeto', cancel: 'Cancelar', add: 'Agregar', apply: 'Aplicar', close: 'Cerrar', confirm: 'Confirmar', ok: 'OK' },
     dialogs: { confirmation: '⚠️', warning: 'Advertencia', info: 'ℹ️', error: 'Error', newProjectMsg: '¿Desea crear un nuevo proyecto?', unsavedData: '⚠️ Los datos no guardados se perderán.', createNew: 'Crear Nuevo' },
@@ -586,7 +588,7 @@ const translations: Record<Locale, Translations> = {
     circle: { defaultName: '圆{id}', centerX: '中心 X', centerY: '中心 Y', radiusUnit: '半径（单位）', radiusPixel: '半径', borderColor: '边框颜色', fillColor: '填充颜色' },
     rectangle: { defaultName: '矩形{id}', width: '宽度', height: '高度' },
     textLabel: { defaultName: '文本{id}', posX: '位置 X', posY: '位置 Y', text: '文本', textPlaceholder: 't = {t:2}s', size: '大小', interpolationHint: '使用 {varname} 或 {varname:2} 来插值' },
-    field: { defaultName: '场{id}', fieldType: '矢量场', range: '范围', zAxisColor: 'Z 轴 -> 颜色', zExprHint: '定义后，每个点的颜色将映射 Fz：', zScaleHint: '负值 -> 零 -> 正值', zExample: '例如: z, x*y, sin(x)', baseColor: '基础颜色', viewMode: '显示模式', vectorsMode: '矢量', fieldLinesMode: '场线', gridN: '网格 N', arrowScale: '箭头缩放', seeds: '种子数', steps: '步数', stepSize: '步长', lineThickness: '线宽' },
+    field: { defaultName: '场{id}', fieldType: '矢量场', range: '范围', zAxisColor: 'Z 轴 -> 颜色', zExprHint: '定义后，每个点的颜色将映射 Fz：', zScaleHint: '负值 -> 零 -> 正值', zExample: '例如: z, x*y, sin(x)', baseColor: '基础颜色', viewMode: '显示模式', vectorsMode: '矢量', fieldLinesMode: '场线', gridN: '网格 N', arrowScale: '箭头缩放', seeds: '种子数', steps: '步数', stepSize: '步长', lineThickness: '线宽', switchToExpr: '使用手动表达式', switchToVar: '使用模型变量' },
     video: { defaultName: '视频{id}', url: 'URL', originX: '起点 X', originY: '起点 Y', width: '宽度', height: '高度', allowFullscreen: '允许全屏', embedHint: '请使用有效链接（YouTube、Vimeo 等）。' },
     modals: { newProject: '新项目', newObject: '新对象', cancel: '取消', add: '添加', apply: '应用', close: '关闭', confirm: '确认', ok: '确定' },
     dialogs: { confirmation: '⚠️', warning: '警告', info: 'ℹ️', error: '错误', newProjectMsg: '是否要创建新项目？', unsavedData: '⚠️ 未保存的数据将丢失。', createNew: '创建新项目' },

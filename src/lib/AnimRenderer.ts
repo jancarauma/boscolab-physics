@@ -18,6 +18,7 @@ export class AnimRenderer {
   _hoveredObj: any | null;
   _mediaLayer: HTMLDivElement | null;
   _videoNodes: Map<number, HTMLDivElement>;
+  simEvalAt: ((varName: string, overrides: Record<string, number>) => number) | null;
 
   constructor(canvas: HTMLCanvasElement) {
     this.cv = canvas; this.ctx = canvas.getContext('2d')!;
@@ -32,6 +33,7 @@ export class AnimRenderer {
     this._dragObj = null;
     this._mediaLayer = null;
     this._videoNodes = new Map();
+    this.simEvalAt = null;
     this._setupEvents();
   }
 
@@ -452,6 +454,37 @@ export class AnimRenderer {
     ctx.fillText(rendered, x, y);
   }
 
+  _compileVFExpr(expr: string): (x: number, y: number, t: number, s: Record<string, number>) => number {
+    const VF_FNS: Record<string, string> = {
+      sin: 'Math.sin', cos: 'Math.cos', tan: 'Math.tan',
+      asin: 'Math.asin', acos: 'Math.acos', atan: 'Math.atan', atan2: 'Math.atan2',
+      sqrt: 'Math.sqrt', abs: 'Math.abs', exp: 'Math.exp', ln: 'Math.log',
+      log: 'Math.log10', log10: 'Math.log10', floor: 'Math.floor', ceil: 'Math.ceil',
+      round: 'Math.round', sign: 'Math.sign', min: 'Math.min', max: 'Math.max',
+      pow: 'Math.pow', hypot: 'Math.hypot', sinh: 'Math.sinh', cosh: 'Math.cosh', tanh: 'Math.tanh',
+      if: '_if',
+    };
+    const PARAMS = new Set(['x', 'y', 't']);
+    // Protect existing Math.xxx (backward compat with old files)
+    let js = expr.replace(/\^/g, '**').replace(/\bMath\./g, '\x00MATH\x00.');
+    // Replace identifiers, skipping those after '.' (member access)
+    js = js.replace(/(?<![.\w\x00])([a-zA-Z_][a-zA-Z0-9_]*)/g, (match, name, offset, str) => {
+      const lo = name.toLowerCase();
+      const after = str.slice(offset + match.length).trimStart();
+      const isCall = after.startsWith('(');
+      if (isCall) return VF_FNS[lo] !== undefined ? VF_FNS[lo] : match;
+      if (lo === 'pi') return 'Math.PI';
+      if (lo === 'e') return 'Math.E';
+      if (lo === 'inf' || lo === 'infinity') return 'Infinity';
+      if (PARAMS.has(lo)) return lo;
+      return `(s['${lo}']??0)`;
+    });
+    js = js.replace(/\x00MATH\x00\./g, 'Math.');
+    const _if = (c: any, a: any, b: any) => c ? a : b;
+    try { return new Function('x', 'y', 't', 's', '_if', `return (${js});`) as any; }
+    catch (_) { return () => 0; }
+  }
+
   _drawObj(ctx: CanvasRenderingContext2D, o: any, state: Record<string, number>) {
     const g = (k: string) => this._evalProp(o[k], state);
     const color = o.color || '#4f9eff';
@@ -635,15 +668,18 @@ export class AnimRenderer {
       const R = o.gridRange || 5;
       const vfw = R * 2, vfh = R * 2;
       const fxStr = o.fxExpr || '-y', fyStr = o.fyExpr || 'x';
-      const fzStr: string | undefined = o.fzExpr && o.fzExpr.trim() !== '' ? o.fzExpr : undefined;
+      const fzStr: string | undefined = (o.fzExpr && o.fzExpr.trim() !== '') ? o.fzExpr : undefined;
       const baseColor2 = o.color || '#4f9eff';
       let cr = 79, cg = 158, cb = 255;
       const hm = baseColor2.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
       if (hm) { cr = parseInt(hm[1], 16); cg = parseInt(hm[2], 16); cb = parseInt(hm[3], 16); }
-      let fxFn: Function, fyFn: Function, fzFn: Function | null = null;
-      try { fxFn = new Function('x', 'y', 't', 'Math', `return ${fxStr.replace(/\^/g, '**')};`); } catch (e) { fxFn = () => 0; }
-      try { fyFn = new Function('x', 'y', 't', 'Math', `return ${fyStr.replace(/\^/g, '**')};`); } catch (e) { fyFn = () => 0; }
-      if (fzStr) { try { fzFn = new Function('x', 'y', 't', 'Math', `return ${fzStr.replace(/\^/g, '**')};`); } catch (e) { fzFn = null; } }
+
+      type VFfn = (x: number, y: number, t: number, s: Record<string, number>) => number;
+      let fxFn: VFfn, fyFn: VFfn, fzFn: VFfn | null = null;
+      fxFn = this._compileVFExpr(fxStr);
+      fyFn = this._compileVFExpr(fyStr);
+      if (fzStr) { fzFn = this._compileVFExpr(fzStr); }
+      const _if = (c: any, a: any, b: any) => c ? a : b;
       const T = state.t || 0;
       const vfMode = o.vfMode || 'arrows'; // 'arrows' | 'fieldlines'
 
@@ -654,7 +690,7 @@ export class AnimRenderer {
         const SN = 10, SR = R * 2 / (SN - 1);
         for (let i = 0; i < SN; i++) for (let j = 0; j < SN; j++) {
           try {
-            const v = fzFn(-R + i * SR, -R + j * SR, T, Math);
+            const v = fzFn(-R + i * SR, -R + j * SR, T, state);
             if (isFinite(v)) { fzMin = Math.min(fzMin, v); fzMax = Math.max(fzMax, v); }
           } catch (_) {}
         }
@@ -667,7 +703,7 @@ export class AnimRenderer {
       const getColor = (x: number, y: number, norm: number, alpha: number): string => {
         if (fzFn) {
           let fz = 0;
-          try { fz = fzFn(x, y, T, Math); } catch (_) {}
+          try { fz = fzFn(x, y, T, state); } catch (_) {}
           // t ∈ [-1, 1]
           const t2 = Math.max(-1, Math.min(1, fz / (fzMax || 1)));
           let r2: number, g2: number, b2: number;
@@ -701,7 +737,7 @@ export class AnimRenderer {
         // Campo normalizado (só direção, integração estável)
         const field = (x: number, y: number): [number, number] => {
           let fx = 0, fy = 0;
-          try { fx = fxFn(x, y, T, Math); fy = fyFn(x, y, T, Math); } catch (_) {}
+          try { fx = fxFn(x, y, T, state); fy = fyFn(x, y, T, state); } catch (_) {}
           const mag = Math.hypot(fx, fy) || 1e-10;
           return [fx / mag, fy / mag];
         };
@@ -790,7 +826,7 @@ export class AnimRenderer {
           for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
             const xi = -R + i * step, yj = -R + j * step;
             try {
-              const m = Math.hypot(fxFn(xi, yj, T, Math), fyFn(xi, yj, T, Math));
+              const m = Math.hypot(fxFn(xi, yj, T, state), fyFn(xi, yj, T, state));
               if (isFinite(m)) mags.push(m);
             } catch (_) {}
           }
@@ -803,7 +839,7 @@ export class AnimRenderer {
           for (let j = 0; j < N; j++) {
             const xi = -R + i * step, yj = -R + j * step;
             let fx = 0, fy = 0;
-            try { fx = fxFn(xi, yj, T, Math); fy = fyFn(xi, yj, T, Math); } catch (_) {}
+            try { fx = fxFn(xi, yj, T, state); fy = fyFn(xi, yj, T, state); } catch (_) {}
             if (!isFinite(fx) || !isFinite(fy)) continue;
             const mag = Math.hypot(fx, fy);
             if (mag < refMag * 1e-3) continue;

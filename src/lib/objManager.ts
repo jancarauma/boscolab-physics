@@ -531,15 +531,27 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${rowVarOrConst(tr.textLabel.posY, 'y', obj.y ?? 3, vars, obj.id)}
       </div>
       <div class="prop-section" style="font-size:10px;color:var(--txt3)">${tr.textLabel.interpolationHint}</div>`,
-    vectorfield: `
+    vectorfield: (() => {
+      function rowVFField(label: string, exprProp: string): string {
+        const exprVal = (obj[exprProp] || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+        return `<div class="prop-row">
+          <span class="prop-label">${label}</span>
+          <input class="prop-val" style="flex:1;font-family:monospace;font-size:11px" value="${exprVal}"
+            onblur="window.__updateObjProp(${obj.id},'${exprProp}',this.value)"
+            onkeydown="if(event.key==='Enter'){window.__updateObjProp(${obj.id},'${exprProp}',this.value);this.blur()}"
+            placeholder="ex: sin(x)*k">
+        </div>`;
+      }
+      const fzActive = (obj.fzExpr && obj.fzExpr.trim()) || (obj.fzVar && obj.fzVar.trim());
+      return `
       <div class="prop-section"><div class="prop-title">${tr.field.fieldType}</div>
         ${row(tr.commonProps.name, 'name', obj.name)}
-        ${row('Fx(x,y,t)', 'fxExpr', obj.fxExpr || '-y')}
-        ${row('Fy(x,y,t)', 'fyExpr', obj.fyExpr || 'x')}
+        ${rowVFField('Fx', 'fxExpr')}
+        ${rowVFField('Fy', 'fyExpr')}
         ${row(tr.field.range, 'gridRange', obj.gridRange || 5, 'number')}
       </div>
       <div class="prop-section"><div class="prop-title">${tr.field.zAxisColor}</div>
-        ${row('Fz(x,y,t)', 'fzExpr', obj.fzExpr || '')}
+        ${rowVFField('Fz', 'fzExpr')}
         <div class="prop-row" style="font-size:10px;color:var(--txt3);flex-direction:column;align-items:flex-start;gap:3px">
           <span>${tr.field.zExprHint}</span>
           <div style="display:flex;align-items:center;gap:4px;margin-top:2px">
@@ -548,7 +560,7 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
           </div>
           <span style="margin-top:2px">${tr.field.zExample}</span>
         </div>
-        ${obj.fzExpr ? '' : row(tr.field.baseColor, 'color', obj.color || '#4f9eff', 'color')}
+        ${fzActive ? '' : row(tr.field.baseColor, 'color', obj.color || '#4f9eff', 'color')}
       </div>
       <div class="prop-section"><div class="prop-title">${tr.field.viewMode}</div>
         <div class="prop-row"><span class="prop-label">${tr.commonProps.mode}</span>
@@ -567,7 +579,8 @@ export function renderObjProps(obj: any, sim: SimEngine, anim: AnimRenderer): vo
         ${row(tr.field.stepSize, 'fieldDs', obj.fieldDs || 0.08, 'number')}
         ${row(tr.field.lineThickness, 'lineWidth', obj.lineWidth || 1.2, 'number')}
         `}
-      </div>`,
+      </div>`;
+    })(),
     video: `
       <div class="prop-section"><div class="prop-title">${tr.commonProps.identity}</div>
         ${row(tr.commonProps.name, 'name', obj.name)}
@@ -612,7 +625,7 @@ export function updateObjProp(id: number, prop: string, value: any, anim: AnimRe
   const numProps = new Set(['trailLen', 'vecScale', 'scale', 'lineWidth', 'fontSize', 'coils', 'fieldSeeds', 'fieldSteps', 'fieldDs']);
   const varOrNumProps = new Set(['pivotX', 'pivotY', 'L', 'x1', 'y1', 'x', 'y', 'vx', 'vy', 'r', 'w', 'h', 'radius', 'rotation']);
   const boolProps = new Set(['showVec', 'showVecProj', 'showProj', 'showTrail', 'useImage', 'visible', 'allowFullscreen']);
-  const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'projColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'fzExpr', 'text', 'label', 'vecLabel', 'projXLabel', 'projYLabel', 'magLabel', 'theta', 'vfMode', 'url', 'embedUrl']);
+  const strProps = new Set(['trailMode', 'color', 'trailColor', 'vecColor', 'projColor', 'rodColor', 'fillColor', 'fxExpr', 'fyExpr', 'fzExpr', 'fxVar', 'fyVar', 'fzVar', 'text', 'label', 'vecLabel', 'projXLabel', 'projYLabel', 'magLabel', 'theta', 'vfMode', 'url', 'embedUrl']);
 
   if (numProps.has(prop)) {
     o[prop] = parseFloat(value) || 0;

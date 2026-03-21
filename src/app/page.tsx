@@ -62,6 +62,9 @@ export default function Home() {
     w.resetObjId = resetObjId;
     Object.defineProperty(w, '_objId', { get: () => getObjId(), configurable: true });
 
+    // Connect vectorfield model-variable evaluator
+    anim.simEvalAt = (varName: string, overrides: Record<string, number>) => sim.evalVarAt(varName, overrides);
+
     // Inline HTML callbacks
     w.__updateObjProp    = (id: number, prop: string, value: any) => { updateObjProp(id, prop, value, anim); undoPush(anim); };
     w.__selectObj        = (id: number) => doSelectObj(id);

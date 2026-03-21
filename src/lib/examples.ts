@@ -206,7 +206,7 @@ percent_charge = 100*(vc/Vs)`,
     model: `// Campo Vetorial Puro\nomega = 1.0\nphi = omega*t`,
     ic: { omega: 1 }, dt: 0.1, tmax: 100,
     objects: [
-      { type: 'vectorfield', fxExpr: 'Math.sin(y)*Math.cos(x*0.5)', fyExpr: 'Math.cos(x)*Math.sin(y*0.5)', gridN: 18, gridRange: 6, arrowScale: 0.45, color: '#a78bfa' },
+      { type: 'vectorfield', fxExpr: 'sin(y)*cos(x*0.5)', fyExpr: 'cos(x)*sin(y*0.5)', gridN: 18, gridRange: 6, arrowScale: 0.45, color: '#a78bfa' },
       { type: 'label', x: -5.5, y: 5.5, text: 'Campo: F = (sin y·cos x/2, cos x·sin y/2)', fontSize: 11, color: '#94a3b8' },
     ],
     g0: { xvar: 't', yvar: 't' }, g1: { xvar: 't', yvar: 't' }, scale: 50, ox: .5, oy: .5
