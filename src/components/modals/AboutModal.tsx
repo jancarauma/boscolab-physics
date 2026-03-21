@@ -28,14 +28,14 @@ export default function AboutModal() {
           <div className="about-sub">{text.subtitle}</div>
         </div>
         <div className="about-body">
-          <div className="about-row"><span className="label">{text.versionLabel}</span><span className="val">1.0.0-AR — 2026</span></div>
+          <div className="about-row"><span className="label">{text.versionLabel}</span><span className="val">1.0.0 - Alpha Release</span></div>
           <div className="about-row"><span className="label">{text.authorLabel}</span><span className="val">J. Caraumã</span><a href="https://github.com/jancarauma/boscolab-physics" target="_blank" rel="noopener">github.com/jancarauma ↗</a></div>
           <div className="about-row"><span className="label">{text.websiteLabel}</span><span className="val">{text.websiteValue}</span><a href="https://carauma.com" target="_blank" rel="noopener">carauma.com ↗</a></div>
-          <div className="about-row"><span className="label">{text.copyrightLabel}</span><span className="val">{text.copyrightValue}</span></div>
+          <div className="about-row"><span className="label">{text.copyrightLabel}</span><span className="val">{new Date().getFullYear()} {text.copyrightValue}</span></div>
           <div className="about-row"><span className="label">{text.mathParserLabel}</span><span className="val">{text.mathParserValue}</span></div>
           <div className="about-row"><span className="label">{text.integratorsLabel}</span><span className="val">{text.integratorsValue}</span></div>
-          <div className="about-row"><span className="label">{text.graphs}</span><span className="val">LTTB decimation (Largest-Triangle-Three-Buckets)</span></div>
-          <div className="about-row"><span className="label">{text.equations}</span><span className="val"><a href="https://cortexjs.io/mathlive/" target="_blank" rel="noopener">MathLive 0.99 ↗</a></span></div>
+          <div className="about-row"><span className="label">{text.graphs}</span><span className="val">LTTB decimation (Largest-Triangle-Three-Buckets)</span><a href="https://github.com/sveinn-steinarsson/flot-downsample" target="_blank" rel="noopener">S. Steinarsson ↗</a></div>
+          <div className="about-row"><span className="label">{text.equations}</span><span className="val">MathLive</span><a href="https://cortexjs.io/mathlive/" target="_blank" rel="noopener">v0.99 ↗</a></div>
         </div>
         <div className="about-footer">
           <button className="dlg-btn ok" onClick={close}>{text.close}</button>
