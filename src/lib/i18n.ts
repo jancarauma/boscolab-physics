@@ -487,7 +487,7 @@ export interface Translations {
 // --- Dicionários -------
 const translations: Record<Locale, Translations> = {
   pt: {
-    meta: { appTitle: 'Boscolab', appDescription: 'Simulador de equações diferenciais' },
+    meta: { appTitle: 'Boscolab', appDescription: 'Simulador de física interativo' },
     menu: { file: 'Arquivo', edit: 'Editar', examples: 'Exemplos', view: 'Exibir', options: 'Opções', help: 'Ajuda' },
     file: { new: 'Novo', open: 'Abrir .modx', save: 'Salvar', exportData: 'Exportar Dados', exportImage: 'Exportar Imagem', precision: 'Precisão' },
     exCategories: { mechanics: 'Mecânica', kinematics: 'Cinemática', gravitation: 'Gravitação', waves: 'Ondas', oscillations: 'Oscilações', other: 'Outros', electromagnetism: 'Eletromagnetismo', complex: 'Sistemas Complexos' },
@@ -557,7 +557,7 @@ const translations: Record<Locale, Translations> = {
   },
 
   es: {
-    meta: { appTitle: 'Boscolab', appDescription: 'Simulador de ecuaciones diferenciales' },
+    meta: { appTitle: 'Boscolab', appDescription: 'Simulador de física interactivo' },
     menu: { file: 'Archivo', edit: 'Editar', examples: 'Ejemplos', view: 'Vista', options: 'Opciones', help: 'Ayuda' },
     file: { new: 'Nuevo', open: 'Abrir .modx', save: 'Guardar', exportData: 'Exportar Datos', exportImage: 'Exportar Imagen', precision: 'Precisión' },
     exCategories: { mechanics: 'Mecánica', kinematics: 'Cinemática', gravitation: 'Gravitación', waves: 'Ondas', oscillations: 'Oscilaciones', other: 'Otros', electromagnetism: 'Electromagnetismo', complex: 'Sistemas Complejos' },
