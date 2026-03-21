@@ -207,6 +207,7 @@ export default function Menubar() {
             {tr.options.precision}
           </div>
 
+          {/* Método de cálculo da simulação */}
           <div className="di has-sub">
             {tr.settings.method}
             <div className="sub-drop" style={{ minWidth: 150 }}>
@@ -217,6 +218,21 @@ export default function Menubar() {
               <div className="di" onClick={() => changeMethod('rk4')} style={method === 'rk4' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
                 {tr.settings.rk4}
                 {method === 'rk4' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+            </div>
+          </div>
+
+          {/* Unidade de ângulo */}
+          <div className="di has-sub">
+            {tr.options.angleUnit}
+            <div className="sub-drop" style={{ minWidth: 160 }}>
+              <div className="di" onClick={() => changeAngleUnit('rad')} style={angleUnit === 'rad' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.options.radians}
+                {angleUnit === 'rad' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
+              </div>
+              <div className="di" onClick={() => changeAngleUnit('deg')} style={angleUnit === 'deg' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
+                {tr.options.degrees}
+                {angleUnit === 'deg' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
               </div>
             </div>
           </div>
@@ -235,22 +251,7 @@ export default function Menubar() {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Unidade de ângulo */}
-          <div className="di has-sub">
-            {tr.options.angleUnit}
-            <div className="sub-drop" style={{ minWidth: 160 }}>
-              <div className="di" onClick={() => changeAngleUnit('rad')} style={angleUnit === 'rad' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
-                {tr.options.radians}
-                {angleUnit === 'rad' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
-              </div>
-              <div className="di" onClick={() => changeAngleUnit('deg')} style={angleUnit === 'deg' ? { color: 'var(--acc)', fontWeight: 600 } : {}}>
-                {tr.options.degrees}
-                {angleUnit === 'deg' && <span style={{ marginLeft: 'auto', fontSize: 10 }}>✓</span>}
-              </div>
-            </div>
-          </div>
+          </div>          
 
         </div>
       </div>

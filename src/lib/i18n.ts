@@ -475,7 +475,7 @@ const translations: Record<Locale, Translations> = {
     view: { grid: '⊞ Grade', axes: '↔ Eixos', clearTrails: '✕ Limpar Rastros', centerView: '⊙ Centralizar Vista' },
     help: { syntax: 'Sintaxe das Equações', about: 'Sobre' },
     options: { precision: 'Precisão', language: 'Idioma', angleUnit: 'Unidade de Ângulo', radians: 'Radianos (rad)', degrees: 'Graus (°)' },
-    toolbar: { play: '▶ Iniciar', pause: '⏸  Parar', restart: '↺ Reiniciar', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Desfazer (Ctrl+Z)', redoTooltip: 'Refazer (Ctrl+Y)' },
+    toolbar: { play: '▶ Iniciar', pause: '⏸  Parar', restart: '↺ Reiniciar', stepBack: '◀|', stepForward: '|▶', undo: '↩', redo: '↪', undoTooltip: 'Desfazer', redoTooltip: 'Refazer' },
     panels: { showObjects: 'Mostrar Objetos', showGraphs: 'Mostrar Gráficos', objects: 'Objetos', graphs: 'Gráficos', noObjects: 'Sem objetos.', noObjectsDesc: 'Adicione abaixo ↓', noProps: 'Clique num objeto', noPropsDesc: 'para ver propriedades', applyAndRestart: '✓ Aplicar e Reiniciar', clearAll: 'Limpar tudo', minimize: 'Minimizar' },
     objectTypes: { particle: '● Partícula', pendulum: '℘ Pêndulo', spring: '⇝ Mola', vector: '➡ Vetor', circle: '◯ Círculo', rectangle: '▭ Retângulo', text: 'T Texto', field: '⊞ Campo', video: '▶ Vídeo' },
     commonProps: { name: 'Nome', color: 'Cor', show: 'Mostrar', hide: 'Ocultar', mode: 'Modo', moveUp: 'Mover para cima (frente)', moveDown: 'Mover para baixo (atrás)', type: 'Tipo', reset: 'Resetar', remove: 'Remover', identity: 'Identidade', physics: 'Física', geometry: 'Geometria', visualization: 'Visualização', content: 'Conteúdo', configuration: 'Configuração' },
