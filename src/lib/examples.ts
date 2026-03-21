@@ -2,7 +2,7 @@ export const EXAMPLES: Record<string, any> = {
   queda: {
     model: `// Queda Livre\ng = 9.8\n\ny(t+dt) = y(t) + vy*dt\nvy(t+dt) = vy(t) - g*dt`,
     ic: { y: 22, vy: 0 }, dt: 0.01, tmax: 2.070,
-    objects: [{ type: 'particle', x: '0', y: 'y', color: '#4f9eff', showTrail: true, showVec: true, vx: '0', vy: 'vy', vecScale: 0.2, label: 'queda' }],
+    objects: [{ type: 'particle', x: '0', y: 'y', color: '#4f9eff', showTrail: true, showVec: true, vx: '0', vy: 'vy', vecScale: 0.2, radius: 1, label: 'queda' }],
     g0: { xvar: 't', yvar: 'y' }, g1: { xvar: 't', yvar: 'vy' }, scale: 8, ox: .5, oy: .1
   },
   projetil: {
@@ -13,33 +13,33 @@ export const EXAMPLES: Record<string, any> = {
       x3: 0, y3: 0, vx3: 7, vy3: 18,
     }, dt: 0.01, tmax: 3.7,
     objects: [
-      { type: 'label', x: -20.2, y: 13, text: 'Bem-Vindo(a) ao BoscoLab', fontSize: 0.8, color: '#05a500' },
-      { type: 'label', x: -20.2, y: 11.0, text: 'Lançamentos oblíquos', fontSize: 0.6, color: '#16f8ed' },
-      { type: 'label', x: -20.2, y: 10, text: 'Projétil A: x = {x1:2} m,  y = {y1:2} m, |v| = {v1:2} m/s', fontSize: 0.467, color: '#fc05e7' },
-      { type: 'label', x: -20.2, y: 9, text: 'Projétil B:  x = {x2:2} m,  y = {y2:2} m, |v| = {v2:2} m/s', fontSize: 0.467, color: '#15ff00' },
-      { type: 'label', x: -20.2, y: 8, text: 'Projétil C:  x = {x3:2} m,  y = {y3:2} m, |v| = {v3:2} m/s', fontSize: 0.467, color: '#fbbf24' },
-      { type: 'label', x: -20.2, y: 7, text: 'Altura máx. de A: ({x_apice:2}, {y_apice:2}) m', fontSize: 0.467, color: '#fc05e7' },
-      { type: 'label', x: -20.2, y: 5, text: 'tempo de subida={t_subida:2} s,   tempo total={t_total:2} s', fontSize: 0.467, color: '#93c5fd' },
-      { type: 'label', x: -20.2, y: 4, text: 'tempo atual={t:2} s', fontSize: 0.467, color: '#93c5fd' },
+      { type: 'label', x: -20.2, y: 13, text: 'Bem-Vindo(a) ao BoscoLab', fontSize: 1.333, color: '#05a500' },
+      { type: 'label', x: -20.2, y: 11.0, text: 'Lançamentos oblíquos', fontSize: 1, color: '#16f8ed' },
+      { type: 'label', x: -20.2, y: 10, text: 'Projétil A: x = {x1:2} m,  y = {y1:2} m, |v| = {v1:2} m/s', fontSize: 0.778, color: '#fc05e7' },
+      { type: 'label', x: -20.2, y: 9, text: 'Projétil B:  x = {x2:2} m,  y = {y2:2} m, |v| = {v2:2} m/s', fontSize: 0.778, color: '#15ff00' },
+      { type: 'label', x: -20.2, y: 8, text: 'Projétil C:  x = {x3:2} m,  y = {y3:2} m, |v| = {v3:2} m/s', fontSize: 0.778, color: '#fbbf24' },
+      { type: 'label', x: -20.2, y: 7, text: 'Altura máx. de A: ({x_apice:2}, {y_apice:2}) m', fontSize: 0.778, color: '#fc05e7' },
+      { type: 'label', x: -20.2, y: 5, text: 'tempo de subida={t_subida:2} s,   tempo total={t_total:2} s', fontSize: 0.778, color: '#93c5fd' },
+      { type: 'label', x: -20.2, y: 4, text: 'tempo atual={t:2} s', fontSize: 0.778, color: '#93c5fd' },
 
       { type: 'video', url: 'https://vimeo.com/97682476', embedUrl: 'https://player.vimeo.com/video/97682476', x: -10.5, y: -7.5, w: 17, h: 12, allowFullscreen: true },
       
       { type: 'particle', x: 'x2', y: 'y2', color: '#38bdf8', trailColor: '#67e8f9', 
         showTrail: true, trailMode: 'persist', trailLen: 180, 
         showVec: true, showVecProj: false, vx: 'vx2', vy: 'vy2', vecScale: 0.24, 
-        vecColor: '#0ea5e9', radius: 0.233, label: 'B' },
+        vecColor: '#0ea5e9', radius: 0.389, label: 'B' },
       
       { type: 'particle', x: 'x3', y: 'y3', color: '#fbbf24', trailColor: '#fde68a', 
         showTrail: true, trailMode: 'persist', trailLen: 220, 
         showVec: true, showVecProj: false, vx: 'vx3', vy: 'vy3', vecScale: 0.24, 
-        vecColor: '#f59e0b', radius: 0.233, label: 'C' },
+        vecColor: '#f59e0b', radius: 0.389, label: 'C' },
       
       { type: 'vector', x: '0', y: '0', vx: 'x1', vy: 'y1', color: '#22c55e', 
         scale: 1, showProj: true, projColor: '#86efac', vecLabel: 'Velocidade', 
         magLabel: 'Distância até a Origem = {dTotal:1} m', projXLabel: 'xA = {x1:1}', projYLabel: 'yA = {y1:1}' },        
       
       { type: 'circle', x: 'x_apice', y: 'y_apice', r: '0.18', color: '#fbbf24', fillColor: 'rgba(251,191,36,.18)' },
-      { type: 'label', x: 'x_apice + 0.25', y: 'y_apice + 0.4', text: 'Altura máx. de A ({x_apice:2}, {y_apice:2}) m', fontSize: 0.367, color: '#fbbf24' },
+      { type: 'label', x: 'x_apice + 0.25', y: 'y_apice + 0.4', text: 'Altura máx. de A ({x_apice:2}, {y_apice:2}) m', fontSize: 0.611, color: '#fbbf24' },
 
       { type: 'particle', x: 'x1', y: 'y1', color: '#fc0808', trailColor: '#b60000', 
         showTrail: true, trailMode: 'dots', trailLen: 800, 
@@ -59,14 +59,14 @@ export const EXAMPLES: Record<string, any> = {
     ic: { x: 0, y: 0, vx: 20, vy: 25 }, dt: 0.005, tmax: 6,
     objects: [
       { type: 'vectorfield', fxExpr: '-0.8', fyExpr: '-0.3', gridN: 14, gridRange: 30, arrowScale: 0.3, color: '#94a3b8' },
-      { type: 'particle', x: 'x', y: 'y', color: '#fb7185', showTrail: true, showVec: false, radius: 0.267 }
+      { type: 'particle', x: 'x', y: 'y', color: '#fb7185', showTrail: true, showVec: false, radius: 0.5 }
     ],
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'vy' }, scale: 16, ox: .03, oy: .55
   },
   pendulo: {
     model: `// Pêndulo Simples\ng = 9.8\nL = 1.5\n\ntheta(t+dt) = theta(t) + omega*dt\nomega(t+dt) = omega(t) - (g/L)*sin(theta)*dt`,
     ic: { theta: 1.2, omega: 0 }, dt: 0.005, tmax: 12,
-    objects: [{ type: 'pendulum', theta: 'theta', L: 1.5, color: '#f97316', showTrail: true, radius: 0.333 }],
+    objects: [{ type: 'pendulum', theta: 'theta', L: 1.5, color: '#f97316', showTrail: true, radius: 0.125 }],
     g0: { xvar: 't', yvar: 'theta' }, g1: { xvar: 'theta', yvar: 'omega' }, scale: 80, ox: .5, oy: .25
   },
   mola: {
@@ -79,43 +79,43 @@ export const EXAMPLES: Record<string, any> = {
     model: `// Lei de Kepler \nG = 1.0\nM = 1.0\n\nr = sqrt(x^2 + y^2)\nax = -G*M*x/r^3\nay = -G*M*y/r^3\n\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvx(t+dt) = vx(t) + ax*dt\nvy(t+dt) = vy(t) + ay*dt`,
     ic: { x: 1, y: 0, vx: 0, vy: 0.7 }, dt: 0.005, tmax: 30,
     objects: [      
-      { type: 'particle', x: '0', y: '0', color: '#fbbf24', showVec: false, radius: 0.4, label: "Sol" },
-      { type: 'particle', x: 'x', y: 'y', color: '#4f9eff', showTrail: true, trailLen: 600, showVec: false, radius: 0.2, label: "Terra" },
+      { type: 'particle', x: '0', y: '0', color: '#fbbf24', showVec: false, radius: 0.086, label: "Sol" },
+      { type: 'particle', x: 'x', y: 'y', color: '#4f9eff', showTrail: true, trailLen: 600, showVec: false, radius: 0.043, label: "Terra" },
     ],
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'x', yvar2: 'y' }, scale: 140, ox: .5, oy: .5
   },
   lotka: {
     model: `// Lotka-Volterra (Predador-Presa)\na = 1.0\nb = 0.1\nc = 0.075\nd = 1.5\n\nx(t+dt) = x(t) + (a*x - b*x*y)*dt\ny(t+dt) = y(t) + (c*x*y - d*y)*dt`,
     ic: { x: 10, y: 5 }, dt: 0.005, tmax: 40,
-    objects: [{ type: 'particle', x: 'x', y: 'y', color: '#34d399', showTrail: true, trailLen: 800, radius: 0.2, label: '' }],
+    objects: [{ type: 'particle', x: 'x', y: 'y', color: '#34d399', showTrail: true, trailLen: 800, radius: 0.5, label: '' }],
     g0: { xvar: 't', yvar: 'x', yvar2: 'y' }, g1: { xvar: 'x', yvar: 'y' }, scale: 12, ox: .1, oy: .9
   },
   lorenz: {
     model: `// Atrator de Lorenz (projeção XZ)\nsigma = 10\nrho = 28\nbeta = 2.667\n\nx(t+dt) = x(t) + sigma*(y - x)*dt\ny(t+dt) = y(t) + (x*(rho - z) - y)*dt\nz(t+dt) = z(t) + (x*y - beta*z)*dt`,
     ic: { x: 0.1, y: 0, z: 0 }, dt: 0.002, tmax: 50,
-    objects: [{ type: 'particle', x: 'x', y: 'z', color: '#a78bfa', showTrail: true, trailLen: 2000, radius: 0.1, showVec: false }],
+    objects: [{ type: 'particle', x: 'x', y: 'z', color: '#a78bfa', showTrail: true, trailLen: 2000, radius: 0.375, showVec: false }],
     g0: { xvar: 'x', yvar: 'z' }, g1: { xvar: 't', yvar: 'x' }, scale: 8, ox: .5, oy: .5
   },
   pendulo_duplo: {
     model: `// Pêndulo Duplo (caótico)\ng = 9.8\nL1 = 1.2\nL2 = 1.2\nm1 = 1.0\nm2 = 1.0\n\nx1 = sin(theta1)*L1\ny1 = -cos(theta1)*L1\nx2 = x1 + sin(theta2)*L2\ny2 = y1 - cos(theta2)*L2\n\ntheta1(t+dt) = theta1(t) + omega1*dt\ntheta2(t+dt) = theta2(t) + omega2*dt\n\ndel = theta2 - theta1\nD1 = L1*(2*m1+m2-m2*cos(2*del))\nD2 = L2*(2*m1+m2-m2*cos(2*del))\n\nalpha1 = (-g*(2*m1+m2)*sin(theta1) - m2*g*sin(theta1-2*theta2) - 2*sin(del)*m2*(omega2^2*L2+omega1^2*L1*cos(del))) / D1\nalpha2 = (2*sin(del)*(omega1^2*L1*(m1+m2)+g*(m1+m2)*cos(theta1)+omega2^2*L2*m2*cos(del))) / D2\n\nomega1(t+dt) = omega1(t) + alpha1*dt\nomega2(t+dt) = omega2(t) + alpha2*dt`,
     ic: { theta1: 2.5, theta2: 1.5, omega1: 0, omega2: 0 }, dt: 0.004, tmax: 40,
     objects: [
-      { type: 'pendulum', theta: 'theta1', L: 1.2, pivotX: 0, pivotY: 0, color: '#f97316', showTrail: false, radius: 0.3 },
-      { type: 'pendulum', theta: 'theta2', L: 1.2, pivotX: 'x1', pivotY: 'y1', color: '#fb7185', showTrail: true, trailLen: 1500, radius: 0.3 },
+      { type: 'pendulum', theta: 'theta1', L: 1.2, pivotX: 0, pivotY: 0, color: '#f97316', showTrail: false, radius: 0.1 },
+      { type: 'pendulum', theta: 'theta2', L: 1.2, pivotX: 'x1', pivotY: 'y1', color: '#fb7185', showTrail: true, trailLen: 1500, radius: 0.1 },
     ],
     g0: { xvar: 't', yvar: 'theta1', yvar2: 'theta2' }, g1: { xvar: 'theta1', yvar: 'omega1' }, scale: 90, ox: .5, oy: .28
   },
   mola2d: {
     model: `// Mola 2D — Movimento elíptico\nkx = 4.0\nky = 9.0\nm = 1.0\n\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvx(t+dt) = vx(t) + (-kx/m * x)*dt\nvy(t+dt) = vy(t) + (-ky/m * y)*dt`,
     ic: { x: 2, y: 0, vx: 0, vy: 3 }, dt: 0.01, tmax: 15,
-    objects: [{ type: 'particle', x: 'x', y: 'y', color: '#06b6d4', showTrail: true, trailLen: 1000, radius: 0.233, showVec: true, vx: 'vx', vy: 'vy', vecScale: 0.2, vecColor: '#fbbf24' }],
+    objects: [{ type: 'particle', x: 'x', y: 'y', color: '#06b6d4', showTrail: true, trailLen: 1000, radius: 0.14, showVec: true, vx: 'vx', vy: 'vy', vecScale: 0.2, vecColor: '#fbbf24' }],
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'x', yvar2: 'y' }, scale: 50, ox: .5, oy: .5
   },
   orbita3: {
     model: `// Problema de 3 Corpos (restrito)\nG = 1.0\nm1 = 1.0\nm2 = 1.0\n\nomega = 1.0\nx1 = cos(omega*t)\ny1 = sin(omega*t)\nx2 = -cos(omega*t)\ny2 = -sin(omega*t)\n\nr1 = sqrt((x-x1)^2 + (y-y1)^2 + 0.01)\nr2 = sqrt((x-x2)^2 + (y-y2)^2 + 0.01)\n\nax = -G*m1*(x-x1)/r1^3 - G*m2*(x-x2)/r2^3\nay = -G*m1*(y-y1)/r1^3 - G*m2*(y-y2)/r2^3\n\nx(t+dt) = x(t) + vx*dt\ny(t+dt) = y(t) + vy*dt\nvx(t+dt) = vx(t) + ax*dt\nvy(t+dt) = vy(t) + ay*dt`,
     ic: { x: 0.5, y: 0.0, vx: 0.0, vy: 1.2 }, dt: 0.001, tmax: 30,
     objects: [
-      { type: 'particle', x: 'x', y: 'y', color: '#06b6d4', showTrail: true, trailLen: 3000, radius: 0.133, showVec: false },
+      { type: 'particle', x: 'x', y: 'y', color: '#06b6d4', showTrail: true, trailLen: 3000, radius: 0.04, showVec: false },
       { type: 'circle', x: 'x1', y: 'y1', r: '0.08', color: '#fbbf24', fillColor: 'rgba(251,191,36,.4)' },
       { type: 'circle', x: 'x2', y: 'y2', r: '0.08', color: '#fb7185', fillColor: 'rgba(251,113,133,.4)' },
     ],
@@ -145,18 +145,18 @@ e_cap = 0.5*C*vc^2
 percent_charge = 100*(vc/Vs)`,
     ic: { vc: 0 }, dt: 0.001, tmax: 8.0,
     objects: [
-      { type: 'particle', x: 't', y: 'vc', color: '#4f9eff', showTrail: true, trailLen: 2500, radius: 0.3, showVec: true, vy: 'i', vx: '0', vecScale: 0.3, vecColor: '#34d399', label: 'Carregamento' },
-      { type: 'label', x: 1.1, y: 5.0, text: '═══════════════════════════════════', fontSize: 0.4, color: '#475569' },
-      { type: 'label', x: 1.1, y: 3.1, text: 'CARREGAMENTO DE CAPACITOR RC', fontSize: 0.467, color: '#f0f9ff' },
-      { type: 'label', x: 1.1, y: 2.8, text: 'TENSÃO DO CAPACITOR', fontSize: 0.367, color: '#94a3b8' },
-      { type: 'label', x: 1.1, y: 2.5, text: 'Vc = {vc:5} V  |  {percent_charge:0}% carregado', fontSize: 0.4, color: '#4f9eff' },
-      { type: 'label', x: 1.1, y: 2.2, text: 'CORRENTE (decaimento exponencial)', fontSize: 0.367, color: '#94a3b8' },
-      { type: 'label', x: 1.1, y: 1.9, text: 'i = {i:8} A', fontSize: 0.4, color: '#34d399' },
-      { type: 'label', x: 1.1, y: 1.6, text: 'DIFERENÇAS DE POTENCIAIS (DDPs)', fontSize: 0.367, color: '#94a3b8' },
-      { type: 'label', x: 1.1, y: 1.3, text: 'Vs = {Vs:3} V  |  Vr = {vr:5} V  (Vc + Vr = Vs)', fontSize: 0.367, color: '#fbbf24' },
-      { type: 'label', x: 1.1, y: 1.0, text: 'PARÂMETROS & ENERGIA', fontSize: 0.367, color: '#94a3b8' },
-      { type: 'label', x: 1.1, y: 0.7, text: 'τ = {tau:4} s  |  E = {e_cap:8} J', fontSize: 0.367, color: '#a78bfa' },
-      { type: 'label', x: 1.1, y: 0.4, text: '📌 Em ~5τ: 99% carregado. Após 5 segundos.', fontSize: 0.333, color: '#22d3ee' },
+      { type: 'particle', x: 't', y: 'vc', color: '#4f9eff', showTrail: true, trailLen: 2500, radius: 0.15, showVec: true, vy: 'i', vx: '0', vecScale: 0.3, vecColor: '#34d399', label: 'Carregamento' },
+      { type: 'label', x: 1.1, y: 5.0, text: '═══════════════════════════════════', fontSize: 0.2, color: '#475569' },
+      { type: 'label', x: 1.1, y: 3.1, text: 'CARREGAMENTO DE CAPACITOR RC', fontSize: 0.233, color: '#f0f9ff' },
+      { type: 'label', x: 1.1, y: 2.8, text: 'TENSÃO DO CAPACITOR', fontSize: 0.183, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 2.5, text: 'Vc = {vc:5} V  |  {percent_charge:0}% carregado', fontSize: 0.2, color: '#4f9eff' },
+      { type: 'label', x: 1.1, y: 2.2, text: 'CORRENTE (decaimento exponencial)', fontSize: 0.183, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 1.9, text: 'i = {i:8} A', fontSize: 0.2, color: '#34d399' },
+      { type: 'label', x: 1.1, y: 1.6, text: 'DIFERENÇAS DE POTENCIAIS (DDPs)', fontSize: 0.183, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 1.3, text: 'Vs = {Vs:3} V  |  Vr = {vr:5} V  (Vc + Vr = Vs)', fontSize: 0.183, color: '#fbbf24' },
+      { type: 'label', x: 1.1, y: 1.0, text: 'PARÂMETROS & ENERGIA', fontSize: 0.183, color: '#94a3b8' },
+      { type: 'label', x: 1.1, y: 0.7, text: 'τ = {tau:4} s  |  E = {e_cap:8} J', fontSize: 0.183, color: '#a78bfa' },
+      { type: 'label', x: 1.1, y: 0.4, text: '📌 Em ~5τ: 99% carregado. Após 5 segundos.', fontSize: 0.167, color: '#22d3ee' },
     ],
     g0: { xvar: 't', yvar: 'vc', yvar2: 'vr' }, 
     g1: { xvar: 't', yvar: 'i' }, 
@@ -171,7 +171,7 @@ percent_charge = 100*(vc/Vs)`,
   vanderpol: {
     model: `// Oscilador de Van der Pol\nmu = 2.0\n\nx(t+dt) = x(t) + v*dt\nv(t+dt) = v(t) + (mu*(1-x^2)*v - x)*dt`,
     ic: { x: 0.5, v: 0 }, dt: 0.005, tmax: 40,
-    objects: [{ type: 'particle', x: 'x', y: 'v', color: '#06b6d4', showTrail: true, trailLen: 2000, radius: 0.2, showVec: false }],
+    objects: [{ type: 'particle', x: 'x', y: 'v', color: '#06b6d4', showTrail: true, trailLen: 2000, radius: 0.12, showVec: false }],
     g0: { xvar: 't', yvar: 'x' }, g1: { xvar: 'x', yvar: 'v' }, scale: 50, ox: .5, oy: .5
   },
   solar: {
@@ -180,14 +180,14 @@ percent_charge = 100*(vc/Vs)`,
     dt: 0.002, tmax: 37,
     objects: [
       { type: 'circle', x: '0', y: '0', r: '0.12', color: '#ffd700', fillColor: 'rgba(255,215,0,.35)' },
-      { type: 'particle', x: 'xm', y: 'ym', color: '#b0c0d0', showTrail: true, trailLen: 550, radius: 0.1, label: 'Mercúrio' },
-      { type: 'particle', x: 'xv', y: 'yv', color: '#e8cda0', showTrail: true, trailLen: 550, radius: 0.133, label: 'Vênus' },
-      { type: 'particle', x: 'xt', y: 'yt', color: '#4f9eff', showTrail: true, trailLen: 550, radius: 0.133, label: 'Terra' },
-      { type: 'particle', x: 'xma', y: 'yma', color: '#f97316', showTrail: true, trailLen: 500, radius: 0.133, label: 'Marte' },
-      { type: 'particle', x: 'xj', y: 'yj', color: '#daa520', showTrail: true, trailLen: 420, radius: 0.2, label: 'Júpiter' },
-      { type: 'particle', x: 'xs', y: 'ys', color: '#f4e4c1', showTrail: true, trailLen: 360, radius: 0.167, label: 'Saturno' },
-      { type: 'particle', x: 'xu', y: 'yu', color: '#4fd0e7', showTrail: true, trailLen: 280, radius: 0.133, label: 'Urano' },
-      { type: 'particle', x: 'xn', y: 'yn', color: '#4169e1', showTrail: true, trailLen: 220, radius: 0.133, label: 'Netuno' },
+      { type: 'particle', x: 'xm', y: 'ym', color: '#b0c0d0', showTrail: true, trailLen: 550, radius: 0.075, label: 'Mercúrio' },
+      { type: 'particle', x: 'xv', y: 'yv', color: '#e8cda0', showTrail: true, trailLen: 550, radius: 0.1, label: 'Vênus' },
+      { type: 'particle', x: 'xt', y: 'yt', color: '#4f9eff', showTrail: true, trailLen: 550, radius: 0.1, label: 'Terra' },
+      { type: 'particle', x: 'xma', y: 'yma', color: '#f97316', showTrail: true, trailLen: 500, radius: 0.1, label: 'Marte' },
+      { type: 'particle', x: 'xj', y: 'yj', color: '#daa520', showTrail: true, trailLen: 420, radius: 0.15, label: 'Júpiter' },
+      { type: 'particle', x: 'xs', y: 'ys', color: '#f4e4c1', showTrail: true, trailLen: 360, radius: 0.125, label: 'Saturno' },
+      { type: 'particle', x: 'xu', y: 'yu', color: '#4fd0e7', showTrail: true, trailLen: 280, radius: 0.1, label: 'Urano' },
+      { type: 'particle', x: 'xn', y: 'yn', color: '#4169e1', showTrail: true, trailLen: 220, radius: 0.1, label: 'Netuno' },
     ],
     g0: { xvar: 'xt', yvar: 'yt' }, g1: { xvar: 't', yvar: 'rt' }, scale: 40, ox: .5, oy: .5
   },
@@ -200,7 +200,7 @@ percent_charge = 100*(vc/Vs)`,
         gridN: 44, gridRange: 5, arrowScale: 0.9, color: '#4f9eff', fzExpr: '-x' },
       { type: 'circle', x: '-2', y: '0', r: '0.18', color: '#fb7185', fillColor: 'rgba(251,113,133,.4)' },
       { type: 'circle', x: '2', y: '0', r: '0.18', color: '#4f9eff', fillColor: 'rgba(79,158,255,.4)' },
-      { type: 'particle', x: 'x', y: 'y', color: '#34d399', showTrail: true, trailLen: 1200, radius: 0.2, showVec: true, vx: 'vx', vy: 'vy', vecScale: 0.15, vecColor: '#fbbf24' },
+      { type: 'particle', x: 'x', y: 'y', color: '#34d399', showTrail: true, trailLen: 1200, radius: 0.1, showVec: true, vx: 'vx', vy: 'vy', vecScale: 0.15, vecColor: '#fbbf24' },
     ],
     g0: { xvar: 'x', yvar: 'y' }, g1: { xvar: 't', yvar: 'r1' }, scale: 60, ox: .5, oy: .5
   },
@@ -219,8 +219,8 @@ percent_charge = 100*(vc/Vs)`,
     model: `// Queda Livre: Terra vs Lua\ng_terra = 9.8\ng_lua = 1.62\n\nyt(t+dt) = yt(t) + vyt*dt\nvyt(t+dt) = vyt(t) - g_terra*dt\n\nyl(t+dt) = yl(t) + vyl*dt\nvyl(t+dt) = vyl(t) - g_lua*dt`,
     ic: { yt: 20, vyt: 0, yl: 20, vyl: 0 }, dt: 0.01, tmax: 4.880,
     objects: [
-      { type: 'particle', x: '-3', y: 'yt', color: '#4f9eff', showTrail: true, trailLen: 300, radius: 0.3, showVec: false, label: 'Terra' },
-      { type: 'particle', x: '3', y: 'yl', color: '#fbbf24', showTrail: true, trailLen: 300, radius: 0.3, showVec: false, label: 'Lua' },
+      { type: 'particle', x: '-3', y: 'yt', color: '#4f9eff', showTrail: true, trailLen: 300, radius: 0.75, showVec: false, label: 'Terra' },
+      { type: 'particle', x: '3', y: 'yl', color: '#fbbf24', showTrail: true, trailLen: 300, radius: 0.75, showVec: false, label: 'Lua' },
     ],
     g0: { xvar: 't', yvar: 'yt', yvar2: 'yl' }, g1: { xvar: 't', yvar: 'vyt', yvar2: 'vyl' }, scale: 12, ox: .5, oy: .1
   },
@@ -229,10 +229,10 @@ percent_charge = 100*(vc/Vs)`,
     ic: { x: 3, v: 0 }, dt: 0.01, tmax: 20,
     objects: [
       { type: 'spring', x: '0', y: 'x', x1: 0, y1: 5, pivotX: 0, pivotY: 5, coils: 10, vertical: true, color: '#a78bfa' },
-      { type: 'label', x: -4, y: 4.5, text: 'ζ={zeta:3}  ω₀={omega0:2} rad/s', fontSize: 0.433, color: '#94a3b8' },
-      { type: 'label', x: -4, y: 3.2, text: 'E = {E:3} J', fontSize: 0.433, color: '#fbbf24' },
-      { type: 'label', x: -4, y: 2.2, text: 'Ek = {Ek:3} J', fontSize: 0.433, color: '#fbbf24' },
-      { type: 'label', x: -4, y: 1.2, text: 'Ep = {Ep:3} J', fontSize: 0.433, color: '#fbbf24' },
+      { type: 'label', x: -4, y: 4.5, text: 'ζ={zeta:3}  ω₀={omega0:2} rad/s', fontSize: 0.26, color: '#94a3b8' },
+      { type: 'label', x: -4, y: 3.2, text: 'E = {E:3} J', fontSize: 0.26, color: '#fbbf24' },
+      { type: 'label', x: -4, y: 2.2, text: 'Ek = {Ek:3} J', fontSize: 0.26, color: '#fbbf24' },
+      { type: 'label', x: -4, y: 1.2, text: 'Ep = {Ep:3} J', fontSize: 0.26, color: '#fbbf24' },
     ],
     g0: { xvar: 't', yvar: 'x', yvar2: 'v' }, g1: { xvar: 'x', yvar: 'v' }, scale: 50, ox: .5, oy: .15
   },
@@ -259,8 +259,8 @@ percent_charge = 100*(vc/Vs)`,
       // Terra
       { type: 'circle', x: '0', y: '0', r: '0.4', color: '#60a5fa', fillColor: 'rgba(56,189,248,.6)' },
       // Rótulos
-      { type: 'label', x: -6.5, y: 6.6, text: '☀ Vento Solar', fontSize: 0.4, color: '#fb923c' },
-      { type: 'label', x: -6.5, y: -6.2, text: 'Campo Magnético Terrestre', fontSize: 0.4, color: '#94a3b8' },
+      { type: 'label', x: -6.5, y: 6.6, text: '☀ Vento Solar', fontSize: 0.24, color: '#fb923c' },
+      { type: 'label', x: -6.5, y: -6.2, text: 'Campo Magnético Terrestre', fontSize: 0.24, color: '#94a3b8' },
     ],
     g0: { xvar: 't', yvar: 't' }, g1: { xvar: 't', yvar: 't' }, scale: 50, ox: .5, oy: .5
   },
@@ -268,15 +268,15 @@ percent_charge = 100*(vc/Vs)`,
     model: `// Batimento de Ondas\nomega1 = 6.28\nomega2 = 6.91\nA1 = 1.0\nA2 = 1.0\n\nphi1(t+dt) = phi1(t) + omega1*dt\nphi2(t+dt) = phi2(t) + omega2*dt\n\ny1 = A1*sin(phi1)\ny2 = A2*sin(phi2)\ny = y1 + y2\n\nf_bat = (omega2 - omega1)/(2*3.14159)\nomega_bat = omega2 - omega1`,
     ic: { phi1: 0, phi2: 0 }, dt: 0.005, tmax: 20,
     objects: [
-      { type: 'label', x: -6, y: 6, text: 'Batimento de Ondas', fontSize: 0.5, color: '#e2e8f0' },
-      { type: 'label', x: -6, y: 4.8, text: 'ω₁ = {omega1:2} rad/s', fontSize: 0.4, color: '#4f9eff' },
-      { type: 'label', x: -6, y: 3.7, text: 'ω₂ = {omega2:2} rad/s', fontSize: 0.4, color: '#a78bfa' },
-      { type: 'label', x: -6, y: 2.5, text: 'Δω (bat.) = {omega_bat:3} rad/s', fontSize: 0.4, color: '#fbbf24' },
-      { type: 'label', x: -6, y: 1.4, text: 'y₁ = {y1:3}', fontSize: 0.4, color: '#4f9eff' },
-      { type: 'label', x: -6, y: 0.3, text: 'y₂ = {y2:3}', fontSize: 0.4, color: '#a78bfa' },
-      { type: 'label', x: -6, y: -0.8, text: 'y = y₁+y₂ = {y:3}', fontSize: 0.433, color: '#34d399' },
-      { type: 'particle', x: 't', y: 'y', color: '#34d399', showTrail: true, trailMode: 'persist', trailLen: 5000, radius: 0.1, showVec: false, label: '' },
-      { type: 'particle', x: 't', y: 'y1', color: '#4f9eff', showTrail: true, trailMode: 'fade', trailLen: 300, radius: 0.067, showVec: false, label: '' },
+      { type: 'label', x: -6, y: 6, text: 'Batimento de Ondas', fontSize: 0.375, color: '#e2e8f0' },
+      { type: 'label', x: -6, y: 4.8, text: 'ω₁ = {omega1:2} rad/s', fontSize: 0.3, color: '#4f9eff' },
+      { type: 'label', x: -6, y: 3.7, text: 'ω₂ = {omega2:2} rad/s', fontSize: 0.3, color: '#a78bfa' },
+      { type: 'label', x: -6, y: 2.5, text: 'Δω (bat.) = {omega_bat:3} rad/s', fontSize: 0.3, color: '#fbbf24' },
+      { type: 'label', x: -6, y: 1.4, text: 'y₁ = {y1:3}', fontSize: 0.3, color: '#4f9eff' },
+      { type: 'label', x: -6, y: 0.3, text: 'y₂ = {y2:3}', fontSize: 0.3, color: '#a78bfa' },
+      { type: 'label', x: -6, y: -0.8, text: 'y = y₁+y₂ = {y:3}', fontSize: 0.325, color: '#34d399' },
+      { type: 'particle', x: 't', y: 'y', color: '#34d399', showTrail: true, trailMode: 'persist', trailLen: 5000, radius: 0.075, showVec: false, label: '' },
+      { type: 'particle', x: 't', y: 'y1', color: '#4f9eff', showTrail: true, trailMode: 'fade', trailLen: 300, radius: 0.05, showVec: false, label: '' },
     ],
     g0: { xvar: 't', yvar: 'y', yvar2: 'y1' }, g1: { xvar: 't', yvar: 'y2' }, scale: 40, ox: .03, oy: .5
   },
