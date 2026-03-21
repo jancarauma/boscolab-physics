@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { initTheme } from '@/lib/theme';
 import { BabyIcon, BookHeartIcon, TelescopeIcon } from 'lucide-react';
 import { t, loadLocale, setLocale, onLocaleChange, type Locale } from '@/lib/i18n';
@@ -123,6 +123,8 @@ function Carousel({ title, slides, interval = 5000 }: { title: string; slides: S
 export default function Home() {
   const [locale, setLocaleState] = useState<Locale>('pt');
   const [playbackRate, setPlaybackRate] = useState(0.75);
+  const [clickCount, setClickCount] = useState(0);
+  const solarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     initTheme();
@@ -165,9 +167,25 @@ export default function Home() {
   });
 
   const handleClick = () => {
+    setClickCount(prev => prev + 1);
     setPlaybackRate((rate) => rate + 0.1);
     heartClickSound.play();
+    
+    // Trigger shake effect
+    if (solarRef.current && clickCount < 9) {
+      solarRef.current.classList.add('shaking');
+      setTimeout(() => {
+        solarRef.current?.classList.remove('shaking');
+      }, 500);
+    }
   }
+
+  // Apply exploded class when clickCount reaches 10
+  useEffect(() => {
+    if (clickCount >= 10 && solarRef.current) {
+      solarRef.current.classList.add('exploded');
+    }
+  }, [clickCount]);
 
   const handleClickLang = () => {
     langClickSound.play();
@@ -201,7 +219,7 @@ export default function Home() {
         </div>
 
         <div className="lp-hero-anim" aria-hidden="true">
-          <div className="lp-solar" onClick={ handleClick }>
+          <div className="lp-solar" onClick={ handleClick } ref={solarRef}>
             <div className="lp-sun-glow" />
             <div className="lp-sun" />
             <div className="lp-ring lp-ring-1"><div className="lp-dot lp-dot-1" /></div>
