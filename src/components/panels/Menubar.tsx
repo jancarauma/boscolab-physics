@@ -1,9 +1,48 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { t, getLocale, setLocale, loadLocale, onLocaleChange, type Locale, translations } from '@/lib/i18n';
 
 const LOCALE_FLAGS: Record<Locale, string> = { pt: '🇧🇷', en: '🇺🇸', es: '🇪🇸', zh: '🇨🇳' };
+
+const LOGO_PARTS = [
+  { text: 'BOSCO', orange: false },
+  { text: 'LAB',   orange: true  },
+] as const;
+
+function WaveLogo() {
+  const [active, setActive] = useState(false);
+  let charIdx = 0;
+  return (
+    <Link href="/" style={{ textDecoration: 'none' }}>
+      <span
+        className={`logo wave-text wave-text--logo${active ? ' wave-active' : ''}`}
+        style={{ cursor: 'pointer' }}
+        onMouseEnter={() => setActive(true)}
+        onMouseLeave={() => setActive(false)}
+        onTouchStart={() => setActive(true)}
+        onTouchEnd={() => setActive(false)}
+        onTouchCancel={() => setActive(false)}
+      >
+        {LOGO_PARTS.map(({ text, orange }) =>
+          text.split('').map(ch => {
+            const delay = charIdx++ * 60;
+            return (
+              <span
+                key={`${text}-${delay}`}
+                className="wave-char"
+                style={{ animationDelay: `${delay}ms`, color: orange ? 'orange' : undefined }}
+              >
+                {ch}
+              </span>
+            );
+          })
+        )}
+      </span>
+    </Link>
+  );
+}
 const LOCALE_LABELS: Record<Locale, string> = { pt: 'Português', en: 'English', es: 'Español', zh: '中文' };
 type SimMethod = 'euler' | 'rk4';
 type TrailMode = 'fade' | 'persist' | 'dots' | 'none';
@@ -82,7 +121,7 @@ export default function Menubar() {
 
   return (
     <div id="menubar">
-      <span className="logo">BOSCO<a style={{ color: 'orange' }}>LAB</a></span>
+      <WaveLogo />
 
       {/* --- Arquivo ---------- */}
       <div className="mitem" onClick={(e) => (window as any).toggleMenu?.(e.currentTarget)}>

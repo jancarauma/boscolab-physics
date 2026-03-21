@@ -120,6 +120,32 @@ function Carousel({ title, slides, interval = 5000 }: { title: string; slides: S
   );
 }
 
+function WaveText({ text }: { text: string }) {
+  const [active, setActive] = useState(false);
+  const on  = () => setActive(true);
+  const off = () => setActive(false);
+  return (
+    <span
+      className={`wave-text${active ? ' wave-active' : ''}`}
+      onMouseEnter={on}
+      onMouseLeave={off}
+      onTouchStart={on}
+      onTouchEnd={off}
+      onTouchCancel={off}
+    >
+      {text.split('').map((ch, i) => (
+        <span
+          key={i}
+          className="wave-char"
+          style={{ animationDelay: `${i * 65}ms` }}
+        >
+          {ch === ' ' ? '\u00A0' : ch}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export default function Home() {
   const [locale, setLocaleState] = useState<Locale>('pt');
   const [playbackRate, setPlaybackRate] = useState(0.75);
@@ -229,11 +255,11 @@ export default function Home() {
             <em>Bosco</em>Lab
           </h1>
           <h3 className="lp-subtitle">
-            {tr.subtitle}
+            <WaveText text={tr.subtitle} />
           </h3>
           <p className="lp-tagline">{tr.tagline}</p>
           <div className="lp-hero-actions">
-            <Link href="/simulador" className="lp-btn-primary" style={{ color: 'white' }}>
+            <Link href="/sim" className="lp-btn-primary" style={{ color: 'white' }}>
               <div className="statusdot running" style={{ background: 'orange' }} />&nbsp;&nbsp;{tr.btnOpen}
             </Link>
             <a href="https://github.com/jancarauma/boscolab-physics" target="_blank" rel="noreferrer" className="lp-btn-ghost">
