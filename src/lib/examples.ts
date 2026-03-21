@@ -22,7 +22,7 @@ export const EXAMPLES: Record<string, any> = {
       { type: 'label', x: -20.2, y: 5, text: 'tempo de subida={t_subida:2} s,   tempo total={t_total:2} s', fontSize: 14, color: '#93c5fd' },
       { type: 'label', x: -20.2, y: 4, text: 'tempo atual={t:2} s', fontSize: 14, color: '#93c5fd' },
 
-      { type: 'video', url: 'https://www.youtube.com/watch?v=N1CQQLSJfwQ', embedUrl: 'https://www.youtube.com/embed/N1CQQLSJfwQ', x: -10.5, y: -7.5, w: 14, h: 10, allowFullscreen: true },
+      { type: 'video', url: 'https://vimeo.com/97682476', embedUrl: 'https://player.vimeo.com/video/97682476', x: -10.5, y: -7.5, w: 17, h: 12, allowFullscreen: true },
       
       { type: 'particle', x: 'x2', y: 'y2', color: '#38bdf8', trailColor: '#67e8f9', 
         showTrail: true, trailMode: 'persist', trailLen: 180, 
